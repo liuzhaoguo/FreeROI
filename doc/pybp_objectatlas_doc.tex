@@ -1,0 +1,444 @@
+\chapter{腹侧视觉脑区图谱}
+\section{基本信息}
+\subsection{脑区参考}
+    \begin{enumerate}
+        \item 标准结构像（MNI152）：提供宏观解剖位置和范围信息;
+        \item 组概率分区（group level parcellation）：提供功能位置和范围参考；
+        \item 组概率图（probabilistic map）： 提供了激活概率强度信息, 但根据经验概率值好像作用不大，而单个被试的激活值作用更大；
+        \item 个体激活图（subject-specific activation map）： 提供单个被试激活强度信息；
+    \end{enumerate}
+
+\subsection{脑区确定准则}
+\begin{enumerate}
+           \item 由三视图，基于解剖脑区和landmark初步定位ROI；
+           \item 由组分割脑区（group parcel），初步定位ROI;
+           \item 在初步确定ROI cluster后，不同ROI间的相对位置信息确认ROI选择正确；
+           \begin{enumerate}
+               \item 左右相应ROI基本对称；
+               \item Face系统中，OFA一般位于pFus的后斜上方，pFus位于aFus的后斜上方，而STS则大致位于pFus和aFus上方偏外侧的地方；
+               \item Object系统中，LO位于pFs后上方偏外侧的位置；
+               \item Place系统中，TOS位于皮层外，大约在RSC上方稍后偏外侧；RSC与PPA相比，稍靠内侧偏上。
+           \end{enumerate}
+
+           \item 确定ROI位置后，通过调整阈限，精确确定ROI边界，进行涂写。
+    \begin{enumerate}
+           \item 从最有把握的，最容易入手的ROI开始进行，从而其它为其它ROI提供参考，避免误差累积；
+           \item 从最有把握的体素开始，根据cluster连续性，追踪开去；
+           \item 连续的cluster 是必要条件，若在一个group label 中，有两个连续的cluster，则选择一个更可能的；
+           \item 可以调整阈限观察cluster变化情况，但画图和做交集时，必须确保采用统一固定阈限；
+           \item 一片激活中存在明显的多个peak时，寻找与label位置关系最近的(cluster尽量大)peak，然后根据激活的渐变，划定该peak峰所在的'山包'作为ROI；
+           \item 一大片激活没有明显的多peak现象的脑区，采用粗暴方式，将label附近整个一片划定为该ROI(对于这种情况需要做异常记录)。
+           \item 对于特定阈限时激活很小甚至没有的情况，根据激活划定label附近的voxel，果断处理即可。
+    \end{enumerate}
+\end{enumerate}
+
+
+\subsection{操作流程}
+    \begin{enumerate}
+          \item 读入MRI结构像，gray显示，阈限3000-8000；读入group label； 读入激活图gray显示，阈限2.3-6；
+          \item 首先使用group label和激活图做交集;
+          \item 基于交集New volume依照label editor中label的顺序(能否自动？)画ROI(刷子和橡皮):只要和label没覆盖住的激活图，都涂上Label 颜色；
+          \item 在全部画完后，再和激活图进行交集。
+    \end{enumerate}
+
+\section{ROI确定方法}
+\subsection{FFA}
+    \begin{enumerate}
+          \item 位置信息：腹侧梭状回中部，较OFA更偏下，且靠内侧(medial)。MNI152上，常在z=20开始出现(小脑和颞叶交界处)。
+          \item 关键边界：下侧和小脑激活的边界；后外侧和OFA的边界；前侧和aFus的边界；侧上和STS激活cluster边界（不常见）。
+          \item 注意事项：和小脑相连的cluster，如果没有明显边界，就都选上；最容易在轴向位判定位置。
+    \end{enumerate}
+
+\subsection{OFA}
+    \begin{enumerate}
+          \item 位置信息：枕叶侧面，较FFA偏上，且靠外侧(lateral);MNI152上，长在z=24左右开始。
+          \item 关键边界：下侧和小脑激活的边界；上内侧和OFA的边界；侧上和STS激活cluster边界（不常见）。
+          \item 注意事项：和小脑相连的cluster，如果没有明显边界，就都选上；向内侧注意和V1的边界；调整阈限发现和STS激活cluster边界。最容易在轴向位判定位置。
+    \end{enumerate}
+
+\subsection{aIT}
+    \begin{enumerate}
+          \item 位置信息：下颞叶前部，较aFus偏前，较FFA偏下;
+          \item 关键边界：后侧和aFus的边界；
+          \item 注意事项：和小脑相连的cluster，如果没有明显边界，就都选上；调整阈限发现和STS激活cluster边界。最容易在轴向位判定位置。
+    \end{enumerate}
+
+
+\subsection{pcSTS}
+    \begin{enumerate}
+          \item 位置信息：位于STS沟顶端侧下，MTS沟中。枕叶侧面，较FFA偏上，且靠外侧(lateral);
+          \item 关键边界：前上和pSTS的边界，下侧和OFA的边界；
+          \item 注意事项：调整阈限发现和pSTS激活cluster边界。最容易在弧矢向位判定位置。
+    \end{enumerate}
+
+\subsection{pSTS}
+    \begin{enumerate}
+          \item 位置信息：位于STS沟顶端前下侧，TPJ 前下侧， pcSTS上前侧;
+          \item 关键边界：后下和pcSTS的边界，前下侧和aSTS的边界；
+          \item 注意事项：调整阈限发现和pcSTS激活cluster边界；如果是一个连续cluster，无法发现明确边界，就都选上；最容易在弧矢向位判定位置。
+    \end{enumerate}
+
+\subsection{aSTS}
+    \begin{enumerate}
+          \item 位置信息：位于STS沟下端后侧，aIT外侧;
+          \item 关键边界：后上和pSTS的边界，上侧和脑岛边界；
+          \item 注意事项：调整阈限发现和pSTS激活cluster边界；最容易在弧矢向位判定位置。
+    \end{enumerate}
+
+
+\subsection{LO}
+    \begin{enumerate}
+          \item 位置信息：LO和OFA位置类似，位于枕叶外侧；向上有一个cluster位于pcSTS位置;
+          \item 关键边界：前下和pFs的边界，上侧和pcSTS边界；
+          \item 注意事项：调整阈限发现和pcSTS，pFs激活cluster边界；如果是一个连续cluster，无法发现明确边界，就都选上；最容易在弧矢向位判定位置。
+    \end{enumerate}
+
+
+\subsection{pFs}
+    \begin{enumerate}
+          \item 位置信息：pFs和FFA位置类似，位于梭状回后部；有时向前有一个cluster位于mFus位置;
+          \item 关键边界：后上和LO的边界，前侧和mFus的边界；
+          \item 注意事项：调整阈限发现和LO激活cluster边界；最容易在弧矢向位判定位置。
+    \end{enumerate}
+
+
+\subsection{PPA}
+    \begin{enumerate}
+          \item 位置信息：从后上向前下沿旁海马回延伸，RSC外下侧；
+          \item 关键边界：前上和RSC的边界，后侧和V1边界；
+          \item 注意事项：调整阈限发现和RSC cluster边界；最容易在弧矢向位判定和RSC边界。
+    \end{enumerate}
+
+\subsection{RSC}
+    \begin{enumerate}
+          \item 位置信息：precuneous附近，后扣带后方；较PPA更为内侧，且更高。
+          \item 关键边界：前上和顶叶激活边界，后前和PPA边界，后下和V1边界；
+          \item 注意事项：调整阈限发现和PPA,V1边界；最容易在轴向位判定和PPA边界。
+    \end{enumerate}
+
+\subsection{TOS}
+    \begin{enumerate}
+          \item 位置信息：TOS 位于顶叶外侧，很容易识别；
+          \item 关键边界：上和额叶激活边界；
+          \item 注意事项：左右对称性。
+    \end{enumerate}
+
+
+\section{科学问题}
+    \begin{enumerate}
+        \item Individual variability(location, response,relative location);
+        \item Spatial relation between fROI and aROI;
+        \item Spatial relation between fROI from different contrast;
+        \item Asymmetry of ROI(location,response,connectivity);
+        \item Trend of ROI in hierarchy;
+        \item Functional variability vs. structure variability vs. connectivity variability;
+        \item ROI anatomical and functional connectivity(intra-subject and inter-subject);
+        \item Male vs. female(gender x lobe);
+        \item Behavior correlation analysis.
+    \end{enumerate}
+
+\newpage
+
+\section{分析方法}
+\subsection{ROI特征测量}
+    \begin{enumerate}
+          \item 单ROI
+              \begin{enumerate}
+                \item 几何信息：体积、中心、peak 位置、距离中心的欧式距离（或距离中心的体素坐标标准差-在大脑空间中显示，协方差椭球。）
+                \item ROI 功能信息：Response(Z,T,d',PSC)
+                \item Overcomplete spherical wavelets： 刻画ROI 特征
+              \end{enumerate}
+          \item 多ROI
+              \begin{enumerate}
+                \item 几何信息：相对位置
+                \item ROI 功能信息：connectivity
+              \end{enumerate}
+    \end{enumerate}
+
+\subsection{ROI被试间变异度量}
+    \begin{enumerate}
+        \item 几何信息：概率图，体积、中心坐标Mean,Std,histgram,coefficient of variation
+        \item ROI 功能信息： Response的Mean, Std 及分布
+    \end{enumerate}
+
+\subsection{ROI间关系度量}
+    \begin{enumerate}
+        \item 概率图: 计算每个voxel属于特定ROI的概率；
+        \item Jcard index: 计算ROI间的overlap；
+        \item Hausdorff distance: 计算ROI间的边界距离或peak, center到特定ROI距离；
+        \item Procrutes analysis(Procrustes distance): The difference between the shape of two objects;objects made up from a finite number k of points in n dimensions:  k regions in 3 dimensions), 利用ROI间关系，多个ROI坐标二次配准；
+        \item Overcomplete spherical wavelets： 刻画ROI 特征，进而度量差异；
+        \item Label based measure: 计算ROI落入不同label voxel的比率；
+        \item mutual border or pairwise distance matrix: 计算两两点间的距离(contingency tables);
+        \item Network：基于被试间变异的网络分析；
+        \item 自动分割 和 手动分割比较；不同用户手动分割和自动分割比较；
+    \end{enumerate}
+
+
+
+\section{Network for object recognition}
+
+\subsection{Nodes}
+通过融合基于概率图的ROI和基于ICA的ROI，确定节点。
+
+\subsection{Group Average based Network}
+Construct the network based on the TR or trial data.
+    \begin{enumerate}
+        \item 静息活动网络(rfMRI);
+        \item 白质连接网络(DTI);
+        \item 任务活动网络(fMRI):整体+单条件
+    \end{enumerate}
+
+\subsection{Individual Difference based Network}
+Construct the network based on the subject data.
+    \begin{enumerate}
+        \item 灰质体积网络(VBM)；
+        \item DTI或者静息参数网络(如，FA,ALFF)；
+        \item 任务活动网络(fMRI):整体+单条件；
+    \end{enumerate}
+
+\subsection{Tricks}
+\begin{enumerate}
+        \item 空间距离: 当前研究使用的是在相同阈限下，不同被试过阈限所有边的长度来度量，并基于全连接进行矫正。使用的是标准空间，而不是在单个被试空间下计算。如何标准化？
+            相对全脑距离-那所有人是共同的，可以不用标准化，直接用物理距离了。或者在没变换到标准空间时，基于非标准脑进行标准化。
+        \item 局部脑区激活；采用绝对激活，还是相对激活？
+        \item 混淆信号： Global signal(整体连接比较大，容易把微小区别淹没，是否需要去除Global signal),头动，CSF, WM. 为保留任务信号，可以只对残差进行去除global,然后再把激活信号加回来。微分项通过插值得到。Global 信号产生方法：1）所有sphere ROI的均值，2）所有 ROI mask 均值，3）除去ROI外的均值。
+        \item 如果不同被试在相同的物理空间，且使用了相同的边的比例，比较不同被试的整体参数时，不需要进行normailze，因为整体是一致的.但在比较不同node的参数时，可以考虑normailze。
+\end{enumerate}
+
+\subsection{分析思路}
+首先从容易的入手，分析individual difference network，分析不同条件间网络的差异，及和VBM网络间的关系。进而分析RFX based network, 看两者是否收敛。
+重点参考文献：Hagmann, PLOS Biol, Power Neuron, Kitzbichler JN,Fornito JN, Young nature, Saxe nature neuroscience;
+\begin{enumerate}
+        \item 先按Bin 网络搞，比较简单
+        \item 关键节点(hub)，骨架(rich club)，core; degree, distance 之类的简单参数可以不考虑，因为其他参数已经集成了他们的信息。
+        \item 局部和全局参数:global and local efficiency,modularity,physical distance,small wordiness, modularity,participation coefficient
+        \item 构造sparse network or principal network for analysis.
+        \item 增量法，计算每种边的数量下的参数;[1,100],[2,20],[1,10],[2,20]。
+        \item 不同模态参数间关系(网络参数，激活,连接距离);
+        \item 心理学问题:左右半球对称性，性别差异，行为相关；
+\end{enumerate}
+
+
+XDS： 完全重复HBM 文章。静息分割 vs. 任务分割； Group average based network vs. Individual difference based network.
+\subsection{流程}
+\begin{enumerate}
+        \item 确定ROI：确定Node数量，并投到surface上;
+        \item 基于ROI提取原始时间序列数据；
+        \item 基于原始时间序列进行不同预处理（去除头动,global mean, WM），得预处理后数据；每个run单独处理。变回去后，重新找质心。
+        \item 基于不同的预处理数据构造连接矩阵;
+        \item 使用BCT对连接矩阵进行分析，产生可以直接BNV可读写格式结果，进行可视化和结果理解。
+\end{enumerate}
+
+
+
+
+
+
+%\section{脑区确定landmark}
+%
+%\subsection{FFA}
+%
+%\begin{table}[htbp]
+% \begin{tabular}{|l|l|} \hline
+%  \backslashbox{Landmark}{Region} & Fusiform face area(FFA) \\ \hline
+%  MRI    &  梭状回中部 \\ \hline
+%  Label  &  多位于FFA内 \\ \hline
+%  Zstat  &  有时会细分为两个cluster，左右位置大致对称，右侧体积大 \\ \hline
+% \end{tabular}
+%\end{table}
+%
+%
+%{\small
+%\begin{table}[htbp]
+% \caption{\label{tab:facemark} Landmark for face regions}
+% \begin{tabular}{|l|l|} \hline
+%   Region & landmark  \\ \hline
+%  FFA  &  梭状回，细分为1-2个小cluster \\ \hline
+%  OFA  &  FFA后部，调整阈限仔细其和小脑cluster边界 \\ \hline
+%  pSTS &  \parbox{22em}{颞上沟后部与顶叶交互点下前，后下部为OFA，sag 方向更容易识别} \\ \hline
+%  mSTS &  颞上沟中部，pSTS和aSTS group label 分界附近 \\ \hline
+%  aSTS &  颞上沟前下部，颞极后部； \\ \hline
+%  aIT  &  颞叶前部 \\ \hline
+% \end{tabular}
+%\end{table}}
+
+
+
+
+
+
+
+\section{脑区名称缩写}
+
+{\small
+\begin{table}[htbp]
+ \caption{\label{tbl:faceroi} Face ROI name}
+ \begin{tabular}{lll}
+  \toprule
+   Lobe & Region & Abbr  \\
+
+
+  \midrule
+  \multirow{9}{*}{Frontal Lobe}
+  & Orbitofrontal cortex & OFC \\
+  & Inferior frontal gyrus & IFG  \\
+  & Precentral gyrus & PCG  \\
+  & Frontal eye field & FEF \\
+  & Superior frontal cortex & SFG  \\
+  & Frontal medial cortex & FMC \\
+  & Frontal pole & FP \\
+
+  \midrule
+  \multirow{1}{*}{Insular Lobe}
+  & Insular cortex & IC \\
+
+  \midrule
+  \multirow{2}{*}{Parietal  Lobe}
+  & Intraparietal sulcus & IPS \\
+  & Precuneous cortex & PCUN \\
+
+  \midrule
+  \multirow{4}{*}{Temporal Lobe}
+  & Fusiform face area & FFA  \\
+  & Superior temporal sulcus & STS  \\
+  & Anterior temporal cortex & AIT  \\
+  & Temporal pole & TP \\
+
+  \midrule
+  \multirow{4}{*}{Occipital Lobe}
+  & Occipital face area & OFA  \\
+  & Lateral occipital & LO \\
+  & Occipital pole & OP  \\
+  & Lingual gyrus & LG \\
+
+  \midrule
+  \multirow{2}{*}{Subcortical}
+  & Amygdala & AMG \\
+  & Mediodorsal nucleus of thalamus & MDT \\
+
+
+  \midrule
+  \multirow{2}{*}{Limbic system}
+  & Anterior cingulate cortex & ACC \\
+  & Posterior cingulate cortex & PCC \\
+
+  \midrule
+  \multirow{1}{*}{Cerebellum}
+  & Lateral cerebellum & LC \\
+
+  \bottomrule
+ \end{tabular}
+\end{table}}
+
+
+
+
+
+{\small
+\begin{table}[htbp]
+ \caption{\label{tbl:objectroi} Object ROI name}
+ \begin{tabular}{lll}
+  \toprule
+   Lobe & Region & Abbr  \\
+
+  \midrule
+  \multirow{1}{*}{Frontal Lobe}
+  & Postcentral gyrus  & PCG  \\
+
+  \midrule
+  \multirow{4}{*}{Parietal  Lobe}
+  & Superior parietal lobule & SPL \\
+  & Inferior parietal lobule & IPL \\
+  & Precuneous cortex & PCUN \\
+
+  \midrule
+  \multirow{1}{*}{Occipital Lobe}
+  & Lateral occipital & LO \\
+  \bottomrule
+ \end{tabular}
+\end{table}}
+
+
+
+
+{\small
+\begin{table}[htbp]
+ \caption{\label{tbl:sceneroi} Scene ROI name}
+ \begin{tabular}{lll}
+  \toprule
+   Lobe & Region & Abbr  \\
+
+  \midrule
+  \multirow{3}{*}{Occipital Lobe}
+  & Transverse Occipital Sulcus & TOS \\
+  & Retrosplenial cortex & RSC \\
+  & Parahippocampal gyrus & PPA \\
+
+  \bottomrule
+ \end{tabular}
+\end{table}}
+
+
+
+\section{参考文献}
+%\begin{landscape}
+{\small
+\begin{table}[htbp]
+ \caption{\label{tbl:faceref} Face selective regions}
+ \begin{tabular}{llccccc}
+  \toprule
+   Lobe & Region & \multicolumn{3}{c}{Coordinates}  & Literature  \\
+  \cmidrule{3-5}
+  & & X & Y & Z & & \\
+
+  \midrule
+  \multirow{9}{*}{Frontal Lobe}
+  & Orbitofrontal cortex (OFC) & 0 & 0 & 0  & \\
+  & Inferior frontal gyrus(IFG) & 0 & 0 & 0  & \\
+  & Precentral gyrus(PCG) & 0 & 0 & 0  & \\
+  & Frontal eye field(FEF)& 0 & 0 & 0  & \\
+  & Superior frontal cortex(SFG) & 0 & 0 & 0  & \\
+  & Frontal medial cortex(FMC)& 0 & 0 & 0  & \\
+  & Frontal pole(FP)& 0 & 0 & 0  & \\
+
+  \midrule
+  \multirow{1}{*}{Insular Lobe}& Insular cortex(IC)& 0 & 0 & 0  & \\
+
+  \midrule
+  \multirow{2}{*}{Parietal  Lobe}& Intraparietal sulcus(IPS)& 0 & 0 & 0  & \\
+      & Precuneous cortex(PCUN) & 0 & 0 & 0  & \\
+
+  \midrule
+  \multirow{4}{*}{Temporal Lobe}
+  & Fusiform face area(FFA) & 35 & -49 & -14  & \\
+  & Superior temporal sulcus(STS) & 0 & 0 & 0  & \\
+  & Anterior temporal cortex(AIT) & 38 & 2 & -38  & \\
+  & Temporal pole(TP)& 0 & 0 & 0  & \\
+
+  \midrule
+  \multirow{4}{*}{Occipital Lobe}
+  & Occipital face area (OFA) & 0 & 0 & 0  & \\
+  & Lateral occipital (LO) & 0 & 0 & 0  & \\
+  & Occipital pole(OP) & 0 & 0 & 0  & \\
+  & Lingual gyrus(LG）& 0 & 0 & 0  & \\
+
+  \midrule
+  \multirow{2}{*}{Subcortical}
+  & Amygdala(AMG)& 0 & 0 & 0  & \\
+  & Mediodorsal nucleus of thalamus(MDT)& 0 & 0 & 0  & \\
+
+
+  \midrule
+  \multirow{2}{*}{Limbic system}
+  & Anterior cingulate cortex(ACC)& 0 & 0 & 0 & \\
+  & Posterior cingulate cortex (PCC)& 0 & 0 & 0  & \\
+
+  \midrule
+  \multirow{1}{*}{Cerebellum}
+  & Lateral cerebellum(LC)& 0 & 0 & 0  & \\
+
+  \bottomrule
+ \end{tabular}
+\end{table}}
+%\end{landscape}

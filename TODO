@@ -1,0 +1,23 @@
+TO DO LIST
+
+** Long-Term Aim
+1. The cursor could be clicked and `moved` in OrthView to select different 
+   slice dynamically.
+2. Slice number in GridView should change dynamically to fit the width of 
+   the ImageView widget.
+3. Link the OrthView to the ROI selector.
+4. Coordinate panel could be used to select a specified position.
+5. Reverse direction of sagittal image in OrthView to fit users' experience.
+
+All features above could be added `smoothly`.
+---------------------------------------------------------------------------
+
+** Version: 0.1.2
+Issues should be finished before 2012.11.15
+
+1. Automitically update 'value' and 'label' when current selected volume is
+   being changed. -- DXB
+2. Add user-configuration file in users' home directory to specify some 
+   parameters fitting users' habits. -- YZT
+3. Separate zoom scale factors of GridView and that of OrthView. -- HLJ
+---------------------------------------------------------------------------

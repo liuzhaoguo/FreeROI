@@ -1,0 +1,2 @@
+wc -l algorithm/* bpio/* testing/* tests/* cluster/* gui/* 2>/dev/null | grep '^    .*[0-9]'|grep -v 'pyc'|awk '{sum += $1} END {print sum}'
+
