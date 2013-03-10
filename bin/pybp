@@ -9,7 +9,7 @@ import os
 import argparse
 
 from PyQt4.QtGui import QApplication
-from pybp.gui.main import BpMainWindow
+from nkbp.gui.main import BpMainWindow
 
 def main():
     # get labelconfig settings
