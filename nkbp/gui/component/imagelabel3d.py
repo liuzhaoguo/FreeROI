@@ -5,7 +5,7 @@ import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from ..utilities.array2qimage import composition, qrgba2qimage
+from nkbp.algorithm.array2qimage import composition, qrgba2qimage
 from drawsettings import DrawSettings
 
 """ImageLabel3d class. It is used to show a slice in a specific orientation."""

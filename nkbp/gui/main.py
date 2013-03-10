@@ -7,9 +7,9 @@
 import os
 import ConfigParser
 import glob
-import pybp as src_pkg
+import nkbp as src_pkg
 
-from pybp.version import __version__
+from nkbp.version import __version__
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *

@@ -9,10 +9,11 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from ..utilities.array2qimage import idx2rgb
+from nkbp.algorithm..array2qimage import idx2rgb
 from drawsettings import DrawSettings
 from ..base.labelconfig import LabelConfig
 from labelconfigcenter import *
+
 class LayerView(QWidget):
     """
     Implementation a widget for layer selection and parameters alternating.

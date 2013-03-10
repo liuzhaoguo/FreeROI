@@ -165,7 +165,6 @@ class ROILabelDialog(QDialog, DrawSettings):
     def get_drawing_color(self):
         return self.get_current_color()
 
-
 class AddLabelDialog(QDialog):
     """
     A dialog for adding a new label.
@@ -254,7 +253,6 @@ class AddLabelDialog(QDialog):
         self._label_config.add_label(label, index, color)
         self.done(0)
         
-
 class ColorButton(QPushButton):
     """
     Button to choose color from a color dialog.

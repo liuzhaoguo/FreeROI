@@ -4,7 +4,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from ..utilities import imtool
+from nkbp.algorithm import imtool
 
 class ROIFilterDialog(QDialog):
     """

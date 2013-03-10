@@ -12,7 +12,7 @@ import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from ..utilities import array2qimage as aq
+from nkbp.algorithm import array2qimage as aq
 from labelconfig import LabelConfig
 
 
@@ -41,7 +41,6 @@ class DoStack(QObject):
             return True
         else:
             return False
-
 
 class VolumeDataset(object):
     """

@@ -4,7 +4,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from ..utilities import segment
+from nkbp.algorithm import segment
 
 class WatershedDialog(QDialog):
     """

@@ -34,8 +34,8 @@ if 'mingw32' in sys.argv:
                         os.path.dirname(PyQt4.__file__)))
     qt_libraries = [lib + '4' for lib in qt_libraries]
 
-qimageview = Extension('pybp.gui.utilities.qimageview',
-                       sources = [r'third_part/qimageview.sip'],
+qimageview = Extension('nkbp.algorithm.qimageview',
+                       sources = [r'3rdparty/qimageview.sip'],
                        include_dirs = [numpy.get_include(),
                                        qt_inc_dir,
                                        os.path.join(qt_inc_dir, 'QtCore'),
@@ -58,22 +58,20 @@ class build_ext(sipdistutils.build_ext):
                    config.pyqt_sip_flags.split() + 
                    ['-I', config.pyqt_sip_dir, source])
 
-for line in file('pybp/version.py'):
+for line in file('nkbp/version.py'):
     if line.startswith('__version__'):
         exec line
 
-setup(name = 'pybp',
+setup(name = 'nkbp',
       version = __version__,
       description = 'Brain parcellation toolbox',
       author = 'Neuroimageing Team@LiuLab',
-      author_email = 'huanglijie.seal@gmail.com',
+      author_email = ['huanglijie.seal@gmail.com','zetian.yang@gmail.com'],
       url = '',
       download_url = '',
-      packages = ['pybp',
-                  'pybp.gui',
-                  'pybp.gui.base',
-                  'pybp.algorithm',
-                  'pybp.cluster',
-                  'pybp.bpio'],
+      packages = ['nkbp',
+                  'nkbp.gui',
+                  'nkbp.gui.base',
+                  'nkbp.algorithm'],
       ext_modules = [qimageview],
       cmdclass = {'build_ext': build_ext})

@@ -6,7 +6,6 @@ from PyQt4.QtGui import *
 
 from drawsettings import DrawSettings
 
-
 class EraserDialog(QDialog, DrawSettings):
     """
     A dialog window for eraser settings.

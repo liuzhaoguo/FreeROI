@@ -48,7 +48,6 @@ class PainterStatus(object):
     def get_drawing_color(self):
         return self.draw_settings.get_drawing_color()
 
-
 class DrawSettings(object):
     """
     Settings for cursor status.
