@@ -8,6 +8,8 @@ TO DO LIST
 4. Slice number in GridView should change dynamically to fit the width of 
    the ImageView widget.
 5. Coordinate panel could be used to select a specified position.
+6. Add Region Grow Algorithm.
+7. Add regular ROI generation.
 
 All features above could be added `smoothly`.
 ---------------------------------------------------------------------------
