@@ -58,6 +58,7 @@ class ImageLabel3d(QLabel):
 
         # crosshair-displaying setting
         self.display_crosshair = True
+        self.is_moving = False
 
     def set_model(self, model):
         """
@@ -152,19 +153,20 @@ class ImageLabel3d(QLabel):
                         self.painter_status.get_drawing_value())
             self.holder.voxels = set()
         elif self._mouse_in(e.x(), e.y()) and self.painter_status.is_view():
-            if isinstance(self, SagittalImageLabel):
-                current_pos = [self.holder.get_coord()[0],
-                               int((e.x()-self.pic_src_point[0])/scale), 
-                               90 - int((e.y() - self.pic_src_point[1])/scale)]
-            elif isinstance(self, AxialImageLabel):
-                current_pos = [int((e.x() - self.pic_src_point[0])/scale),
-                               int((e.y()-self.pic_src_point[1])/scale), 
-                               self.holder.get_coord()[2]]
-            else:
-                current_pos = [int((e.x() - self.pic_src_point[0])/scale),
-                               self.holder.get_coord()[1],
-                               90 - int((e.y() - self.pic_src_point[1])/scale)]
-            self.holder.set_coord(current_pos)
+            self.is_moving = False
+            #if isinstance(self, SagittalImageLabel):
+            #    current_pos = [self.holder.get_coord()[0],
+            #                   int((e.x()-self.pic_src_point[0])/scale), 
+            #                   90 - int((e.y() - self.pic_src_point[1])/scale)]
+            #elif isinstance(self, AxialImageLabel):
+            #    current_pos = [int((e.x() - self.pic_src_point[0])/scale),
+            #                   int((e.y()-self.pic_src_point[1])/scale), 
+            #                   self.holder.get_coord()[2]]
+            #else:
+            #    current_pos = [int((e.x() - self.pic_src_point[0])/scale),
+            #                   self.holder.get_coord()[1],
+            #                   90 - int((e.y() - self.pic_src_point[1])/scale)]
+            #self.holder.set_coord(current_pos)
         elif self._mouse_in(e.x(), e.y()) and self.painter_status.is_hand():
             self.setCursor(Qt.OpenHandCursor)
 
@@ -274,12 +276,15 @@ class SagittalImageLabel(ImageLabel3d):
             self.repaint()
             self.drawing = False
         elif self.painter_status.is_view():
+            self.is_moving = True
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             x = e.x() - self.pic_src_point[0]
             y = e.y() - self.pic_src_point[1]
             x = int(np.floor(x/scale))
             y = 90 - int(np.floor(y/scale))
             self.holder.xyz_updated.emit([x, self.holder.get_coord()[0], y])
+            current_pos = [self.holder.get_coord()[0], x, y]
+            self.holder.set_coord(current_pos)
         elif self.painter_status.is_hand():
             self.setCursor(Qt.ClosedHandCursor)
             self.old_pos = (e.x(), e.y())
@@ -313,12 +318,15 @@ class SagittalImageLabel(ImageLabel3d):
             self.drawing = False
         elif self.painter_status.is_view():
             self.setCursor(Qt.ArrowCursor)
-            #scale = self.model.get_scale_factor('orth')*self._expanding_factor
-            #x = e.x() - self.pic_src_point[0]
-            #y = e.y() - self.pic_src_point[1]
-            #x = int(np.floor(x/scale))
-            #y = 90 - int(np.floor(y/scale))
-            #self.holder.xyz_updated.emit([x, self.holder.get_coord()[0], y])
+            if self.is_moving:
+                scale = self.model.get_scale_factor('orth')*self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = 90 - int(np.floor(y/scale))
+                self.holder.xyz_updated.emit([x, self.holder.get_coord()[0], y])
+                current_pos = [self.holder.get_coord()[0], x, y]
+                self.holder.set_coord(current_pos)
         elif self.painter_status.is_hand():
             if self.cursor().shape() == Qt.ArrowCursor:
                 self.setCursor(Qt.OpenHandCursor)
@@ -433,12 +441,15 @@ class AxialImageLabel(ImageLabel3d):
             self.repaint()
             self.drawing = False
         elif self.painter_status.is_view():
+            self.is_moving = True
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             x = e.x() - self.pic_src_point[0]
             y = e.y() - self.pic_src_point[1]
             x = int(np.floor(x/scale))
             y = int(np.floor(y/scale))
             self.holder.xyz_updated.emit([y, x, self.holder.get_coord()[2]])
+            current_pos = [x, y, self.holder.get_coord()[2]]
+            self.holder.set_coord(current_pos)
         elif self.painter_status.is_hand():
             self.setCursor(Qt.ClosedHandCursor)
             self.old_pos = (e.x(), e.y())
@@ -471,12 +482,15 @@ class AxialImageLabel(ImageLabel3d):
             self.drawing = False
         elif self.painter_status.is_view():
             self.setCursor(Qt.ArrowCursor)
-            #scale = self.model.get_scale_factor('orth')* self._expanding_factor
-            #x = e.x() - self.pic_src_point[0]
-            #y = e.y() - self.pic_src_point[1]
-            #x = int(np.floor(x/scale))
-            #y = int(np.floor(y/scale))
-            #self.holder.xyz_updated.emit([y, x, self.holder.get_coord()[2]])
+            if self.is_moving:
+                scale = self.model.get_scale_factor('orth')* self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = int(np.floor(y/scale))
+                self.holder.xyz_updated.emit([y, x, self.holder.get_coord()[2]])
+                current_pos = [x, y, self.holder.get_coord()[2]]
+                self.holder.set_coord(current_pos)
         elif self.painter_status.is_hand():
             if self.cursor().shape() == Qt.ArrowCursor:
                 self.setCursor(Qt.OpenHandCursor)
@@ -589,12 +603,15 @@ class CoronalImageLabel(ImageLabel3d):
             self.repaint()
             self.drawing = False
         elif self.painter_status.is_view():
+            self.is_moving = True
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             x = e.x() - self.pic_src_point[0]
             y = e.y() - self.pic_src_point[1]
             x = int(np.floor(x/scale))
             y = 90 - int(np.floor(y/scale))
             self.holder.xyz_updated.emit([self.holder.get_coord()[1], x, y])
+            current_pos = [x, self.holder.get_coord()[1], y]
+            self.holder.set_coord(current_pos)
         elif self.painter_status.is_hand():
             self.setCursor(Qt.ClosedHandCursor)
             self.old_pos = (e.x(), e.y())
@@ -627,12 +644,15 @@ class CoronalImageLabel(ImageLabel3d):
             self.drawing = False
         elif self.painter_status.is_view():
             self.setCursor(Qt.ArrowCursor)
-            #scale = self.model.get_scale_factor('orth')* self._expanding_factor
-            #x = e.x() - self.pic_src_point[0]
-            #y = e.y() - self.pic_src_point[1]
-            #x = int(np.floor(x/scale))
-            #y = 90 - int(np.floor(y/scale))
-            #self.holder.xyz_updated.emit([self.holder.get_coord()[1], x, y])
+            if self.is_moving:
+                scale = self.model.get_scale_factor('orth')* self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = 90 - int(np.floor(y/scale))
+                self.holder.xyz_updated.emit([self.holder.get_coord()[1], x, y])
+                current_pos = [x, self.holder.get_coord()[1], y]
+                self.holder.set_coord(current_pos)
         elif self.painter_status.is_hand():
             if self.cursor().shape() == Qt.ArrowCursor:
                 self.setCursor(Qt.OpenHandCursor)
