@@ -8,8 +8,7 @@ in orthographic style.
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from imagelabel3d import (SagittalImageLabel, AxialImageLabel, 
-                          CoronalImageLabel)
+from imagelabel import (SagittalImageLabel, AxialImageLabel, CoronalImageLabel)
 
 class OrthView(QScrollArea):
     """
