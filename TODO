@@ -2,8 +2,8 @@ TO DO LIST
 
 ** Long-Term Aim
 1. The cursor could be clicked and `moved` in OrthView to select different 
-   slice dynamically.
-2. Link the OrthView to the ROI selector.
+   slice dynamically.    -- HLJ (Complete!)
+2. Link the OrthView to the ROI selector.     -- HLJ (Complete!)
 3. Add Analyses module (descriptive statistic for ROI).
 4. Slice number in GridView should change dynamically to fit the width of 
    the ImageView widget.

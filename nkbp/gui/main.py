@@ -54,8 +54,7 @@ class BpMainWindow(QMainWindow):
     temp_path = os.path.dirname(os.path.join(os.getcwd(), __file__))
     temp_path = temp_path.split('/')
     temp_path.pop()
-    temp_path.pop()
-    temp_path.append('bin')
+    temp_path.append('data')
     label_path = '/'.join(temp_path)
     label_config_dir = os.path.join(label_path, 'labelconfig')
     label_config_suffix = 'lbl'
@@ -811,7 +810,6 @@ class BpMainWindow(QMainWindow):
 
     def _roidialog_enable(self):
         if not hasattr(self, 'roidialog'):
-
             self._actions['cursor'].setChecked(False)
             self._actions['brush'].setChecked(False)
             self._actions['roibrush'].setChecked(False)
