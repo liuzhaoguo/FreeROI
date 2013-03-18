@@ -26,7 +26,7 @@ class OrthView(QScrollArea):
 
         self._model = model
         self._model.scale_changed.connect(self.resize_item)
-        self._draw_settings = draw_settings
+        self.set_draw_settings(draw_settings)
         
         self._saglabel = SagittalImageLabel(model, draw_settings, self)
         self._axilabel = AxialImageLabel(model, draw_settings, self)

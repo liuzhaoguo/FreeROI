@@ -260,7 +260,10 @@ class ImageLabel3d(QLabel):
 
         # crosshair-displaying setting
         self.display_crosshair = True
+
+        # label status
         self.is_moving = False
+        self.is_painting = True
 
     def set_model(self, model):
         """
@@ -310,26 +313,32 @@ class ImageLabel3d(QLabel):
         Return the valid range of horizontal axis.
 
         """
-        min_val = self.pic_src_point[0]
-        if min_val < 0:
-            min_val = 0
-        max_val = self.pic_src_point[0] + self.pm.size().width()
-        if max_val > self.size().width():
-            max_val = self.size().width()
-        return (min_val, max_val)
+        if not self.is_painting:
+            min_val = self.pic_src_point[0]
+            if min_val < 0:
+                min_val = 0
+            max_val = self.pic_src_point[0] + self.pm.size().width()
+            if max_val > self.size().width():
+                max_val = self.size().width()
+            return (min_val, max_val)
+        else:
+            return (0, -1)
 
     def vertical_valid_range(self):
         """
         Return the valid range of vertical axis.
 
         """
-        min_val = self.pic_src_point[1]
-        if min_val < 0:
-            min_val = 0
-        max_val = self.pic_src_point[1] + self.pm.size().height()
-        if max_val > self.size().height():
-            max_val = self.size().height()
-        return (min_val, max_val)
+        if not self.is_painting:
+            min_val = self.pic_src_point[1]
+            if min_val < 0:
+                min_val = 0
+            max_val = self.pic_src_point[1] + self.pm.size().height()
+            if max_val > self.size().height():
+                max_val = self.size().height()
+            return (min_val, max_val)
+        else:
+            return (0, -1)
 
     def _mouse_in(self, x, y):
         """
@@ -345,7 +354,8 @@ class ImageLabel3d(QLabel):
 
         """
         scale = self.model.get_scale_factor('orth') * self._expanding_factor
-        if self.painter_status.is_drawing_valid():
+        if self.painter_status.is_drawing_valid() and (not 
+           self.painter_status.is_roi_tool()):
             pix_to_vox = lambda (x, y, z): (int(np.floor(x/scale)), 
                                             int(np.floor(y/scale)), 
                                             int(np.floor(z/scale)))
@@ -356,19 +366,6 @@ class ImageLabel3d(QLabel):
             self.holder.voxels = set()
         elif self._mouse_in(e.x(), e.y()) and self.painter_status.is_view():
             self.is_moving = False
-            #if isinstance(self, SagittalImageLabel):
-            #    current_pos = [self.holder.get_coord()[0],
-            #                   int((e.x()-self.pic_src_point[0])/scale), 
-            #                   90 - int((e.y() - self.pic_src_point[1])/scale)]
-            #elif isinstance(self, AxialImageLabel):
-            #    current_pos = [int((e.x() - self.pic_src_point[0])/scale),
-            #                   int((e.y()-self.pic_src_point[1])/scale), 
-            #                   self.holder.get_coord()[2]]
-            #else:
-            #    current_pos = [int((e.x() - self.pic_src_point[0])/scale),
-            #                   self.holder.get_coord()[1],
-            #                   90 - int((e.y() - self.pic_src_point[1])/scale)]
-            #self.holder.set_coord(current_pos)
         elif self._mouse_in(e.x(), e.y()) and self.painter_status.is_hand():
             self.setCursor(Qt.OpenHandCursor)
 
@@ -382,6 +379,7 @@ class SagittalImageLabel(ImageLabel3d):
         Reimplement paintEvent.
 
         """
+        self.is_painting = True
         self.voxels_painter = QPainter()
         self.voxels_painter.begin(self)
         
@@ -436,6 +434,7 @@ class SagittalImageLabel(ImageLabel3d):
                                          vertical_targ[1])
             
         self.voxels_painter.end()
+        self.is_painting = False
 
     def draw_voxels(self, voxels):
         """
@@ -459,26 +458,55 @@ class SagittalImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            size = self.painter_status.get_drawing_size()
-            X = e.x()
-            Y = e.y()
-            x_margin = self.pic_src_point[0]
-            y_margin = self.pic_src_point[1]
-            scale = self.model.get_scale_factor('orth') * self._expanding_factor
-            new_voxels = [(self.holder.get_coord()[0] * scale, 
-                           x - x_margin, 
-                           91 * scale - y + y_margin)
-                          for x in xrange(X - size/2, X + size/2 + 1) 
-                          for y in xrange(Y - size/2, Y + size/2 + 1)
-                          if self._mouse_in(x, y)]
-            self.holder.voxels |= set(new_voxels)
-            
-            # draw voxels
-            self.drawing = True
-            self.repaint()
-            self.drawing = False
-        elif self.painter_status.is_view():
-            self.is_moving = True
+            if not self.painter_status.is_roi_tool():
+                size = self.painter_status.get_drawing_size()
+                X = e.x()
+                Y = e.y()
+                x_margin = self.pic_src_point[0]
+                y_margin = self.pic_src_point[1]
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                new_voxels = [(self.holder.get_coord()[0] * scale, 
+                               x - x_margin, 
+                               91 * scale - y + y_margin)
+                              for x in xrange(X - size/2, X + size/2 + 1) 
+                              for y in xrange(Y - size/2, Y + size/2 + 1)
+                              if self._mouse_in(x, y)]
+                self.holder.voxels |= set(new_voxels)
+                # draw voxels
+                self.drawing = True
+                self.repaint()
+                self.drawing = False
+            else:
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = 90 - int(np.floor(y/scale))
+                roi_val = self.model.get_current_roi_val(
+                            self.holder.get_coord()[0], x, y)
+                if roi_val != 0:
+                    t_value = self.painter_status.get_drawing_value()
+                    self.model.modify_voxels(value=t_value, roi=roi_val)
+        elif self.painter_status.is_hand():
+            self.setCursor(Qt.ClosedHandCursor)
+            self.old_pos = (e.x(), e.y())
+        else:
+            self.setCursor(Qt.ArrowCursor)
+            if self.painter_status.is_roi_selection():
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = 90 - int(np.floor(y/scale))
+                roi_val = self.model.get_current_roi_val(
+                            self.holder.get_coord()[0], x, y)
+                if roi_val != 0:
+                    self.painter_status.get_draw_settings()._update_roi(roi_val)
+            else:
+                self.is_moving = True
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             x = e.x() - self.pic_src_point[0]
             y = e.y() - self.pic_src_point[1]
@@ -487,9 +515,6 @@ class SagittalImageLabel(ImageLabel3d):
             self.holder.xyz_updated.emit([x, self.holder.get_coord()[0], y])
             current_pos = [self.holder.get_coord()[0], x, y]
             self.holder.set_coord(current_pos)
-        elif self.painter_status.is_hand():
-            self.setCursor(Qt.ClosedHandCursor)
-            self.old_pos = (e.x(), e.y())
 
     def mouseMoveEvent(self, e):
         """
@@ -513,7 +538,6 @@ class SagittalImageLabel(ImageLabel3d):
                           for y in xrange(Y - size/2, Y + size/2 + 1)
                           if self._mouse_in(x, y)]
             self.holder.voxels |= set(new_voxels)
-            
             # draw voxels
             self.drawing = True
             self.repaint()
@@ -540,6 +564,8 @@ class SagittalImageLabel(ImageLabel3d):
                 self.pic_src_point = (self.pic_src_point[0] + dist[0],
                                       self.pic_src_point[1] + dist[1])
                 self.repaint()
+        else:
+            self.setCursor(Qt.ArrowCursor)
             
 class AxialImageLabel(ImageLabel3d):
     """
@@ -551,6 +577,7 @@ class AxialImageLabel(ImageLabel3d):
         Reimplement paintEvent.
 
         """
+        self.is_painting = True
         self.voxels_painter = QPainter()
         self.voxels_painter.begin(self)
 
@@ -602,6 +629,7 @@ class AxialImageLabel(ImageLabel3d):
                                          vertical_targ[0],
                                          vertical_targ[1])
         self.voxels_painter.end()
+        self.is_painting = False
     
     def draw_voxels(self, voxels):
         """
@@ -625,25 +653,55 @@ class AxialImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            size = self.painter_status.get_drawing_size()
-            X = e.x()
-            Y = e.y()
-            x_margin = self.pic_src_point[0]
-            y_margin = self.pic_src_point[1]
-            scale = self.model.get_scale_factor('orth') * self._expanding_factor
-            new_voxels = [(x - x_margin, 
-                           y - y_margin, 
-                           self.holder.get_coord()[2] * scale)
-                          for x in xrange(X - size/2, X + size/2 + 1)
-                          for y in xrange(Y - size/2, Y + size/2 + 1)
-                          if self._mouse_in(x, y)]
-            self.holder.voxels |= set(new_voxels)
-            # draw voxels
-            self.drawing = True
-            self.repaint()
-            self.drawing = False
-        elif self.painter_status.is_view():
-            self.is_moving = True
+            if not self.painter_status.is_roi_tool():
+                size = self.painter_status.get_drawing_size()
+                X = e.x()
+                Y = e.y()
+                x_margin = self.pic_src_point[0]
+                y_margin = self.pic_src_point[1]
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                new_voxels = [(x - x_margin, 
+                               y - y_margin, 
+                               self.holder.get_coord()[2] * scale)
+                              for x in xrange(X - size/2, X + size/2 + 1)
+                              for y in xrange(Y - size/2, Y + size/2 + 1)
+                              if self._mouse_in(x, y)]
+                self.holder.voxels |= set(new_voxels)
+                # draw voxels
+                self.drawing = True
+                self.repaint()
+                self.drawing = False
+            else:
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = int(np.floor(y/scale))
+                roi_val = self.model.get_current_roi_val(
+                            x, y, self.holder.get_coord()[2])
+                if roi_val != 0:
+                    t_value = self.painter_status.get_drawing_value()
+                    self.model.modify_voxels(value=t_value, roi=roi_val)
+        elif self.painter_status.is_hand():
+            self.setCursor(Qt.ClosedHandCursor)
+            self.old_pos = (e.x(), e.y())
+        else:
+            self.setCursor(Qt.ArrowCursor)
+            if self.painter_status.is_roi_selection():
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = int(np.floor(y/scale))
+                roi_val = self.model.get_current_roi_val(
+                            x, y, self.holder.get_coord()[2])
+                if roi_val != 0:
+                    self.painter_status.get_draw_settings()._update_roi(roi_val)
+            else:
+                self.is_moving = True
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             x = e.x() - self.pic_src_point[0]
             y = e.y() - self.pic_src_point[1]
@@ -652,9 +710,6 @@ class AxialImageLabel(ImageLabel3d):
             self.holder.xyz_updated.emit([y, x, self.holder.get_coord()[2]])
             current_pos = [x, y, self.holder.get_coord()[2]]
             self.holder.set_coord(current_pos)
-        elif self.painter_status.is_hand():
-            self.setCursor(Qt.ClosedHandCursor)
-            self.old_pos = (e.x(), e.y())
 
     def mouseMoveEvent(self, e):
         """
@@ -704,6 +759,8 @@ class AxialImageLabel(ImageLabel3d):
                 self.pic_src_point = (self.pic_src_point[0] + dist[0],
                                       self.pic_src_point[1] + dist[1])
                 self.repaint()
+        else:
+            self.setCursor(Qt.ArrowCursor)
 
 class CoronalImageLabel(ImageLabel3d):
     """
@@ -715,6 +772,7 @@ class CoronalImageLabel(ImageLabel3d):
         Reimplement paintEvent.
 
         """
+        self.is_painting = True
         self.voxels_painter = QPainter()
         self.voxels_painter.begin(self)
         if not self.image or not self.drawing:
@@ -764,6 +822,7 @@ class CoronalImageLabel(ImageLabel3d):
                                          vertical_targ[0],
                                          vertical_targ[1])
         self.voxels_painter.end()
+        self.is_painting = False
     
     def draw_voxels(self, voxels):
         """
@@ -787,25 +846,55 @@ class CoronalImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            size = self.painter_status.get_drawing_size()
-            X = e.x()
-            Y = e.y()
-            x_margin = self.pic_src_point[0]
-            y_margin = self.pic_src_point[1]
-            scale = self.model.get_scale_factor('orth') * self._expanding_factor
-            new_voxels = [(x - x_margin, 
-                           self.holder.get_coord()[1] * scale, 
-                           91 * scale - y + y_margin)
-                          for x in xrange(X - size/2, X + size/2 + 1)
-                          for y in xrange(Y - size/2, Y + size/2 + 1)
-                          if self._mouse_in(x, y)]
-            self.holder.voxels |= set(new_voxels)
-            # draw voxels
-            self.drawing = True
-            self.repaint()
-            self.drawing = False
-        elif self.painter_status.is_view():
-            self.is_moving = True
+            if not self.painter_status.is_roi_tool():
+                size = self.painter_status.get_drawing_size()
+                X = e.x()
+                Y = e.y()
+                x_margin = self.pic_src_point[0]
+                y_margin = self.pic_src_point[1]
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                new_voxels = [(x - x_margin, 
+                               self.holder.get_coord()[1] * scale, 
+                               91 * scale - y + y_margin)
+                              for x in xrange(X - size/2, X + size/2 + 1)
+                              for y in xrange(Y - size/2, Y + size/2 + 1)
+                              if self._mouse_in(x, y)]
+                self.holder.voxels |= set(new_voxels)
+                # draw voxels
+                self.drawing = True
+                self.repaint()
+                self.drawing = False
+            else:
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = 90 - int(np.floor(y/scale))
+                roi_val = self.model.get_current_roi_val(
+                            x, self.holder.get_coord()[1], y)
+                if roi_val != 0:
+                    t_value = self.painter_status.get_drawing_value()
+                    self.model.modify_voxels(value=t_value, roi=roi_val)
+        elif self.painter_status.is_hand():
+            self.setCursor(Qt.ClosedHandCursor)
+            self.old_pos = (e.x(), e.y())
+        else:
+            self.setCursor(Qt.ArrowCursor)
+            if self.painter_status.is_roi_selection():
+                scale = self.model.get_scale_factor('orth') * \
+                        self._expanding_factor
+                x = e.x() - self.pic_src_point[0]
+                y = e.y() - self.pic_src_point[1]
+                x = int(np.floor(x/scale))
+                y = 90 - int(np.floor(y/scale))
+                roi_val = self.model.get_current_roi_val(
+                            x, self.holder.get_coord()[1], y)
+                if roi_val != 0:
+                    self.painter_status.get_draw_settings()._update_roi(roi_val)
+            else:
+                self.is_moving = True
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             x = e.x() - self.pic_src_point[0]
             y = e.y() - self.pic_src_point[1]
@@ -814,9 +903,6 @@ class CoronalImageLabel(ImageLabel3d):
             self.holder.xyz_updated.emit([self.holder.get_coord()[1], x, y])
             current_pos = [x, self.holder.get_coord()[1], y]
             self.holder.set_coord(current_pos)
-        elif self.painter_status.is_hand():
-            self.setCursor(Qt.ClosedHandCursor)
-            self.old_pos = (e.x(), e.y())
 
     def mouseMoveEvent(self, e):
         """
@@ -866,3 +952,5 @@ class CoronalImageLabel(ImageLabel3d):
                 self.pic_src_point = (self.pic_src_point[0] + dist[0],
                                       self.pic_src_point[1] + dist[1])
                 self.repaint()
+        else:
+            self.setCursor(Qt.ArrowCursor)
