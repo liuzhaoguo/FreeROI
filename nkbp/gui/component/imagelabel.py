@@ -375,7 +375,7 @@ class SagittalImageLabel(ImageLabel3d):
         """
         w_times = float(self.size().width()) / self.model.getX()
         h_times = float(self.size().height()) / self.model.getZ()
-        return np.fix(np.min([w_times, h_times]))
+        return np.min([w_times, h_times])
 
     def paintEvent(self, e):
         """
@@ -584,7 +584,7 @@ class AxialImageLabel(ImageLabel3d):
         """
         w_times = float(self.size().width()) / self.model.getY()
         h_times = float(self.size().height()) / self.model.getX()
-        return np.fix(np.min([w_times, h_times]))
+        return np.min([w_times, h_times])
 
     def paintEvent(self, e):
         """
@@ -790,7 +790,7 @@ class CoronalImageLabel(ImageLabel3d):
         """
         w_times = float(self.size().width()) / self.model.getY()
         h_times = float(self.size().height()) / self.model.getZ()
-        return np.fix(np.min([w_times, h_times]))
+        return np.min([w_times, h_times])
 
     def paintEvent(self, e):
         """

@@ -65,7 +65,7 @@ class OrthView(QWidget):
         self._expanding_factor = np.min([self._corlabel.get_expanding_size(),
                                          self._saglabel.get_expanding_size(),
                                          self._axilabel.get_expanding_size()])
-        self._expanding_factor += 1
+        self._expanding_factor -= 0.1
 
     def get_expanding_factor(self):
         return self._expanding_factor
