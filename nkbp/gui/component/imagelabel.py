@@ -231,9 +231,6 @@ class ImageLabel3d(QLabel):
 
         """
         super(ImageLabel3d, self).__init__(parent)
-        # default setting
-        self._expanding_factor = 3
-        self._rect_size = 109
 
         # set background color as black
         palette = self.palette()
@@ -278,8 +275,7 @@ class ImageLabel3d(QLabel):
         Size hint configuration.
 
         """
-        return QSize(self._rect_size * self._expanding_factor, 
-                     self._rect_size * self._expanding_factor)
+        return QSize(self.size().width(), self.size().height())
 
     def update_image(self, coord):
         """
@@ -293,9 +289,7 @@ class ImageLabel3d(QLabel):
         Create a whole black background.
 
         """
-        background = np.zeros((self._rect_size * self._expanding_factor,
-                               self._rect_size * self._expanding_factor,
-                               3),
+        background = np.zeros((self.size().height(), self.size().width(), 3),
                               dtype=np.uint8)
         return qrgba2qimage(background)
 
@@ -374,6 +368,15 @@ class SagittalImageLabel(ImageLabel3d):
     ImageLabel in sagittal view.
 
     """
+    def get_expanding_size(self):
+        """
+        Compute a proper expanding size used to display
+
+        """
+        w_times = float(self.size().width()) / self.model.getX()
+        h_times = float(self.size().height()) / self.model.getZ()
+        return np.fix(np.min([w_times, h_times]))
+
     def paintEvent(self, e):
         """
         Reimplement paintEvent.
@@ -383,10 +386,13 @@ class SagittalImageLabel(ImageLabel3d):
         self.voxels_painter = QPainter()
         self.voxels_painter.begin(self)
         
+        self._expanding_factor = self.holder.get_expanding_factor()
+
         # composite volume picture
         if not self.image or not self.drawing:
             idx = self.holder.get_coord()[0]
-            back_temp = np.zeros((91, 109, 3), dtype=np.uint8)
+            back_temp = np.zeros((self.model.getZ(), self.model.getX(), 3), 
+                                 dtype=np.uint8)
             blend = reduce(composition, 
                            self.model.sagital_rgba_list(idx),
                            back_temp)
@@ -395,16 +401,13 @@ class SagittalImageLabel(ImageLabel3d):
         
         # draw black background
         pm = QPixmap.fromImage(self.background)
-        self.voxels_painter.drawPixmap(0, 0, pm, 0, 0,
-                                       pm.size().width(),
-                                       pm.size().height())
+        self.voxels_painter.drawPixmap(0, 0, pm)
         
         # draw volume picture
         pm = QPixmap.fromImage(self.image)
-        self.pm = pm.scaled(pm.size() * self.model.get_scale_factor('orth') * 
+        self.pm = pm.scaled(pm.size() * self.model.get_scale_factor('orth') * \
                             self._expanding_factor)
-        if not self.pic_src_point:
-            self.pic_src_point = self.center_src_point()
+        self.pic_src_point = self.center_src_point()
         self.voxels_painter.drawPixmap(self.pic_src_point[0],
                                        self.pic_src_point[1], 
                                        self.pm)
@@ -417,9 +420,11 @@ class SagittalImageLabel(ImageLabel3d):
         if self.display_crosshair:
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.holder.get_coord()
-            horizon_src = (0, (90-current_pos[2])*scale+self.pic_src_point[1])
-            horizon_targ = (self._rect_size * self._expanding_factor,
-                            (90-current_pos[2])*scale + self.pic_src_point[1])
+            horizon_src = (0, (self.model.getZ() - 1 - current_pos[2]) * \
+                               scale + self.pic_src_point[1])
+            horizon_targ = (self.size().width(),
+                            (self.model.getZ() - 1 - current_pos[2]) * \
+                             scale + self.pic_src_point[1])
             self.voxels_painter.setPen(QColor(0, 255, 0, 255))
             self.voxels_painter.drawLine(horizon_src[0],
                                          horizon_src[1],
@@ -427,7 +432,7 @@ class SagittalImageLabel(ImageLabel3d):
                                          horizon_targ[1])
             vertical_src = (current_pos[1] * scale + self.pic_src_point[0], 0)
             vertical_targ = (current_pos[1] * scale + self.pic_src_point[0],
-                             self._rect_size * self._expanding_factor)
+                             self.size().height())
             self.voxels_painter.drawLine(vertical_src[0],
                                          vertical_src[1],
                                          vertical_targ[0],
@@ -572,6 +577,15 @@ class AxialImageLabel(ImageLabel3d):
     ImageLabel in axial view.
 
     """
+    def get_expanding_size(self):
+        """
+        Compute a proper expanding size used to display
+
+        """
+        w_times = float(self.size().width()) / self.model.getY()
+        h_times = float(self.size().height()) / self.model.getX()
+        return np.fix(np.min([w_times, h_times]))
+
     def paintEvent(self, e):
         """
         Reimplement paintEvent.
@@ -581,10 +595,13 @@ class AxialImageLabel(ImageLabel3d):
         self.voxels_painter = QPainter()
         self.voxels_painter.begin(self)
 
+        self._expanding_factor = self.holder.get_expanding_factor()
+
         # composite volume picture
         if not self.image or not self.drawing:
             idx = self.holder.get_coord()[2]
-            back_temp = np.zeros((109, 91, 3), dtype=np.uint8)
+            back_temp = np.zeros((self.model.getX(), self.model.getY(), 3), 
+                                 dtype=np.uint8)
             blend = reduce(composition, 
                            self.model.axial_rgba_list(idx),
                            back_temp)
@@ -599,8 +616,7 @@ class AxialImageLabel(ImageLabel3d):
         pm = QPixmap.fromImage(self.image)
         self.pm = pm.scaled(pm.size() * self.model.get_scale_factor('orth') * 
                             self._expanding_factor)
-        if not self.pic_src_point:
-            self.pic_src_point = self.center_src_point()
+        self.pic_src_point = self.center_src_point()
         self.voxels_painter.drawPixmap(self.pic_src_point[0],
                                        self.pic_src_point[1],
                                        self.pm)
@@ -614,7 +630,7 @@ class AxialImageLabel(ImageLabel3d):
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.holder.get_coord()
             horizon_src = (0, current_pos[1] * scale + self.pic_src_point[1])
-            horizon_targ = (self._rect_size * self._expanding_factor,
+            horizon_targ = (self.size().width(),
                             current_pos[1] * scale + self.pic_src_point[1])
             self.voxels_painter.setPen(QColor(0, 255, 0, 255))
             self.voxels_painter.drawLine(horizon_src[0],
@@ -623,7 +639,7 @@ class AxialImageLabel(ImageLabel3d):
                                          horizon_targ[1])
             vertical_src = (current_pos[0] * scale + self.pic_src_point[0], 0)
             vertical_targ = (current_pos[0] * scale + self.pic_src_point[0],
-                             self._rect_size * self._expanding_factor)
+                             self.size().height())
             self.voxels_painter.drawLine(vertical_src[0],
                                          vertical_src[1],
                                          vertical_targ[0],
@@ -767,6 +783,15 @@ class CoronalImageLabel(ImageLabel3d):
     ImageLabel in coronal view.
 
     """
+    def get_expanding_size(self):
+        """
+        Compute a proper expanding size used to display
+
+        """
+        w_times = float(self.size().width()) / self.model.getY()
+        h_times = float(self.size().height()) / self.model.getZ()
+        return np.fix(np.min([w_times, h_times]))
+
     def paintEvent(self, e):
         """
         Reimplement paintEvent.
@@ -775,9 +800,11 @@ class CoronalImageLabel(ImageLabel3d):
         self.is_painting = True
         self.voxels_painter = QPainter()
         self.voxels_painter.begin(self)
+        self._expanding_factor = self.holder.get_expanding_factor()
         if not self.image or not self.drawing:
             idx = self.holder.get_coord()[1]
-            back_temp = np.zeros((91, 91, 3), dtype=np.uint8)
+            back_temp = np.zeros((self.model.getZ(), self.model.getY(), 3), 
+                                 dtype=np.uint8)
             blend = reduce(composition, 
                            self.model.coronal_rgba_list(idx),
                            back_temp)
@@ -792,8 +819,7 @@ class CoronalImageLabel(ImageLabel3d):
         pm = QPixmap.fromImage(self.image)
         self.pm = pm.scaled(pm.size() * self.model.get_scale_factor('orth') *
                             self._expanding_factor)
-        if not self.pic_src_point:
-            self.pic_src_point = self.center_src_point()
+        self.pic_src_point = self.center_src_point()
         self.voxels_painter.drawPixmap(self.pic_src_point[0],
                                        self.pic_src_point[1],
                                        self.pm)
@@ -806,9 +832,11 @@ class CoronalImageLabel(ImageLabel3d):
         if self.display_crosshair:
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.holder.get_coord()
-            horizon_src = (0, (90-current_pos[2])*scale+self.pic_src_point[1])
-            horizon_targ = (self._rect_size * self._expanding_factor,
-                            (90-current_pos[2]) * scale + self.pic_src_point[1])
+            horizon_src = (0, (self.model.getZ() - 1 - current_pos[2]) * \
+                              scale + self.pic_src_point[1])
+            horizon_targ = (self.size().width(),
+                            (self.model.getZ() - 1 - current_pos[2]) * \
+                             scale + self.pic_src_point[1])
             self.voxels_painter.setPen(QColor(0, 255, 0, 255))
             self.voxels_painter.drawLine(horizon_src[0],
                                          horizon_src[1],
@@ -816,7 +844,7 @@ class CoronalImageLabel(ImageLabel3d):
                                          horizon_targ[1])
             vertical_src = (current_pos[0] * scale + self.pic_src_point[0], 0)
             vertical_targ = (current_pos[0] * scale + self.pic_src_point[0],
-                             self._rect_size * self._expanding_factor)
+                             self.size().height())
             self.voxels_painter.drawLine(vertical_src[0],
                                          vertical_src[1],
                                          vertical_targ[0],

@@ -5,12 +5,13 @@ in orthographic style.
 
 """
 
+import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from imagelabel import (SagittalImageLabel, AxialImageLabel, CoronalImageLabel)
 
-class OrthView(QScrollArea):
+class OrthView(QWidget):
     """
     Implementation a widget for image display in a orthographic style.
 
@@ -31,8 +32,12 @@ class OrthView(QScrollArea):
         self._saglabel = SagittalImageLabel(model, draw_settings, self)
         self._axilabel = AxialImageLabel(model, draw_settings, self)
         self._corlabel = CoronalImageLabel(model, draw_settings, self)
+
         # current position of cursor
         self._current_pos = self._model.get_current_pos()
+        
+        # get expanding factor
+        self.set_expanding_factor()
 
         # set label layout
         layout = QGridLayout()
@@ -42,10 +47,7 @@ class OrthView(QScrollArea):
         layout.addWidget(self._axilabel, 1, 0)
 
         # add display widget
-        view_widget = QWidget()
-        view_widget.setLayout(layout)
-        #self.setLayout(layout)
-        self.setWidget(view_widget)
+        self.setLayout(layout)
         self.setBackgroundRole(QPalette.Dark)
 
         self._type = 'orth'
@@ -58,6 +60,15 @@ class OrthView(QScrollArea):
         self.voxels = set()
 
         self.set_label_mouse_tracking(True)
+
+    def set_expanding_factor(self):
+        self._expanding_factor = np.min([self._corlabel.get_expanding_size(),
+                                         self._saglabel.get_expanding_size(),
+                                         self._axilabel.get_expanding_size()])
+        self._expanding_factor += 1
+
+    def get_expanding_factor(self):
+        return self._expanding_factor
 
     def display_type(self):
         return self._type
@@ -126,4 +137,12 @@ class OrthView(QScrollArea):
         self._saglabel.pic_src_point = None
         self._axilabel.pic_src_point = None
         self._corlabel.pic_src_point = None
+        self.repaint()
+
+    def resizeEvent(self, e):
+        """
+        Reimplement the resize event.
+
+        """
+        self.set_expanding_factor()
         self.repaint()

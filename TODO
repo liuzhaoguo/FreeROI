@@ -4,12 +4,14 @@ TO DO LIST
 1. The cursor could be clicked and `moved` in OrthView to select different 
    slice dynamically.    -- HLJ (Complete!)
 2. Link the OrthView to the ROI selector.     -- HLJ (Complete!)
-3. Add Analyses module (descriptive statistic for ROI).
+3. Label size in OrthView could change dynamically to fit the size of the
+   window.    --HLJ (Complete!)
 4. Slice number in GridView should change dynamically to fit the width of 
    the ImageView widget.
-5. Coordinate panel could be used to select a specified position.
-6. Add Region Grow Algorithm.
-7. Add regular ROI generation.
+5. Add Analyses module (descriptive statistic for ROI).
+6. Coordinate panel could be used to select a specified position.
+7. Add Region Grow Algorithm.
+8. Add regular ROI generation.
 
 All features above could be added `smoothly`.
 ---------------------------------------------------------------------------
