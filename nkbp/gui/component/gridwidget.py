@@ -43,16 +43,8 @@ class GridView(QScrollArea):
         # imagelabel instances
         self.image_labels = [ImageLabel(model, draw_settings, n_slice, self) for
                              n_slice in xrange(model.getZ())]
-        layout = QGridLayout()
-        layout.setSpacing(5)
-        for slice, image in enumerate(self.image_labels):
-            row, col = slice / self._row_count, slice % self._row_count
-            layout.addWidget(image, row, col)
-        view_widget = QWidget()
-        view_widget.setLayout(layout)
-        self.setWidget(view_widget)
-        self.setBackgroundRole(QPalette.Dark)
-        self.layout = layout
+        self.update_row_count()
+        self.update_layout()
         self.set_label_mouse_tracking(True)
 
         self._type = 'grid'
@@ -68,6 +60,18 @@ class GridView(QScrollArea):
             self.verticalScrollBar().setValue(
                     self._vertical_scrollbar_position)
 
+    def update_layout(self):
+        layout = QGridLayout()
+        layout.setSpacing(5)
+        for slice, image in enumerate(self.image_labels):
+            row, col = slice / self._row_count, slice % self._row_count
+            layout.addWidget(image, row, col)
+        view_widget = QWidget()
+        view_widget.setLayout(layout)
+        self.setWidget(view_widget)
+        self.setBackgroundRole(QPalette.Dark)
+        self.layout = layout
+        
     def display_type(self):
         return self._type
 
@@ -88,6 +92,13 @@ class GridView(QScrollArea):
         for label in self.image_labels:
             label.setMouseTracking(t)
 
+    def update_row_count(self, twidth=None):
+        if twidth is None:
+            twidth = self.size().width()
+        img_label_width = self.image_labels[0].size().width()
+        row_count = twidth / img_label_width
+        self._row_count = row_count
+
     def resize_item(self):
         """
         Resize images function.
@@ -95,11 +106,17 @@ class GridView(QScrollArea):
         """
         for image in self.image_labels:
             self.layout.removeWidget(image)
-        for image in self.image_labels:
-            self.layout.addWidget(image)
-        view_widget = QWidget()
-        view_widget.setLayout(self.layout)
-        self.setWidget(view_widget)
+        self.update_row_count(self.size().width())
+        self.update_layout()
+        #for image in self.image_labels:
+            #self.layout.addWidget(image)
+        #view_widget = QWidget()
+        #view_widget.setLayout(self.layout)
+        #self.setWidget(view_widget)
+
+    def resizeEvent(self, e):
+        self.update_row_count(e.size().width())
+        self.update_layout()
         
     def setModel(self, model):
         """

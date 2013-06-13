@@ -7,7 +7,7 @@ TO DO LIST
 3. Label size in OrthView could change dynamically to fit the size of the
    window.    --HLJ (Complete!)
 4. Slice number in GridView should change dynamically to fit the width of 
-   the ImageView widget.
+   the ImageView widget.                  -- YZT (Complete!)
 5. Add Analyses module (descriptive statistic for ROI).
 6. Coordinate panel could be used to select a specified position.
 7. Add Region Grow Algorithm.
