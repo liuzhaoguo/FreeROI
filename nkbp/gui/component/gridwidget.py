@@ -40,6 +40,7 @@ class GridView(QScrollArea):
         # current cursor position
         self._current_pos = self._model.get_current_pos()
 
+        #self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # imagelabel instances
         self.image_labels = [ImageLabel(model, draw_settings, n_slice, self) for
                              n_slice in xrange(model.getZ())]
@@ -96,7 +97,9 @@ class GridView(QScrollArea):
         if twidth is None:
             twidth = self.size().width()
         img_label_width = self.image_labels[0].size().width()
-        row_count = twidth / img_label_width
+        row_count = twidth // (img_label_width+7)
+        if row_count <= 0:
+            row_count=1
         self._row_count = row_count
 
     def resize_item(self):
