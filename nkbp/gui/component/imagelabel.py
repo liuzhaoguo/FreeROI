@@ -400,6 +400,7 @@ class SagittalImageLabel(ImageLabel3d):
             self.image = image
         
         # draw black background
+        self.background = self.make_background()
         pm = QPixmap.fromImage(self.background)
         self.voxels_painter.drawPixmap(0, 0, pm)
         
@@ -609,6 +610,7 @@ class AxialImageLabel(ImageLabel3d):
             self.image = image
 
         # draw black backgroud
+        self.background = self.make_background()
         pm = QPixmap.fromImage(self.background)
         self.voxels_painter.drawPixmap(0, 0, pm)
 
@@ -812,6 +814,7 @@ class CoronalImageLabel(ImageLabel3d):
             self.image = image
 
         # draw black background
+        self.background = self.make_background()
         pm = QPixmap.fromImage(self.background)
         self.voxels_painter.drawPixmap(0, 0, pm)
 
