@@ -166,7 +166,7 @@ class BpMainWindow(QMainWindow):
                                              self.tr("&Add volume"), self)
         self._actions['add_image'].setShortcut(self.tr("Ctrl+A"))
         self._actions['add_image'].triggered.connect(self._add_image)
-        self._actions['add_image'].setEnabled(False)
+        self._actions['add_image'].setEnabled(True)
 
         # Remove an image
         self._actions['remove_image'] = QAction(QIcon(os.path.join(
@@ -527,7 +527,7 @@ class BpMainWindow(QMainWindow):
 
             # change button status
             self._actions['add_template'].setEnabled(False)
-            self._actions['add_image'].setEnabled(True)
+            #self._actions['add_image'].setEnabled(True)
             self._actions['save_image'].setEnabled(True)
             self._actions['ld_lbl'].setEnabled(True)
             self._actions['ld_glbl'].setEnabled(True)
@@ -680,7 +680,7 @@ class BpMainWindow(QMainWindow):
         self._set_scale_factor(self.default_grid_scale_factor)
         self.removeToolBar(self._toolbar)
         self._actions['add_template'].setEnabled(True)
-        self._actions['add_image'].setEnabled(False)
+        #self._actions['add_image'].setEnabled(True)
         self._actions['remove_image'].setEnabled(False)
         self._actions['new_image'].setEnabled(False)
         self._actions['save_image'].setEnabled(False)

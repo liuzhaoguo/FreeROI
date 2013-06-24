@@ -77,7 +77,7 @@ def main():
     temp_path = temp_path.split('/')
     temp_path.pop()
     root_dir = '/'.join(temp_path)
-    template_file = os.path.join(root_dir, 'pybp', 'data', 'standard',
+    template_file = os.path.join(root_dir, 'nkbp', 'data', 'standard',
                                  'MNI152_T1_2mm_brain.nii.gz')
 
     if not os.path.exists(args.srcdir_file):
