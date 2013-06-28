@@ -415,56 +415,56 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addSeparator() 
         self._toolbar.addWidget(self._spinbox)
 
-#add by dang begin 
-        # initialize cursor coord&value widgets
+        ##add by dang begin 
+        ## initialize cursor coord&value widgets
        
-        self._toolbar.addSeparator()
-        coord_x_label = QLabel('x: ')
-        self._coord_x = QLineEdit()
-        self._coord_x.setFixedWidth(30)
-        self._coord_x.setReadOnly(True)
-        coord_y_label = QLabel('y: ')
-        self._coord_y = QLineEdit()
-        self._coord_y.setFixedWidth(30)
-        self._coord_y.setReadOnly(True)
-        coord_z_label = QLabel('z: ')
-        self._coord_z = QLineEdit()
-        self._coord_z.setFixedWidth(30)
-        self._coord_z.setReadOnly(True)
-        
-        coord_value_label = QLabel('value:')
-        self._coord_value = QLineEdit()
-        self._coord_value.setFixedWidth(50)
-        self._coord_value.setReadOnly(True)
-        coord_label_label = QLabel('label:')
-        self._coord_label = QLineEdit()
-        self._coord_label.setFixedWidth(80)
-        self._coord_label.setReadOnly(True)
-        
-        self._toolbar.addWidget(coord_label_label)
-        self._toolbar.addWidget(self._coord_label)
-        self._toolbar.addWidget(coord_value_label)
-        self._toolbar.addWidget(self._coord_value)
-        
-        self._toolbar.addSeparator()
-        self._toolbar.addWidget(coord_x_label)
-        self._toolbar.addWidget(self._coord_x)
-        self._toolbar.addWidget(coord_y_label)
-        self._toolbar.addWidget(self._coord_y)
-        self._toolbar.addWidget(coord_z_label)
-        self._toolbar.addWidget(self._coord_z)
-        
-        self._toolbar.addSeparator()
-        
-#end
+        #self._toolbar.addSeparator()
+        #coord_x_label = QLabel('x: ')
+        #self._coord_x = QLineEdit()
+        #self._coord_x.setFixedWidth(30)
+        #self._coord_x.setReadOnly(True)
+        #coord_y_label = QLabel('y: ')
+        #self._coord_y = QLineEdit()
+        #self._coord_y.setFixedWidth(30)
+        #self._coord_y.setReadOnly(True)
+        #coord_z_label = QLabel('z: ')
+        #self._coord_z = QLineEdit()
+        #self._coord_z.setFixedWidth(30)
+        #self._coord_z.setReadOnly(True)
+        #
+        #coord_value_label = QLabel('value:')
+        #self._coord_value = QLineEdit()
+        #self._coord_value.setFixedWidth(50)
+        #self._coord_value.setReadOnly(True)
+        #coord_label_label = QLabel('label:')
+        #self._coord_label = QLineEdit()
+        #self._coord_label.setFixedWidth(80)
+        #self._coord_label.setReadOnly(True)
+        #
+        #self._toolbar.addWidget(coord_label_label)
+        #self._toolbar.addWidget(self._coord_label)
+        #self._toolbar.addWidget(coord_value_label)
+        #self._toolbar.addWidget(self._coord_value)
+        #
+        #self._toolbar.addSeparator()
+        #self._toolbar.addWidget(coord_x_label)
+        #self._toolbar.addWidget(self._coord_x)
+        #self._toolbar.addWidget(coord_y_label)
+        #self._toolbar.addWidget(self._coord_y)
+        #self._toolbar.addWidget(coord_z_label)
+        #self._toolbar.addWidget(self._coord_z)
+        #
+        #self._toolbar.addSeparator()
+        #
+        ##end
         self.addToolBar(self._toolbar)
 
-    def _update_xyzvl_toolbar(self, xyzvl):
-        self._coord_x.setText(xyzvl['x'])
-        self._coord_y.setText(str(108 - int(xyzvl['y'])))
-        self._coord_z.setText(xyzvl['z'])
-        self._coord_value.setText(xyzvl['value'])
-        self._coord_label.setText(xyzvl['label'])
+    #def _update_xyzvl_toolbar(self, xyzvl):
+    #    self._coord_x.setText(xyzvl['x'])
+    #    self._coord_y.setText(str(108 - int(xyzvl['y'])))
+    #    self._coord_z.setText(xyzvl['z'])
+    #    self._coord_value.setText(xyzvl['value'])
+    #    self._coord_label.setText(xyzvl['label'])
 
     def _set_scale_factor(self, value):
         """
@@ -936,7 +936,7 @@ class BpMainWindow(QMainWindow):
         xyzvl['value'] = str(value)
         xyzvl['label'] = self.model.get_current_value_label(int(value))
         self.list_view.update_xyzvl(xyzvl)
-        self._update_xyzvl_toolbar(xyzvl)
+        #self._update_xyzvl_toolbar(xyzvl)
 
     def _init_label_config_center(self):
         lbl_path = os.path.join(self.label_config_dir, 

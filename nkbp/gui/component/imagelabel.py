@@ -408,7 +408,8 @@ class SagittalImageLabel(ImageLabel3d):
         pm = QPixmap.fromImage(self.image)
         self.pm = pm.scaled(pm.size() * self.model.get_scale_factor('orth') * \
                             self._expanding_factor)
-        self.pic_src_point = self.center_src_point()
+        if not self.pic_src_point:
+            self.pic_src_point = self.center_src_point()
         self.voxels_painter.drawPixmap(self.pic_src_point[0],
                                        self.pic_src_point[1], 
                                        self.pm)
@@ -618,7 +619,8 @@ class AxialImageLabel(ImageLabel3d):
         pm = QPixmap.fromImage(self.image)
         self.pm = pm.scaled(pm.size() * self.model.get_scale_factor('orth') * 
                             self._expanding_factor)
-        self.pic_src_point = self.center_src_point()
+        if not self.pic_src_point:
+            self.pic_src_point = self.center_src_point()
         self.voxels_painter.drawPixmap(self.pic_src_point[0],
                                        self.pic_src_point[1],
                                        self.pm)
@@ -822,7 +824,8 @@ class CoronalImageLabel(ImageLabel3d):
         pm = QPixmap.fromImage(self.image)
         self.pm = pm.scaled(pm.size() * self.model.get_scale_factor('orth') *
                             self._expanding_factor)
-        self.pic_src_point = self.center_src_point()
+        if not self.pic_src_point:
+            self.pic_src_point = self.center_src_point()
         self.voxels_painter.drawPixmap(self.pic_src_point[0],
                                        self.pic_src_point[1],
                                        self.pm)
