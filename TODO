@@ -11,7 +11,7 @@ TO DO LIST
 5. Add Analyses module (descriptive statistic for ROI).
 6. Coordinate panel could be used to select a specified position.
 7. Add Region Grow Algorithm.
-8. Add regular ROI generation.
+8. Add regular ROI generation.     -- HLJ (Complete!)
 
 All features above could be added `smoothly`.
 ---------------------------------------------------------------------------
