@@ -4,7 +4,6 @@
 
 """
 from distutils.core import setup, Extension
-
 import sys, os.path, numpy
 import sipdistutils
 
@@ -34,7 +33,7 @@ if 'mingw32' in sys.argv:
                         os.path.dirname(PyQt4.__file__)))
     qt_libraries = [lib + '4' for lib in qt_libraries]
 
-qimageview = Extension('nkbp.algorithm.qimageview',
+qimageview = Extension('nkroi.algorithm.qimageview',
                        sources = [r'3rdparty/qimageview.sip'],
                        include_dirs = [numpy.get_include(),
                                        qt_inc_dir,
@@ -58,20 +57,28 @@ class build_ext(sipdistutils.build_ext):
                    config.pyqt_sip_flags.split() + 
                    ['-I', config.pyqt_sip_dir, source])
 
-for line in file('nkbp/version.py'):
+for line in file('nkroi/version.py'):
     if line.startswith('__version__'):
         exec line
 
-setup(name = 'nkbp',
+setup(name = 'freeroi',
       version = __version__,
-      description = 'Brain parcellation toolbox',
-      author = 'Neuroimageing Team@LiuLab',
+      description = 'Toolbox for ROI defining',
+      author = 'Lijie Huang, Zetian Yang, Guangfu Zhou and Zonglei Zhen, from Neuroinformatic Team@LiuLab',
       author_email = ['huanglijie.seal@gmail.com','zetian.yang@gmail.com'],
-      url = '',
-      download_url = '',
-      packages = ['nkbp',
-                  'nkbp.gui',
-                  'nkbp.gui.base',
-                  'nkbp.algorithm'],
+      packages = ['nkroi',
+                  'nkroi.algorithm',
+                  'nkroi.gui',
+                  'nkroi.gui.base',
+                  'nkroi.gui.component'],
+      scripts = ['bin/freeroi', 'bin/freeroi-sess']
+      data_files = [('nkroi/data/label/face-object', 
+                     'nkroi/data/label/face-object/*'),
+                    ('nkroi/data/labelconfig', 
+                     'nkroi/data/labelconfig/face.lbl'),
+                    ('nkroi/data/standard',
+                     'nkroi/data/standard/MNI152_T1_2mm_brain.nii.gz'),
+                    ('nkroi/gui/icon', 'nkroi/gui/icon/*')]
       ext_modules = [qimageview],
-      cmdclass = {'build_ext': build_ext})
+      cmdclass = {'build_ext': build_ext}
+      )

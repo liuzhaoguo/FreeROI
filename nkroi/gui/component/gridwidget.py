@@ -20,6 +20,7 @@ class GridView(QScrollArea):
     xyz_updated = pyqtSignal(list)
 
     def __init__(self, model=None, draw_settings=None, 
+                 horizontal_scrollbar_position=0,
                  vertical_srollbar_position=0, parent=None):
         """
         Initialize the widget.
@@ -28,7 +29,7 @@ class GridView(QScrollArea):
         super(GridView, self).__init__(parent)
 
         # set scroll bar position
-        #self._horizontal_scrollbar_position = horizontal_scrollbar_position
+        self._horizontal_scrollbar_position = horizontal_scrollbar_position
         self._vertical_scrollbar_position = vertical_srollbar_position
 
         # model settings
@@ -49,16 +50,16 @@ class GridView(QScrollArea):
 
         self._type = 'grid'
         
-        #if self._horizontal_scrollbar_position and \
-           #self._horizontal_scrollbar_position <= \
-                #self.horizontalScrollBar().maximum():
-            #self.horizontalScrollBar().setValue(
-                    #self._horizontal_scrollbar_position)
-        #if self._vertical_scrollbar_position and \
-           #self._vertical_scrollbar_position <= \
-                #self.verticalScrollBar().maximum():
-            #self.verticalScrollBar().setValue(
-                    #self._vertical_scrollbar_position)
+        if self._horizontal_scrollbar_position and \
+           self._horizontal_scrollbar_position <= \
+                self.horizontalScrollBar().maximum():
+            self.horizontalScrollBar().setValue(
+                    self._horizontal_scrollbar_position)
+        if self._vertical_scrollbar_position and \
+           self._vertical_scrollbar_position <= \
+                self.verticalScrollBar().maximum():
+            self.verticalScrollBar().setValue(
+                    self._vertical_scrollbar_position)
 
     def update_layout(self):
         layout = QGridLayout()
@@ -71,11 +72,6 @@ class GridView(QScrollArea):
         self.setWidget(view_widget)
         self.setBackgroundRole(QPalette.Dark)
         self.layout = layout
-        if self._vertical_scrollbar_position and \
-           self._vertical_scrollbar_position <= \
-                self.verticalScrollBar().maximum():
-            self.verticalScrollBar().setValue(
-                    self._vertical_scrollbar_position)
         
     def display_type(self):
         return self._type
@@ -83,8 +79,8 @@ class GridView(QScrollArea):
     def set_display_type(self, type):
         self._type = type
 
-    #def get_horizontal_scrollbar_position(self):
-        #return self.horizontalScrollBar().value()
+    def get_horizontal_scrollbar_position(self):
+        return self.horizontalScrollBar().value()
 
     def get_vertical_srollbar_position(self):
         return self.verticalScrollBar().value()

@@ -12,7 +12,7 @@ import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from nkbp.algorithm import array2qimage as aq
+from nkroi.algorithm import array2qimage as aq
 from labelconfig import LabelConfig
 
 
