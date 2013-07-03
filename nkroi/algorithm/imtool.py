@@ -45,3 +45,46 @@ def roi_filtering(src, ref):
     for roi in all_roi:
         result[src==roi] = roi
     return result
+
+def sphere_roi(data, x, y, z, radius, value):
+    """
+    Generate a sphere roi which center in (x, y, z).
+
+    """
+    for n_x in range(x - radius, x + radius + 1):
+        for n_y in range(y - radius, y + radius + 1):
+            for n_z in range(z - radius, z + radius + 1):
+                if n_x < 0:
+                    n_x = data.shape[0] - n_x
+                if n_y < 0:
+                    n_y = data.shape[1] - n_y
+                if n_z < 0:
+                    n_z = data.shape[2] - n_z
+                n_coord = np.array((n_x, n_y, n_z))
+                coord = np.array((x, y, z))
+                if np.linalg.norm(coord - n_coord) <= radius:
+                    data[n_x, n_y, n_z] = value
+    return data
+
+def cube_roi(data, x, y, z, radius, value):
+    """
+    Generate a cube roi which center in (x, y, z).
+
+    """
+    for n_x in range(x - radius, x + radius + 1):
+        for n_y in range(y - radius, y + radius + 1):
+            for n_z in range(z - radius, z + radius + 1):
+                if n_x >= 0 and n_y >= 0 and n_z >= 0:
+                    data[n_x, n_y, n_z] = value
+    return data
+
+def nonzero_coord(data):
+    """
+    Return all non-zero voxels' coordinate.
+
+    """
+    x, y, z = np.nonzero(data)
+    coord_list = zip(x, y, z)
+    value_list = [data[coord] for coord in coord_list]
+    return coord_list, value_list
+

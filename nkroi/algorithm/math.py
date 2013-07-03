@@ -50,7 +50,6 @@ def nearest_labeling(src, tar):
     tar[tarn] = src[srcn][min_pos]
     return tar
 
-    
 def cluster_labeling(src, conn=1):
     """
     Label different clusters in a image.

@@ -8,19 +8,14 @@ import sys
 import os
 import argparse
 
+import nkroi
 from PyQt4.QtGui import QApplication
 from nkroi.gui.main import BpMainWindow
 
 def main():
     # get labelconfig settings
-    temp_path = os.path.dirname(os.path.join(os.getcwd(), __file__))
-    temp_path = temp_path.split('/')
-    temp_path.pop()
-    temp_path.append('nkroi')
-    temp_path.append('data')
-    temp_path = '/'.join(temp_path)
-    #print temp_path
-    label_config_dir = os.path.join(temp_path, 'labelconfig')
+    temp_path = os.path.dirname(nkroi.__file__)
+    label_config_dir = os.path.join(temp_path, 'data', 'labelconfig')
     label_config_suffix = 'lbl'
     config_file = os.listdir(label_config_dir)
     config_file = [item[0:-(len(label_config_suffix)+1)] for item in config_file

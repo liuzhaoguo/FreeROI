@@ -24,6 +24,7 @@ from component.drawsettings import PainterStatus, ViewSettings, MoveSettings
 from component.labeldialog import LabelDialog
 from component.eraserdialog import EraserDialog
 from component.watersheddialog import WatershedDialog
+from component.regularroidialog import RegularROIDialog
 from component.intersectdialog import IntersectDialog
 from component.growdialog import GrowDialog
 from component.autolabeldialog import AutoLabelDialog
@@ -166,7 +167,7 @@ class BpMainWindow(QMainWindow):
                                              self.tr("&Add volume"), self)
         self._actions['add_image'].setShortcut(self.tr("Ctrl+A"))
         self._actions['add_image'].triggered.connect(self._add_image)
-        self._actions['add_image'].setEnabled(True)
+        self._actions['add_image'].setEnabled(False)
 
         # Remove an image
         self._actions['remove_image'] = QAction(QIcon(os.path.join(
@@ -303,6 +304,13 @@ class BpMainWindow(QMainWindow):
                                         self.tr("Redo"), self)
         self._actions['redo'].triggered.connect(self._redo)
         
+        # sphere and cube roi
+        self._actions['regular_roi'] = QAction(QIcon(os.path.join(
+                                    self._icon_dir, 'sphere_and_cube.png')),
+                                    self.tr("Regular ROI"), self)
+        self._actions['regular_roi'].triggered.connect(self._regular_roi)
+        self._actions['regular_roi'].setEnabled(False)
+
         # Intersect
         self._actions['intersect'] = QAction(QIcon(os.path.join(
                                              self._icon_dir, 'intersect.png')),
@@ -403,6 +411,7 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['redo'])
         # Add automatic tools
         self._toolbar.addSeparator()
+        self._toolbar.addAction(self._actions['regular_roi'])
         self._toolbar.addAction(self._actions['intersect'])
         self._toolbar.addAction(self._actions['open'])
         self._toolbar.addAction(self._actions['lmax'])
@@ -527,7 +536,7 @@ class BpMainWindow(QMainWindow):
 
             # change button status
             self._actions['add_template'].setEnabled(False)
-            #self._actions['add_image'].setEnabled(True)
+            self._actions['add_image'].setEnabled(True)
             self._actions['save_image'].setEnabled(True)
             self._actions['ld_lbl'].setEnabled(True)
             self._actions['ld_glbl'].setEnabled(True)
@@ -593,6 +602,7 @@ class BpMainWindow(QMainWindow):
             self._actions['auto_label'].setEnabled(True)
             self._actions['grow'].setEnabled(True)
             self._actions['open'].setEnabled(True)
+            self._actions['regular_roi'].setEnabled(True)
             self._actions['lmax'].setEnabled(True)
             self._actions['roifilter'].setEnabled(True)
             self._actions['roimerge'].setEnabled(True)
@@ -616,6 +626,7 @@ class BpMainWindow(QMainWindow):
         # change button status
         self._actions['remove_image'].setEnabled(True)
         self._actions['intersect'].setEnabled(True)
+        self._actions['regular_roi'].setEnabled(True)
         self._actions['grow'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
         self._actions['open'].setEnabled(True)
@@ -643,6 +654,7 @@ class BpMainWindow(QMainWindow):
         if self.model.rowCount() == 1:
             self._actions['remove_image'].setEnabled(False)
             self._actions['intersect'].setEnabled(False)
+            self._actions['regular_roi'].setEnabled(False)
             self._actions['grow'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
             self._actions['open'].setEnabled(False)
@@ -680,7 +692,7 @@ class BpMainWindow(QMainWindow):
         self._set_scale_factor(self.default_grid_scale_factor)
         self.removeToolBar(self._toolbar)
         self._actions['add_template'].setEnabled(True)
-        #self._actions['add_image'].setEnabled(True)
+        self._actions['add_image'].setEnabled(False)
         self._actions['remove_image'].setEnabled(False)
         self._actions['new_image'].setEnabled(False)
         self._actions['save_image'].setEnabled(False)
@@ -688,6 +700,7 @@ class BpMainWindow(QMainWindow):
         self._actions['ld_lbl'].setEnabled(False)
         self._actions['close'].setEnabled(False)
         self._actions['intersect'].setEnabled(False)
+        self._actions['regular_roi'].setEnabled(False)
         self._actions['grow'].setEnabled(False)
         self._actions['auto_label'].setEnabled(False)
         self._actions['watershed'].setEnabled(False)
@@ -733,6 +746,7 @@ class BpMainWindow(QMainWindow):
         self.view_menu.addAction(self._actions['original_view'])
 
         self.tool_menu = self.menuBar().addMenu(self.tr("Tools"))
+        self.tool_menu.addAction(self._actions['regular_roi'])
         self.tool_menu.addAction(self._actions['intersect'])
         self.tool_menu.addAction(self._actions['grow'])
         self.tool_menu.addAction(self._actions['auto_label'])
@@ -865,6 +879,11 @@ class BpMainWindow(QMainWindow):
     def _watershed(self):
         watershed_dialog = WatershedDialog(self.model, self)
         watershed_dialog.exec_()
+
+    def _regular_roi(self):
+        regular_roi_dialog = RegularROIDialog(self.model, self)
+        regular_roi_dialog.exec_()
+
 
     def _repaint_slices(self):
         self.model.update_current_rgba()

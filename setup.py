@@ -71,14 +71,11 @@ setup(name = 'freeroi',
                   'nkroi.gui',
                   'nkroi.gui.base',
                   'nkroi.gui.component'],
-      scripts = ['bin/freeroi', 'bin/freeroi-sess']
-      data_files = [('nkroi/data/label/face-object', 
-                     'nkroi/data/label/face-object/*'),
-                    ('nkroi/data/labelconfig', 
-                     'nkroi/data/labelconfig/face.lbl'),
-                    ('nkroi/data/standard',
-                     'nkroi/data/standard/MNI152_T1_2mm_brain.nii.gz'),
-                    ('nkroi/gui/icon', 'nkroi/gui/icon/*')]
+      scripts = ['bin/freeroi', 'bin/freeroi-sess'],
+      package_data = {'nkroi':['data/label/face-object/*', 
+                               'data/labelconfig/face.lbl',
+                               'data/standard/MNI152_T1_2mm_brain.nii.gz',
+                               'gui/icon/*']},
       ext_modules = [qimageview],
       cmdclass = {'build_ext': build_ext}
       )
