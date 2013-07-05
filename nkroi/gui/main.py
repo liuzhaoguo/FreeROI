@@ -1067,7 +1067,7 @@ class BpMainWindow(QMainWindow):
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('grid'))
         self.image_view = GridView(self.model, self.painter_status,
-                self._gridview_horizontal_scrollbar_position,
+                #self._gridview_horizontal_scrollbar_position,
                 self._gridview_vertical_scrollbar_position)
         self.centralWidget().layout().addWidget(self.image_view)
         self.image_view.xyz_updated.connect(self._update_xyzvl)
@@ -1082,8 +1082,8 @@ class BpMainWindow(QMainWindow):
         self._actions['hand'].setEnabled(True)
         self._actions['cursor'].trigger()
 
-        self._gridview_horizontal_scrollbar_position = \
-            self.image_view.get_horizontal_scrollbar_position()
+        #self._gridview_horizontal_scrollbar_position = \
+            #self.image_view.get_horizontal_scrollbar_position()
         self._gridview_vertical_scrollbar_position = \
             self.image_view.get_vertical_srollbar_position()
         self.centralWidget().layout().removeWidget(self.image_view)
