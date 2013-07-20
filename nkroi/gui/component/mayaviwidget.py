@@ -58,10 +58,9 @@ class Visualization(HasTraits):
         self.ipwZ = mlab.pipeline.image_plane_widget(src,plane_orientation='z_axes',colormap='black-white',slice_index=50)
         self.ipwZ.ipw.restrict_plane_to_volume=False
 
-        # self.scalarCutPlane=mlab.pipeline.scalar_cut_plane(src,plane_orientation='z_axes',colormap='hot')
-        # self.ipwX.ipw.on_trait_change(self.ipw_index_changed)
-        # self.ipwY.ipw.on_trait_change(self.ipw_index_changed)
-        # self.ipwZ.ipw.on_trait_change(self.ipw_index_changed)
+
+    view = View(Item('scene', editor=SceneEditor(scene_class=Scene),height=250, width=300, show_label=False),
+                resizable=True)
 
 
 
