@@ -8,6 +8,7 @@ from PyQt4.QtGui import *
 
 import numpy as np
 from nkroi.algorithm import imtool
+from scipy.ndimage import morphology
 
 class GreydilationDialog(QDialog):
     """
@@ -41,10 +42,10 @@ class GreydilationDialog(QDialog):
 
         size_label = QLabel("Size")
         self.size_combo = QComboBox()
-        self.size_combo.addItem("3x3")
-        self.size_combo.addItem("5x5")
-        self.size_combo.addItem("7x7")
-        self.size_combo.addItem("9x9")
+        self.size_combo.addItem("3x3x3")
+        self.size_combo.addItem("5x5x5")
+        self.size_combo.addItem("7x7x7")
+        self.size_combo.addItem("9x9x9")
         mode_label = QLabel("mode")
         self.mode_combo = QComboBox()
         self.mode_combo.addItem("reflect")
@@ -101,7 +102,7 @@ class GreydilationDialog(QDialog):
     def _grey_dilation(self):
         vol_name = str(self.out_edit.text())
         num = self.size_combo.currentIndex() + 3
-        size = (num,num)
+        size = (num,num,num)
         mode = self.mode_combo.currentText()
         cval = self.cval_edit.text()
 
@@ -123,7 +124,7 @@ class GreydilationDialog(QDialog):
         source_data = self._model.data(self._model.index(source_row),
                                        Qt.UserRole + 5)
 
-        new_vol = imtool.grey_dilation_3D(source_data,size,mode,cval)
+        new_vol = morphology.grey_dilation(source_data,size=size,mode=mode,cval=cval)
         self._model.addItem(new_vol,
                             None,
                             vol_name,

@@ -7,6 +7,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import numpy as np
+from scipy.ndimage import morphology
 from nkroi.algorithm import imtool
 
 class BinaryerosionDialog(QDialog):
@@ -40,10 +41,10 @@ class BinaryerosionDialog(QDialog):
 
         structure_label = QLabel("Structure")
         self.structure_combo = QComboBox()
-        self.structure_combo.addItem("3x3")
-        self.structure_combo.addItem("5x5")
-        self.structure_combo.addItem("7x7")
-        self.structure_combo.addItem("9x9")
+        self.structure_combo.addItem("3x3x3")
+        self.structure_combo.addItem("5x5x5")
+        self.structure_combo.addItem("7x7x7")
+        self.structure_combo.addItem("9x9x9")
         out_label = QLabel("Output volume name")
         self.out_edit = QLineEdit()
         
@@ -83,7 +84,7 @@ class BinaryerosionDialog(QDialog):
     def _binary_erosion(self):
         vol_name = str(self.out_edit.text())
         num = self.structure_combo.currentIndex() + 3
-        self.structure_array = np.ones((num,num), dtype=np.int)
+        self.structure_array = np.ones((num,num,num), dtype=np.int)
 
         if not vol_name:
             self.out_edit.setFocus()
@@ -93,8 +94,8 @@ class BinaryerosionDialog(QDialog):
         source_data = self._model.data(self._model.index(source_row),
                                        Qt.UserRole + 5)
 
-        binary_vol = imtool.binaryzation(source_data, 5050)
-        new_vol = imtool.binary_erosion_3D(binary_vol,self.structure_array,1,0)
+        binary_vol = imtool.binaryzation(source_data, (source_data.max()+source_data.min())/2)
+        new_vol = morphology.binary_erosion(binary_vol, structure=self.structure_array)
         self._model.addItem(new_vol,
                             None,
                             vol_name,

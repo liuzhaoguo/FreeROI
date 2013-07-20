@@ -143,13 +143,21 @@ class LayerView(QWidget):
         coord_label_label = QLabel('label:')
         self._coord_label = QLineEdit()
         self._coord_label.setReadOnly(True)
-        
+
+        self.data_select_combo = QComboBox()
+        self.data_select_combo.addItem('3D Volume')
+        self.data_select_combo.addItem('4D Volume')
+        self.volume_index_spinbox = QSpinBox()
+        self.volume_index_spinbox.setValue(0)
+
         glayout = QGridLayout()
         glayout.addLayout(xyz_layout,0,0,1,6)    
         glayout.addWidget(coord_value_label,1,0)
         glayout.addWidget(self._coord_value,1,1,1,5)
         glayout.addWidget(coord_label_label,2,0)
         glayout.addWidget(self._coord_label,2,1,1,5)
+        glayout.addWidget(self.data_select_combo,3,0)
+        glayout.addWidget(self.volume_index_spinbox,3,1,1,5)
        
         self._cursor_info_panel = QGroupBox('Cursor')
         self._cursor_info_panel.setLayout(glayout)

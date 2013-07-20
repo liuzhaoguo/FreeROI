@@ -6,6 +6,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 import numpy as np
+from scipy.ndimage import morphology
 from nkroi.algorithm import imtool
 
 class BinarydilationDialog(QDialog):
@@ -39,10 +40,10 @@ class BinarydilationDialog(QDialog):
 
         structure_label = QLabel("Structure")
         self.structure_combo = QComboBox()
-        self.structure_combo.addItem("3x3")
-        self.structure_combo.addItem("5x5")
-        self.structure_combo.addItem("7x7")
-        self.structure_combo.addItem("9x9")
+        self.structure_combo.addItem("3x3x3")
+        self.structure_combo.addItem("5x5x5")
+        self.structure_combo.addItem("7x7x7")
+        self.structure_combo.addItem("9x9x9")
         # origin_label = QLabel("Origin")
         # self.origin_edit = QLineEdit()
         # self.origin_edit.setText('0')
@@ -89,7 +90,7 @@ class BinarydilationDialog(QDialog):
     def _binary_dilation(self):
         vol_name = str(self.out_edit.text())
         num = self.structure_combo.currentIndex() + 3
-        self.structure_array = np.ones((num,num), dtype=np.int)
+        self.structure_array = np.ones((num,num,num), dtype=np.int)
         # self.orgin = self.origin_edit.text()
 
         if not vol_name:
@@ -100,8 +101,8 @@ class BinarydilationDialog(QDialog):
         source_data = self._model.data(self._model.index(source_row),
                                        Qt.UserRole + 5)
 
-        binary_vol = imtool.binaryzation(source_data, 5050)
-        new_vol = imtool.binary_dilation_3D(binary_vol,self.structure_array,1,0)
+        binary_vol = imtool.binaryzation(source_data, (source_data.max()+source_data.min())/2)
+        new_vol = morphology.binary_dilation(binary_vol,structure=self.structure_array,border_value=1)
         self._model.addItem(new_vol,
                             None,
                             vol_name,

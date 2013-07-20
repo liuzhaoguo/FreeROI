@@ -10,7 +10,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from imagelabel import (SagittalImageLabel, AxialImageLabel, CoronalImageLabel)
-from mayaviwidget import *
 
 class OrthView(QWidget):
     """
@@ -34,8 +33,6 @@ class OrthView(QWidget):
         self._axilabel = AxialImageLabel(model, draw_settings, self)
         self._corlabel = CoronalImageLabel(model, draw_settings, self)
 
-        self._mayaviwidget = Visualization().edit_traits().control
-
         # current position of cursor
         self._current_pos = self._model.get_current_pos()
         
@@ -48,7 +45,6 @@ class OrthView(QWidget):
         layout.addWidget(self._corlabel, 0, 0)
         layout.addWidget(self._saglabel, 0, 1)
         layout.addWidget(self._axilabel, 1, 0)
-        layout.addWidget(self._mayaviwidget, 1, 1)
 
         # add display widget
         self.setLayout(layout)
@@ -121,8 +117,6 @@ class OrthView(QWidget):
         self._current_pos = new_coord
         self._model.set_current_pos(new_coord)
         self.repaint()
-        #print '------------------------------------'
-        #print new_coord
 
     def repaint(self):
         """

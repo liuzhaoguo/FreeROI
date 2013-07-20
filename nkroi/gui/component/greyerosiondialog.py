@@ -8,6 +8,7 @@ from PyQt4.QtGui import *
 
 import numpy as np
 from nkroi.algorithm import imtool
+from scipy.ndimage import morphology
 
 class GreyerosionDialog(QDialog):
     """
@@ -101,7 +102,7 @@ class GreyerosionDialog(QDialog):
     def _grey_erosion(self):
         vol_name = str(self.out_edit.text())
         num = self.size_combo.currentIndex() + 3
-        size = (num,num)
+        size = (num, num, num)
         mode = self.mode_combo.currentText()
         cval = self.cval_edit.text()
 
@@ -124,7 +125,7 @@ class GreyerosionDialog(QDialog):
         source_data = self._model.data(self._model.index(source_row),
                                        Qt.UserRole + 5)
 
-        new_vol = imtool.grey_erosion_3D(source_data,size,mode,cval)
+        new_vol = morphology.grey_erosion(source_data,size=size,mode=mode,cval=cval)
         self._model.addItem(new_vol,
                             None,
                             vol_name,
