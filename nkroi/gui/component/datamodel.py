@@ -99,7 +99,7 @@ class VolumeListModel(QAbstractListModel):
         elif role == Qt.UserRole + 8:
             return self._data[row].get_lthr()
 
-        return QVariant()
+        return None
 
     def setData(self, index, value, role):
         """
@@ -120,8 +120,8 @@ class VolumeListModel(QAbstractListModel):
             else:
                 return False
         elif role == Qt.CheckStateRole:
-            if not self._data[row].is_visible() == value.toBool():
-                self._data[row].set_visible(value.toBool())
+            if not self._data[row].is_visible() == bool(value):
+                self._data[row].set_visible(bool(value))
             else:
                 return False
         elif role == Qt.UserRole:
