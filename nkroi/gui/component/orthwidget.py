@@ -117,6 +117,8 @@ class OrthView(QWidget):
         self._current_pos = new_coord
         self._model.set_current_pos(new_coord)
         self.repaint()
+        #print '------------------------------------'
+        #print new_coord
 
     def repaint(self):
         """

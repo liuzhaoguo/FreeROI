@@ -1,0 +1,470 @@
+\chapter{Development}
+\section{BP Design or Refactor}
+\begin{enumerate}
+ \item 目标
+\begin{enumerate}
+    \item 好的框架：易读、易写、易扩展、易维护。易用？
+    \item 好的标准：有效实施的基础
+    \item 好的功能：易用、多功能；
+\end{enumerate}
+
+ \item 手段
+\begin{enumerate}
+    \item 代码重构(OOP + DP)
+    \item 明确需求，回到具体应用
+\end{enumerate}
+
+ \item 标准(软件工程)
+\begin{enumerate}
+    \item Design：具体到接口参数，那些无法具体的类，可以让有经验的实施；
+    \item Coding: 编码规范（甚至变量命名），质量标准；
+    \item Testing: 测试规范，质量标准；
+    \item document: 文档规范，质量标准；
+    \item collaborating: 协作方式，角色(决策者、合作者、实施者):分工应明确到具体负责哪些类，甚至类的方法。
+\end{enumerate}
+
+
+\item BP 功能
+基于给定的单模，多模数据，先验图谱，能更加合理的定位单个被试的功能区
+\begin{enumerate}
+    \item 基于单模和多模进行手动分割，特征度量（形状、体积、相似性）；
+    \item 基于单模和多模特征进行自动分割，特征度量；
+    \item 基于已有或分割得到的Label 进行ROI分析(信号提取,mean,std)；
+    \item 基于已有或分割得到的Lable 进行连接分析(信号提取,mean,std)；
+\end{enumerate}
+
+\item Issues to resolved
+\begin{enumerate}
+    \item samples vs features:
+    \begin{enumerate}
+        \item 列为feature,每一列是一个参数；行为sample，每一行是一个voxel.
+        \item chunk: voxel vs. TR, region vs. run ,  whole volume vs session .
+    \end{enumerate}
+    \item Pipeline:
+    \begin{enumerate}
+        \item Unsupervised segmentation: segrep = segmentationReproducibility(segmentationMachine, partitioner(), reproducibilityMetric)
+        \item Supervised segmentation:   segpred = segmentationPerformance(segmentationMachine, partitioner(), predictionMetric)
+        \item segmentationReproducibility 和 cross-validation的区别？ reproducibilityMetric 和 error 的区别？partitioner ？
+        \item image segmentation vs. machine learning(clustering \& classification) vs. energy optimization：train, predict对于三者的含义
+    \end{enumerate}
+    \item Multimodality info:
+    \begin{enumerate}
+        \item 使用统计方法，隐式提取信息-clustering and classification
+        \item 定义特异函数，显式提取信息-energy function
+    \end{enumerate}
+
+     \item ID based(freesurfer annotation) vs. location based(fslview); morphology vs. statistic vs. label
+
+     \item functional region vs. functional landmark
+\end{enumerate}
+
+
+\item GUI Issues
+\begin{enumerate}
+    \item New ROI Unit
+    \item ROI operator
+    \item Automatic ROI
+\end{enumerate}
+
+\vspace{5\baselineskip}
+
+\item LTM study
+\begin{enumerate}
+    \item 使用maximization of consistency 优化ROI的意义：consistency 一致代表脑区特异么？我们更关心的问题是不同voxel的特性不一致，区分属于不同脑区的voxel。
+    \item 需要task fMRI 结果，这时还需要优化么？如果最大值不是因为图像处理产生的，那就应该直接用peak点，而不是取找其他点。因为这时最大值点的各种不一致，真正体现了variability。理论上，各种参数都应该是个概率模型，group template对应模型均值，然后每个被试是从分布中抽出，体现variability
+    \item 不同项起作用的主要是啥？ 缺少control模型，极端情况，随机初始化的效应+空间约束的作用。
+    \item 如何基于多项参数，构造区分不同voxel的模型？
+\end{enumerate}
+
+\item KXZ \& WX
+\begin{enumerate}
+    \item 基于多模态特征，确定不同脑功能区边界，即连接约束下如何进行脑区分割；
+    \item 基于多模态特征，基于被试内最小方差使用多种模态信息优化peak点，即连接约束下找典型体素；
+    \item 基于多模态特征，合并不同contrast得到的peak点，已有研究大多靠距离远近合并peak点，而没考虑其它信息；
+    \item 基于多模态特征，基于Group ROI优化单个被试ROI,精确确定ROI，即连接约束下如何进行配准；
+    \item 基于多模态特征，考察fMRI不同脑区overlap部分(如FFA and EBA)，如果这部分是平滑或者血管扩散导致，是否在更高的MRI和DTI分辨率下，可以提高定位的精度，证明不存在overlap？
+    \item 基于多模态特征，构造预测模型预测新被试脑区(终极目的)，核心问题是，构造什么样的先验图谱及如何构造：
+    \begin{equation*}
+        p(ffa|conn)  = \frac{p(conn|ffa)*p(ffa)}{\int{p(conn|ffa)*p(ffa)}}
+    \end{equation*}
+\end{enumerate}
+
+
+\item 更广范畴思考
+\begin{enumerate}
+    \item 已知连接信息，如何帮助激活区提取及检验？
+    \item 已知结构连接，如何帮助检测功能连接？
+    \item 已知激活，如何推知连接？
+    \item 如何融合连接和激活使得连接既体现同步性，又体现强度？
+\end{enumerate}
+
+
+
+\item 分工
+\begin{enumerate}
+    \item 杨泽天,黄利皆,薛大山-framework, image segmentation;
+    \item 黄利皆,杨泽天-manual segmentation;
+    \item 孔祥祯-Multimodality(DTI,rfMRI) based brain parcellation;
+    \item 王旭-Multimodality(DTI,rfMRI) based brain parcellation;
+    \item 党晓彬-Database and text analysis
+\end{enumerate}
+
+
+\item Package
+\begin{enumerate}
+    \item datasets(IO)
+    \item measures(neighbor, set or image (dis)similarity)
+    \item Algorithms(segmentation, clustering and classification)
+    \item parcel(cluster, peak and manual roi making, roi temporal and spatial statistic like anatomy toolbox)
+    \item stats( statistic for ROIs)
+    \item editor \& viewer(display image and signal)
+\end{enumerate}
+
+ \item Data model for processing
+\begin{enumerate}
+\item Raw data: MRI(thick,...),Task fMRI(activation,conn),Rest fMRI(conn), DTI(fa,conn)...;
+\item Parcel: ROI, cluster, atlas
+\item Data format: NII, other format(txt, npz) for  intermediate data(connectivity, roi feature) and attributes
+\item Attributes for input data
+        \begin{enumerate}
+            \item image info: volumedim, voxelsize, voxel
+            inchies,mask, space(native vs. MNI),rep(volume vs. surface)
+            \item conditional attributes: ca
+            \item feature attributes: fa(thickness, FA, activation)
+            \item sample attributes: sa(chunk for group, identifier for clustering)
+            \item data attributes: da(imghdr,mapper)
+        \end{enumerate}
+
+\item Attributes for output parcel:
+            \begin{enumerate}
+                \item label name, number of label,
+                \item label type(statistic vs. label,macro vs.micro, function vs. anatomy)
+                \item deriveddata,derivedmethod, derivedpara
+                \item temporal and spatial statistical information(size,volume,max,min)
+            \end{enumerate}
+\end{enumerate}
+
+ \item measures
+\begin{enumerate}
+    \item neighbor in volume and surface
+    \item set/image/surface similarity(dice...)
+\end{enumerate}
+
+ \item Algorithms
+\begin{enumerate}
+        \item Classifications(supervised classification)(Bayesian, Dictionary learning,Hierarchy model)
+        \item clustering(Ncut,GMM,Kmeans and spatial constrain version)
+        \item Image processing(image segmentation-watershed,region growing)
+        \item Elements of the Algorithms
+        \begin{enumerate}
+                    \item Measure: similarity or distance measure
+                    \item Optimization(Convex Optimization,ML,MCMC)
+                    \item Prior: sparse,Neighborhood(pymvpa/mis/neighborhood.py)
+        \end{enumerate}
+        \item Useful Information
+        \begin{enumerate}
+            \item image intensities;
+            \item global position within the brain;
+            \item position relative to neighboring brain structures;
+            \item anatomical landmarks.
+        \end{enumerate}
+\end{enumerate}
+
+ \item Editor
+\begin{enumerate}
+    \item editor
+    \item viewer(display image and signal)
+    \item data model for visualization;
+    \begin{enumerate}
+        \item image type(volume vs. surface, statistic vs. label, native vs. MNI),visibility
+    \end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+
+\section{pymvpa}
+\begin{enumerate}
+    \item base.dataset: attrdataset(class), datasetmethod
+    \item dataset.base: Dataset(container): dataset $\rightarrow$ imgdata and patata
+    \item mri.fmridataset, eventrelated.erdataset, eep.eepdataset; \_data2img,\_img2data负责数据读写, dataset 只保存 voxel indices
+    \item dataset， mapper(chinamapper,interface), node(chainnode,processing object)，classifer, measure, generator
+\end{enumerate}
+
+
+\section{pybp}
+\begin{enumerate}
+\item 两种设计
+\begin{enumerate}
+    \item 设计1： imgdata(imgparcel),surfdata(surfaceparcel), patdata(patparcel)(数据包括空间，时间，样本等多种信息使用mapper来进行添加) + dataload(imgload, txtload,surfload)负责填充三类data + datasave(imgsvae, surfsave, txtsave)
+    ----pymvpa 只有一类dataset，采用了这种方式，这个适合我们么？
+    \item 设计2： dataset(load,save 接口) $->$ imgdata,surfdata,patdata--同样可以添加mapper，由于数据多样，mapper接口易于统一么？
+\end{enumerate}
+
+\item patdata的input文件格式设计：前三列为sample 坐标x,y,z，然后提供pat的参考volume or surface，提取数据其它信息，从而避免复杂的文件格式。
+    \begin{verbatim}
+        #the data must be provided with a ref volume
+        Datadesp: connectivity/activation/dti
+        Session: session name
+        Numfeature: ddd
+        Numsample: ddd
+        Samplespace: volume or surface
+        voldims: x y z
+        voxsize  x y z
+        Coordstype: ijk or ras
+        Matrix
+        1 2 3 0.1 0.3 0.4
+        4 3 2 0.3 0.4 0.6
+    \end{verbatim}
+\end{enumerate}
+
+
+\begin{figure}
+    \caption{searchlight} \label{fig:01}
+    \begin{center}
+        \includegraphics[width= \textwidth]{figure/pymvpasearchlite.jpg}
+    \end{center}
+\end{figure}
+
+\begin{figure}
+    \caption{CV} \label{fig:02}
+    \begin{center}
+        \includegraphics[width= \textwidth]{figure/pymvparoi.jpg}
+    \end{center}
+\end{figure}
+
+
+\begin{figure}
+    \caption{CV} \label{fig:03}
+    \begin{center}
+        \includegraphics[width= \textwidth]{figure/datasetattr.jpg}
+    \end{center}
+\end{figure}
+
+\begin{figure}
+    \caption{CV} \label{fig:06}
+    \begin{center}
+        \includegraphics[width= \textwidth]{figure/pymvpapackage.jpg}
+    \end{center}
+\end{figure}
+
+
+\begin{figure}
+    \caption{CV} \label{fig:04}
+    \begin{center}
+        \includegraphics[width= \textwidth]{figure/datasetpara.jpg}
+    \end{center}
+\end{figure}
+
+
+\begin{figure}
+    \caption{CV} \label{fig:05}
+    \begin{center}
+        \includegraphics[width= \textwidth]{figure/fmridatasetcode.jpg}
+    \end{center}
+\end{figure}
+
+\newpage
+\section{Development for PyBP}
+\subsection{工具栏}
+\begin{enumerate}
+     \item File: open, save, save as
+     \item Volume Edit: create, remove, clone, union, intersect,not, xor, mask,
+     \item Preprocessing tool:smooth, sharp, filter, dilate, erosion,opening, closing
+     \item Automatic Segmentation: watershed,cluster,region grow,ncut
+     \item Manual Segmentation:针对voxel 进行操作，包括brush, pen, rubber
+     \item ROI Edit: 针对ID进行操作，包括merge, split, delete, add(point,box or sphere), label, collect
+     \item Color Scheme Edit:
+     \item ROI Statistics:
+     \item ICA 分析建议：1)以cluster进行overlap进行atlas, 2)基于ICA ROI 考察 VBM
+\end{enumerate}
+
+
+\newpage
+\subsection{ZZL}
+\begin{enumerate}
+    \item 文件操作：File->Open 改换成 File->Load volume(surface),save volume
+    \item Volume操作：New image 换成 New volume;
+    \item ROI操作：New ROI, Load ROI, Save ROI, Close ROI
+    \item Label edit, Voxel edit and ROI edit：工作时先选择对什么进行操作，然后列出对该类可能的操作。voxel edit 以voxel为单位，而ROI edit 以ROI为单位，比如add,delete ROI,name ROI
+    \item 无法调整左侧控制框和图像显示框的大小，放大整个GUI时，多出的只是空白处；
+
+    \item group label的颜色和画笔颜色一致，很难观察出，哪些是新画进去的，哪些是group label：引入different color scheme or show label outline only 可解决
+    \item 红色的label和激活图，颜色冲突，无法分清那些是激活，哪些是label：
+    \item 删除label 后，相应的label 就不在显示了，但在底层没同时删除，这会照成不一致。
+    \begin{enumerate}
+        \item 数据和对应属性一起删除;
+        \item 若已使用，给出warning,说明这个label已经被使用，无法删除；
+        \item 无论是否使用，都进行提示，说可能会引起不一致的问题，用户来保证：label color,ID,name 可以作为label color scheme 存在，从而相同的ID可以不同的名称和颜色。
+    \end{enumerate}
+    \item 编辑是对某层进行的，完成一个层的编辑，才能编辑另一层，即不同层间的编辑，应该有个更明确的边界;
+    \item 重新打开笔时，上次调整的size变回默认值1，具有记忆功能会更好些；
+
+    \item 在单层上画出的2D ROI，如何保证多层叠加在一起是连续的: dilate and erode；
+    \item add volume时，点取消，仍旧报 can not load warning,不符合用户习惯。
+    \item 三维显示的制图方式，还是重要的，只有axis显示，严重缺失方位感，比如posterior sts和anterior sts
+    \item 如果选定一个label后，只显示那个label，及和那个Label具有相邻关系的cluster，会不会有效率提高？
+    \item 刷子换图标，另外刷子状态和鼠标状态，应该有不同的显示
+    \item 左边那个列表空白太长，可考虑优化空间；坐标以一行的形式，显示在最下边会省空间。
+    \item 点中一点，然后自动得到该点所处的cluster，进而使用watershed分割这个cluster,然后删除非目标target
+    \item 刷子和橡皮的半径可以全局控制；两者应该放在同一个工具栏，这个工具栏显示label信息及工具，不需要来回切换。
+
+     \item 显示：single view, orth view, light box(sag,axis, coron)
+     \item save volume的时候，显示文件下所有Nii
+     \item intersect volume默认Out volume name
+     \item 基于voxel的intersect 和基于label的Intersect(ID based)
+     \item label editor save as
+     \item 使用解剖图谱做参考
+     \item 通过orth view 确定种子点，然后基于平面识别画ROI
+     \item 利用定出的seed作为种子点，静息识别其它脑区，进行网络分析，研究网络组织，及face脑区在全脑网络中的意义。
+     \item 3D vs 4D, plane vs orth, voxel edit vs roi edit, command vs gui
+
+    \item 流程
+    \begin{enumerate}
+          \item 读入MRI结构像，gray显示，阈限3000-8000；读入GL parcels；读入HO atlas,MGH　color显示; 读入激活图gray显示，阈限2.3-6；
+          \item 首先使用group label和激活图做交集；
+          \item 基于交集产生的new volume，依照label editor中label的顺序进行Labeling(brush and rubber):只要和label没覆盖住的激活图，都涂上Label 颜色；
+          \item 全部画完后，再和激活图进行交集；
+          \item 重复3和4,直至满意，保存结果。
+    \end{enumerate}
+
+      \item 参考信息：
+        \begin{enumerate}
+            \item MNI152 T1 and HO atlas： 提供宏观解剖位置信息;
+            \item GL parcels：提供landmark和范围参考， 而无法提供强度值；
+            \item Probabilistic map 提供了概率强度信息, 但根据经验概率值好像作用不大，而单个被试的激活值作用更大；
+            \item subject-specific activation map, 提供了单个被试激活强度信息；
+            \item 未平滑的原始数据激活曲线
+        \end{enumerate}
+
+   \item 标准：
+        \begin{enumerate}
+           \item 依据激活cluster和解剖结构的相对位置：MNI152 T1 and HO atlas；
+           \item 依据激活cluster和组功能激活的相对位置：GL parcels;
+           \item 依据激活cluster间的相对位置信息；
+           \item 连续是cluster 的必要条件，3D 空间考察cluster是否连续；若在一个GL parcels中，存在多个连续的cluster，则选择最可能的那个；
+           \item GL parcels边缘或只有部分相交的cluster，依据和其它脑区的相对位置判定，该cluster是否入选；
+           \item 确保每个被试的激活阈限统一；但可通过调整激活阈限，从最有把握的cluster中心开始选择，然后降低阈限递增添加，直至最终阈限；
+         \end{enumerate}
+
+    \item 自动ROI
+     \begin{enumerate}
+        \item 全脑自动分割，然后进行后处理(合并，遴选，labeling)；merge, split, delete, add, labeling;
+        \item 局部自动分割，然后进行后处理(合并，遴选，labeling)：需事先基于手动或自动方法，定义出目标cluster。
+        \item 自动cluster:
+     \end{enumerate}
+
+     \item 训练
+     \begin{enumerate}
+        \item subj1-subj5作为训练数据，Z threshold = 2.3；
+        \item 仅画右半球OFA，FFA，pSTS, mSTS, aSTS；
+        \item 全时画ROI，记录完成时间；
+        \item 画的时候，注意目标ROI和结构landmark,功能landmark间的关系，形成专家知识。
+     \end{enumerate}
+\end{enumerate}
+
+
+
+
+\section{To do list}
+\begin{enumerate}
+\item 重点内容
+\begin{enumerate}
+    \item  ROI creator;
+    \item  Neighor module \& Ncut(3D/4D);
+    \item  Parcellation similarity comparison module；
+    \item  Random parcellation(geometry only), functional parcellation
+    \item  Bin application: cluster, sphere or box ROI,statistical information
+\end{enumerate}
+
+\item 程序设计标准
+\begin{enumerate}
+       \item  Standard IO
+       \item  Standard toolbox and version check;
+       \item  Standard Log;
+       \item  Standard framework: parse\_args(argparse), check\_params(argparse).
+\end{enumerate}
+
+\item 杂项
+\begin{enumerate}
+    \item base,bin 整理: comment，docstring,pypy checker;
+    \item code template, unittest template;
+    \item dev.tex.
+\end{enumerate}
+\end{enumerate}
+
+\section{Design for bp.cluster}
+\begin{enumerate}
+\item 基本功能
+\begin{enumerate}
+    \item 生成cluster，给出cluster的特征信息
+    \item 特征信息包括：location, name, size, statistic(min,median,max),
+    \begin{enumerate}
+        \item location: center of gravity (in voxel or in mm)
+        \item name: index(sort in size or total value)
+        \item size: number of voxels
+        \item statistics: min median max
+    \end{enumerate}
+\end{enumerate}
+
+\item 接口定义
+\begin{enumerate}
+    \item cluster.build
+    \item cluster.peak
+    \item cluster.view
+    \item cluster.stats
+\end{enumerate}
+\end{enumerate}
+
+\section{Design of bp.roi}
+    \begin{enumerate}
+        \item roi.draw
+        \item roi.edit
+        \item roi.voxel
+        \item roi.sphere
+        \item roi.cluster
+        \item roi.review
+    \end{enumerate}
+
+\section{Design of bp.io}
+    \begin{enumerate}
+        \item read NII,volume2matrix,save NII,mask
+        \item io.table
+    \end{enumerate}
+
+\section{Design of bp.algorithms}
+    \begin{enumerate}
+        \item 尽量使用已有工具包，优先采用insert范式(svm)，然后是warp范式(glmnet)，最后是独立开发算法(hyperalignment)；
+        \item algorithms.ncut；
+        \item algorithms.transform。
+    \end{enumerate}
+
+\section{Design of bp.roianalysis}
+    \begin{enumerate}
+        \item roianalysis.model
+        \item roianalysis.extract
+        \item roianalysis.estimate
+    \end{enumerate}
+
+
+\section{GUI for manual ROI}
+\begin{enumerate}
+\item 基本环境
+    \begin{enumerate}
+        \item 以被试为单位进行编辑
+        \item 结构像、激活图、组图谱
+    \end{enumerate}
+\item 操作流程(PS可能是个好的参考)
+    \begin{enumerate}
+        \item 开始一个新的ROI，设定新ROI属性
+        \item 编辑新ROI，该ROI为激活状态
+        \item 暂停编辑该ROI，激活另一个已存在ROI进行编辑
+        \item 重复以上流程
+    \end{enumerate}
+\item 关键问题
+    \begin{enumerate}
+        \item 各种图以什么形式存在(3D vs. 4D, contour vs. filled)
+        \item 如何编辑: 自动生长，然后以此为基础手动增添(brush and rubber)
+        \item 如何方便在不同ROI间切换--同时编辑多个ROI？
+        \item 如何确保不同ROI间不产生overlap or conflict(warning or remove beforehandad)？
+    \end{enumerate}
+\end{enumerate} 

@@ -1,0 +1,82 @@
+\chapter{PyBP 使用}
+\section{PyBP 简明手册}
+\subsection{PyBP配置}
+为使用PyBP，需首先在~/.bashrc中进行如下配置：
+\begin{enumerate}
+\item 设置Python路径，以让Python可以找到PyBP：\\
+    PYBP=\~/workingdir/svn/neospearman/toolbox/pybp/tags/pybp\_latest
+    PYTHONPATH=\$PYBP:\$PYTHONPATH
+    export PYTHONPATH
+
+\item 设置系统路径，以让系统可以找到pybp和pybp-sess：\\
+    PYBPBIN=\~/workingdir/svn/neospearman/toolbox/pybp/tags/pybp\_latest/bin
+    PATH=\$PYBPBIN:\$PATH
+\end{enumerate}
+
+\subsection{规范}
+\begin{enumerate}
+    \item 激活阈限统一设定为Z=2.3；
+    \item 完成的ROI，统一保存为 \textbf{操作者姓名首字母小写}加\_labelname\_thr.nii.gz的形式,如zzl\_face\_z2.3.nii.gz；
+\end{enumerate}
+
+\subsection{流程}
+\begin{enumerate}
+    \item 制作sesspar(session parent directory)和sessid(session identifier)文件。sesspar和sessid文件名可以为任意，只要文件中保存的是session parent directory和session identifier 即可；
+    \item 通过批处理命令，启动程序：pybp-sess -df atlaspar -sf G1 -c face-object -stat zstat1.nii.gz -lt 2.3 -ht 5 -labelvol face.nii.gz -label face -o zzl\_face\_z2.3；
+    \item 使用watershed 对zstat1进行分割，得到zstat1\_ws；
+    \item 调整显示顺序，MNI置于最下层，上边依次为zstat1,zzl\_face\_z2.3,face,和zstat1\_ws；如果想只显示特定Label, 可调整face.nii.gz的colormap为single ROI模式。
+    \item 选择zstat1\_ws,为当前工作图像，并值于最上层；
+    \item 在Label Config Center选择当前要画的ROI；
+    \item 启动工具栏右上ROI toolset，并设置Target volume 为 zzl\_face\_z2.3；
+    \item 在当前工作图像上，选择和目标ROI对应的cluster；如果出现误选，可使用Deselect选项丢弃；选择完成后点击run,完成该ROI选择；
+    \item 同时显示zstat1，face.nii.gz，zzl\_face\_z2.3，检查刚画ROI是否正确，也可选择在所有ROI均完成后，统一检查；
+    \item 回到第6步，开始画另一个ROI；
+    \item 完成所有ROI后，同时显示zstat1，face.nii.gz，zzl\_face\_z2.3，逐个检查已画ROI是否合理。可以在Lightbox View和 Orth View的情况下分别检查下，确保所画ROI位置没有问题。
+\end{enumerate}
+
+\subsection{技巧}
+\begin{enumerate}
+    \item PyBP启动后，首先上下拉宽，确保label config center 里的所有label都显示出来；
+    \item 画的时候，左右对称ROI，一定要同时进行观察和选择，千万别全部画完右脑后，再去画左脑；
+    \item 判定一个watershed cluster是否属于所要画的ROI，不仅要观察其和Label交集有多大，同时要观察该cluster整体在多层上的走向；
+    \item STS 相关cluster有时较为分散，选择时注意走向，对称性等整体特征；
+    \item 对于主体大部分在白质中的cluster，不要选。但如果一个cluster既包含位置合适的灰质部分，也有白质部分，则要进行选择；
+    \item 在一个ROI(label)中，存在多个cluster时，若位置合适，且cluster间连续，则都入选；
+        如果cluster相互分离，但cluster大小差不多，也都入选；如果分离，且大小相差很大，可只选择较大的。
+    \item 若在默认watershed sigma=1时发现本应分为多个cluster的大cluster，而直接选择这个大cluster不合理。这时可以通过手动设置sigma=0来看结果是否满意，如果满意，该ROI，
+可以基于sigma=0进行选择；如果sigma=0仍不满意，则需要手动擦除，修整；
+    \item 使用Label single ROI显示模式，可使我们关注某个特定ROI，但这也意味着失去了和其它label的相对位置参考信息。当无法判定某个cluster是属于当前ROI，还是其它ROI，
+        可以把face.nii.gz以face的显示模式全部显示出来，帮助判断；
+    \item 若感觉watershed cluster全部显示比较混乱，可以通过ROI filter功能把和目标ROI相交的所有cluster给filter到一个新volume中，然后进行选择；
+    \item 使用pybp-sess时，可以通过sessid文件来控制每次要画哪些被试的ROI。调用segid命令，可以把你的sessid文件分组；
+    \item 开始选下一个ROI时，首先确保Label config center里已经移到该ROI；
+    \item 使用ROI toolset在对cluster进行labeling的时候，首先确保target volume正确，然后再进行cluster选择；
+    \item 检查时，一定要把选好的ROI，和激活图相互比较；
+    \item 心细：画时一定要观察仔细，综合考虑多方面信息，定位ROI；
+    \item 胆大：要大胆去画，相信自己的判断，别总纠结自己是否选择正确，只要尽力就好。
+\end{enumerate}
+
+
+\section{ROI信息}
+\subsection{脑区参考}
+    \begin{enumerate}
+        \item 标准结构像（MNI152）：提供宏观解剖位置和范围信息;
+        \item 组概率分区（group level parcellation）：提供功能位置和范围参考；
+        \item 组概率图（probabilistic map）： 提供了激活概率强度信息, 但根据经验概率值好像作用不大，而单个被试的激活值作用更大；
+        \item 个体激活图（subject-specific activation map）： 提供单个被试激活强度信息；
+    \end{enumerate}
+
+\subsection{脑区确定准则}
+\begin{enumerate}
+           \item 由三视图，基于解剖脑区和landmark初步定位ROI；
+           \item 由组分割脑区（group parcel），初步定位ROI;
+           \item 在初步确定ROI cluster后，不同ROI间的相对位置信息确认ROI选择正确；
+           \begin{enumerate}
+               \item 左右相应ROI基本对称；
+               \item Face系统中，OFA一般位于pFus的后斜上方，pFus位于aFus的后斜上方，而STS则大致位于pFus和aFus上方偏外侧的地方；
+               \item Object系统中，LO位于pFs后上方偏外侧的位置；
+               \item Place系统中，TOS位于皮层外，大约在RSC上方稍后偏外侧；RSC与PPA相比，稍靠内侧偏上。
+           \end{enumerate}
+\end{enumerate}
+
+

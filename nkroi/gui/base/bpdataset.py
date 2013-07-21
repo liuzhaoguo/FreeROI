@@ -15,8 +15,6 @@ from PyQt4.QtGui import *
 from nkroi.algorithm import array2qimage as aq
 from labelconfig import LabelConfig
 
-threeD_fourD_flag = False
-data = ''
 
 class DoStack(QObject):
     """
@@ -91,8 +89,6 @@ class VolumeDataset(object):
                 raise ValueError("Parameter header must be specified!")
             elif header.get_data_shape() == source.shape:
                 self._header = header
-            elif len(header.get_data_shape())-1 == len(source.shape):
-                self._header = header #added by zgf....
             else:
                 raise ValueError("Data dimension does not match.")
         else:
@@ -100,21 +96,7 @@ class VolumeDataset(object):
             # FIXME: only fit in Unix/Linux systems
             basename = os.path.basename(source.strip('/'))
             self._name = re.sub(r'(.*)\.nii(\.gz)?', r'\1', basename)
-
-            #----------------------------------zgf-----------------------------------------------------------------
-            global data,threeD_fourD_flag
-            data = img.get_data()
-            length = len(data.shape)
-            if length == 3:
-               self._data = np.rot90(data)
-               threeD_fourD_flag = False
-            elif length == 4:
-                self._data = np.rot90(data[:,:,:,0])
-                threeD_fourD_flag = True
-            else:
-                print 'error!'
-            #----------------------------------zgf-----------------------------------------------------------------
-            # self._data = np.rot90(data)
+            self._data = np.rot90(img.get_data())
             self._header = img.get_header()
 
         if view_min == None:
