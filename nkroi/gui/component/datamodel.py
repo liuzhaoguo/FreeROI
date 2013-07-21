@@ -99,7 +99,7 @@ class VolumeListModel(QAbstractListModel):
         elif role == Qt.UserRole + 8:
             return self._data[row].get_lthr()
 
-        return QVariant()
+        return None
 
     def setData(self, index, value, role):
         """
@@ -111,7 +111,8 @@ class VolumeListModel(QAbstractListModel):
 
         row = index.row()
         if role == Qt.EditRole:
-            value_str = value.toPyObject()
+            # value_str = value.toPyObject()
+            value_str = value
             if not value_str == '':
                 if not self._data[row].get_name() == value_str:
                     self._data[row].set_name(str(value_str))
@@ -120,8 +121,8 @@ class VolumeListModel(QAbstractListModel):
             else:
                 return False
         elif role == Qt.CheckStateRole:
-            if not self._data[row].is_visible() == value.toBool():
-                self._data[row].set_visible(value.toBool())
+            if not self._data[row].is_visible() == bool(value):
+                self._data[row].set_visible(bool(value))
             else:
                 return False
         elif role == Qt.UserRole:
@@ -149,6 +150,10 @@ class VolumeListModel(QAbstractListModel):
                 return False
             else:
                 self._data[row].set_roi_name([value])
+        elif role == Qt.UserRole + 5:
+            self._data[row]._data  = np.rot90(value)
+
+
 
         # Update RGBA list after setting
         self._data[row].update_rgba()     
@@ -202,7 +207,8 @@ class VolumeListModel(QAbstractListModel):
         Remove items from the list.
         
         """
-        self.beginRemoveRows(parent, row, row + count - 1)
+        print type(row),'----------------------',type(count)
+        self.beginRemoveRows(parent, row, (row + count - 1))
         for index in range(count):
             self._data.pop(row)
         self.endRemoveRows()
