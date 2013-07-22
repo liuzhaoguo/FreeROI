@@ -81,7 +81,7 @@ class BpMainWindow(QMainWindow):
         self._icon_dir = os.path.join(module_path, 'icon')
         
         # set window title
-        self.setWindowTitle('PyBP')
+        self.setWindowTitle('FreeROI')
         #self.resize(1280, 1000)
         self.center()
         # set window icon

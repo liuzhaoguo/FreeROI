@@ -21,7 +21,7 @@ class RegularROIDialog(QDialog):
         self._create_actions()
 
     def _init_gui(self):
-        self.setWindowTitle("Genearte Regular ROI")
+        self.setWindowTitle("Generate Regular ROI")
 
         radius_label = QLabel("Radius of ROI (voxel)")
         self.radius_edit = QLineEdit()
