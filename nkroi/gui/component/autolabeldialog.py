@@ -28,11 +28,11 @@ class AutoLabelDialog(QDialog):
         tar_label = QLabel("Target")
         self.tar_combo = QComboBox()
         vol_list = self._model.getItemList()
-        self.src_combo.addItems(QStringList(vol_list))
-        self.tar_combo.addItems(QStringList(vol_list))
+        self.src_combo.addItems(vol_list)
+        self.tar_combo.addItems(vol_list)
         method_label = QLabel("Method")
         self.method_combo = QComboBox()
-        self.method_combo.addItem(QString("Nearest"))
+        self.method_combo.addItem("Nearest")
         out_label = QLabel("Output")
         self.out_edit = QLineEdit()
         
@@ -66,7 +66,7 @@ class AutoLabelDialog(QDialog):
     def _auto_label(self):
         out_name = str(self.out_edit.text())
         if not out_name:
-            self.out_edit.setFoucus()
+            self.out_edit.setFocus()
             return
 
         src_row = self.src_combo.currentIndex()

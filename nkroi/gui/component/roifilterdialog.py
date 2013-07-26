@@ -33,10 +33,10 @@ class ROIFilterDialog(QDialog):
         mask_label = QLabel("Mask")
         self.mask_combo = QComboBox()
         vol_list = self._model.getItemList()
-        self.source_combo.addItems(QStringList(vol_list))
+        self.source_combo.addItems(vol_list)
         row = self._model.currentIndex().row()
         self.source_combo.setCurrentIndex(row)
-        self.mask_combo.addItems(QStringList(vol_list))
+        self.mask_combo.addItems(vol_list)
         self.mask_combo.setCurrentIndex(self.last_mask_idx)
         filter_label = QLabel("Filter")
         self.filter_combo = QComboBox()
@@ -47,7 +47,7 @@ class ROIFilterDialog(QDialog):
             roi_list = mask_config.get_label_list()
         else:
             roi_list = []
-        self.filter_combo.addItems(QStringList(roi_list))
+        self.filter_combo.addItems(roi_list)
         if roi_list:
             self.filter_combo.setCurrentIndex(current_idx.row())
 

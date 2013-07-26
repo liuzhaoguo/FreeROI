@@ -840,7 +840,11 @@ class BpMainWindow(QMainWindow):
         self._actions['original_view'].setEnabled(False)
         self._actions['roifilter'].setEnabled(False)
         self._actions['roimerge'].setEnabled(False)
-
+        self._actions['binaryzation'].setEnabled(False)
+        self._actions['binarydilation'].setEnabled(False)
+        self._actions['binaryerosion'].setEnabled(False)
+        self._actions['greydilation'].setEnabled(False)
+        self._actions['greyerosion'].setEnabled(False)
     def _about_pybp(self):
         """
         About PyBP.
