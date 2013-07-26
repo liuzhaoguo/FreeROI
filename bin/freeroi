@@ -90,8 +90,7 @@ def main():
     args = parser.parse_args()
 
     # Start GUI
-    # app = QApplication([])
-    app = QApplication.instance() #modified by zgf
+    app = QApplication([])
 
     win = BpMainWindow()
     win.show()
@@ -137,8 +136,7 @@ def main():
                         print 'Could not create volume ' + args.new_vol_names[i]
                         raise
                         sys.exit()
-    # sys.exit(app.exec_())
-    app.exec_() #modified by zgf
+    sys.exit(app.exec_())
             
 if __name__ == '__main__':
     main()
