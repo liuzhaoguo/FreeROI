@@ -121,7 +121,7 @@ def main():
                 args_list = ['-img', args.label_file, '-lt', '0',
                              '-ht', '20', '-c', args.label_config] + args_list
             subprocess.call(['cd', temp_dir], shell=True)
-            cmd_list = ['pybp', '-img', template_file, '-lt', '3000',
+            cmd_list = ['freeroi', '-img', template_file, '-lt', '3000',
                         '-ht', '8000', '-c', 'gray'] + \
                        args_list + \
                        ['-label', args.label_config]
