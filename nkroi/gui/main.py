@@ -173,7 +173,7 @@ class BpMainWindow(QMainWindow):
                                              self.tr("&Add volume"), self)
         self._actions['add_image'].setShortcut(self.tr("Ctrl+A"))
         self._actions['add_image'].triggered.connect(self._add_image)
-        self._actions['add_image'].setEnabled(False)
+        self._actions['add_image'].setEnabled(True)
 
         # Remove an image
         self._actions['remove_image'] = QAction(QIcon(os.path.join(
@@ -553,12 +553,12 @@ class BpMainWindow(QMainWindow):
         Add template image.
 
         """
-        self._init_label_config_center()
-
-        self.model = VolumeListModel([], self._label_config_center)
-        self.model.set_scale_factor(self.default_grid_scale_factor, 'grid')
-        self.model.set_scale_factor(self.default_orth_scale_factor, 'orth')
-        self.painter_status = PainterStatus(ViewSettings())
+        if not self._actions['remove_image'].isEnabled():
+            self._init_label_config_center()
+            self.model = VolumeListModel([], self._label_config_center)
+            self.model.set_scale_factor(self.default_grid_scale_factor, 'grid')
+            self.model.set_scale_factor(self.default_orth_scale_factor, 'orth')
+            self.painter_status = PainterStatus(ViewSettings())
 
         template_path = str(source)
         #label_config = self._get_label_config(template_path)
@@ -632,7 +632,7 @@ class BpMainWindow(QMainWindow):
         """
          new_coord = [self.list_view._coord_x.value(),self.list_view._coord_y.value(),self.list_view._coord_z.value()]
          self.image_view.set_coord(new_coord)
-    #generate by zgf................................................................................................
+    #generate by zgf...................................................................................................
 
 
     def _add_image(self):
@@ -658,6 +658,14 @@ class BpMainWindow(QMainWindow):
         Add extra image.
 
         """
+        if self._actions['add_template'].isEnabled():
+            self._init_label_config_center()
+
+            self.model = VolumeListModel([], self._label_config_center)
+            self.model.set_scale_factor(self.default_grid_scale_factor, 'grid')
+            self.model.set_scale_factor(self.default_orth_scale_factor, 'orth')
+            self.painter_status = PainterStatus(ViewSettings())
+
         file_path = str(source)
         self._temp_dir = os.path.dirname(file_path)
         if self.model.addItem(file_path, None, name, header, view_min,
@@ -671,6 +679,61 @@ class BpMainWindow(QMainWindow):
             self._actions['lmax'].setEnabled(True)
             self._actions['roifilter'].setEnabled(True)
             self._actions['roimerge'].setEnabled(True)
+
+            if self._actions['add_template'].isEnabled():
+               # initialize views and model
+               self.list_view = LayerView(self._label_config_center)
+               self.list_view.setModel(self.model)
+               self.image_view = GridView(self.model, self.painter_status)
+
+               # initialize display layout
+               central_widget = QWidget()
+               layout = QHBoxLayout()
+               central_widget.setLayout(layout)
+               central_widget.layout().addWidget(self.list_view)
+               central_widget.layout().addWidget(self.image_view)
+               self._init_data_select()
+               self.setCentralWidget(central_widget)
+
+               # add a toolbar
+               self._add_toolbar()
+
+               # change button status
+               self._actions['add_image'].setEnabled(True)
+               self._actions['save_image'].setEnabled(True)
+               self._actions['ld_lbl'].setEnabled(True)
+               self._actions['ld_glbl'].setEnabled(True)
+               self._actions['new_image'].setEnabled(True)
+               self._actions['close'].setEnabled(True)
+               self._actions['orth_view'].setEnabled(True)
+               self._actions['original_view'].setEnabled(True)
+               self._actions['watershed'].setEnabled(True)
+               self._actions['binaryzation'].setEnabled(True)
+               self._actions['binarydilation'].setEnabled(True)
+               self._actions['binaryerosion'].setEnabled(True)
+               self._actions['greydilation'].setEnabled(True)
+               self._actions['greyerosion'].setEnabled(True)
+
+               self._actions['undo'].setEnabled(False)
+               self._actions['redo'].setEnabled(False)
+               self.list_view.current_changed.connect(self._update_undo)
+               self.list_view.current_changed.connect(self._update_redo)
+               self.list_view.input_changed.connect(self._inputUpdate)
+               self.list_view.volume_index_spinbox.valueChanged.connect(self._volume_index_changed)
+
+               self.list_view.current_changed.connect(self._current_layer_xyzvl_changed)
+
+               self.model.undo_stack_changed.connect(self._update_undo)
+               self.model.redo_stack_changed.connect(self._update_redo)
+
+               self._actions['watershed'].setEnabled(True)
+               self.list_view.setCurrentIndex(self.model.index(0))
+
+               # update_xyzvl when necessarily
+               self.image_view.xyz_updated.connect(self._update_xyzvl)
+               self.image_view.xyz_updated.emit([self.model.get_current_pos()[1],
+                                                self.model.get_current_pos()[0],
+                                                self.model.get_current_pos()[2]])
             self.list_view.setCurrentIndex(self.model.index(0))
             self._init_data_select()
         else:
@@ -758,7 +821,7 @@ class BpMainWindow(QMainWindow):
         self._set_scale_factor(self.default_grid_scale_factor)
         self.removeToolBar(self._toolbar)
         self._actions['add_template'].setEnabled(True)
-        self._actions['add_image'].setEnabled(False)
+        self._actions['add_image'].setEnabled(True)
         self._actions['remove_image'].setEnabled(False)
         self._actions['new_image'].setEnabled(False)
         self._actions['save_image'].setEnabled(False)
@@ -792,8 +855,8 @@ class BpMainWindow(QMainWindow):
     def _create_menus(self):
         """Create menus."""
         self.file_menu = self.menuBar().addMenu(self.tr("File"))
-        self.file_menu.addAction(self._actions['add_template'])
         self.file_menu.addAction(self._actions['add_image'])
+        self.file_menu.addAction(self._actions['add_template'])
         self.file_menu.addAction(self._actions['save_image'])
         self.file_menu.addSeparator()
         self.file_menu.addAction(self._actions['ld_lbl'])
