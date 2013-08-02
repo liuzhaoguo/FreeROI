@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from drawsettings import DrawSettings
-from nkroi.algorithm.math import merge
+from froi.algorithm.math import merge
 
 class ROIMergeDialog(QDialog):
     """

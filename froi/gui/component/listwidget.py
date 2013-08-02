@@ -9,7 +9,7 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from nkroi.algorithm.array2qimage import idx2rgb
+from froi.algorithm.array2qimage import idx2rgb
 from drawsettings import DrawSettings
 from ..base.labelconfig import LabelConfig
 from labelconfigcenter import *

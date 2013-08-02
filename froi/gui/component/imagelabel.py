@@ -5,7 +5,7 @@ import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from nkroi.algorithm.array2qimage import composition, qrgba2qimage
+from froi.algorithm.array2qimage import composition, qrgba2qimage
 from drawsettings import DrawSettings
 
 """ImageLabel class. It is used to show a slice of the 3D image"""

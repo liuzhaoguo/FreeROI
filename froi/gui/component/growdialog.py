@@ -4,7 +4,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from nkroi.algorithm import math
+from froi.algorithm import math
 
 
 class GrowDialog(QDialog):

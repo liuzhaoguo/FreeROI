@@ -17,13 +17,13 @@ sip.setapi('QVariant', 2)
 import sys
 import argparse
 
-import nkroi
+import froi
 from PyQt4.QtGui import QApplication
-from nkroi.gui.main import BpMainWindow
+from froi.gui.main import BpMainWindow
 
 def main():
     # get labelconfig settings
-    temp_path = os.path.dirname(nkroi.__file__)
+    temp_path = os.path.dirname(froi.__file__)
     label_config_dir = os.path.join(temp_path, 'data', 'labelconfig')
     label_config_suffix = 'lbl'
     config_file = os.listdir(label_config_dir)
