@@ -7,9 +7,9 @@
 import os
 import ConfigParser
 import glob
-import nkroi as src_pkg
+import froi as src_pkg
 
-from nkroi.version import __version__
+from froi.version import __version__
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *

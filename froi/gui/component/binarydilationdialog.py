@@ -1,4 +1,3 @@
-
 __author__ = 'zhouguangfu'
 # emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
 # vi: set ft=python sts=4 ts=4 sw=4 et:
@@ -8,15 +7,15 @@ from PyQt4.QtGui import *
 
 import numpy as np
 from scipy.ndimage import morphology
-from nkroi.algorithm import imtool
+from froi.algorithm import imtool
 
-class BinaryerosionDialog(QDialog):
+class BinarydilationDialog(QDialog):
     """
-    A dialog for action of binaryerosion.
+    A dialog for action of binarydilation.
 
     """
     def __init__(self, model, parent=None):
-        super(BinaryerosionDialog, self).__init__(parent)
+        super(BinarydilationDialog, self).__init__(parent)
         self._model = model
 
         self._init_gui()
@@ -28,7 +27,7 @@ class BinaryerosionDialog(QDialog):
 
         """
         # set dialog title
-        self.setWindowTitle("Binaryerosion")
+        self.setWindowTitle("Binarydilation")
 
         # initialize widgets
         source_label = QLabel("Source")
@@ -45,6 +44,13 @@ class BinaryerosionDialog(QDialog):
         self.structure_combo.addItem("5x5x5")
         self.structure_combo.addItem("7x7x7")
         self.structure_combo.addItem("9x9x9")
+        # origin_label = QLabel("Origin")
+        # self.origin_edit = QLineEdit()
+        # self.origin_edit.setText('0')
+        border_value_label = QLabel("BorderValue")
+        self.border_value_combo = QComboBox()
+        self.border_value_combo.addItem("0")
+        self.border_value_combo.addItem("1")
         out_label = QLabel("Output volume name")
         self.out_edit = QLineEdit()
         
@@ -73,18 +79,19 @@ class BinaryerosionDialog(QDialog):
 
     def _create_actions(self):
         self.source_combo.currentIndexChanged.connect(self._create_output)
-        self.run_button.clicked.connect(self._binary_erosion)
+        self.run_button.clicked.connect(self._binary_dilation)
         self.cancel_button.clicked.connect(self.done)
 
     def _create_output(self):
         source_name = self.source_combo.currentText()
-        output_name = '_'.join([str(source_name), 'binaryerosion'])
+        output_name = '_'.join([str(source_name), 'binarydilation'])
         self.out_edit.setText(output_name)
 
-    def _binary_erosion(self):
+    def _binary_dilation(self):
         vol_name = str(self.out_edit.text())
         num = self.structure_combo.currentIndex() + 3
         self.structure_array = np.ones((num,num,num), dtype=np.int)
+        # self.orgin = self.origin_edit.text()
 
         if not vol_name:
             self.out_edit.setFocus()
@@ -95,7 +102,7 @@ class BinaryerosionDialog(QDialog):
                                        Qt.UserRole + 5)
 
         binary_vol = imtool.binaryzation(source_data, (source_data.max()+source_data.min())/2)
-        new_vol = morphology.binary_erosion(binary_vol, structure=self.structure_array)
+        new_vol = morphology.binary_dilation(binary_vol,structure=self.structure_array,border_value=1)
         self._model.addItem(new_vol,
                             None,
                             vol_name,

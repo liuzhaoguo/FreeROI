@@ -12,7 +12,7 @@ import numpy as np
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from nkroi.algorithm import array2qimage as aq
+from froi.algorithm import array2qimage as aq
 from labelconfig import LabelConfig
 
 threeD_fourD_flag = False
