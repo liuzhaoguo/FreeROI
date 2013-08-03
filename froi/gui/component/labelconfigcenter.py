@@ -177,6 +177,6 @@ class LabelConfigCenter(QGroupBox, DrawSettings):
 
     def get_value_label(self, value):
         if not self.is_drawing_valid():
-            return str
+            return QString()
         return self.get_current_label_config().get_index_label(value)
 
