@@ -415,8 +415,6 @@ class BpMainWindow(QMainWindow):
         self._actions['roimerge'].triggered.connect(self._roimerge)
         self._actions['roimerge'].setEnabled(False)
 
-
-
     def _add_toolbar(self):
         """
         Add toolbar.
