@@ -15,7 +15,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from base.labelconfig import LabelConfig
-import  base.bpdataset as globavariable
+import base.bpdataset as globavariable
 from component.listwidget import LayerView
 from component.gridwidget import GridView
 from component.orthwidget import OrthView
@@ -470,56 +470,7 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addSeparator() 
         self._toolbar.addWidget(self._spinbox)
 
-        ##add by dang begin 
-        ## initialize cursor coord&value widgets
-       
-        #self._toolbar.addSeparator()
-        #coord_x_label = QLabel('x: ')
-        #self._coord_x = QLineEdit()
-        #self._coord_x.setFixedWidth(30)
-        #self._coord_x.setReadOnly(True)
-        #coord_y_label = QLabel('y: ')
-        #self._coord_y = QLineEdit()
-        #self._coord_y.setFixedWidth(30)
-        #self._coord_y.setReadOnly(True)
-        #coord_z_label = QLabel('z: ')
-        #self._coord_z = QLineEdit()
-        #self._coord_z.setFixedWidth(30)
-        #self._coord_z.setReadOnly(True)
-        #
-        #coord_value_label = QLabel('value:')
-        #self._coord_value = QLineEdit()
-        #self._coord_value.setFixedWidth(50)
-        #self._coord_value.setReadOnly(True)
-        #coord_label_label = QLabel('label:')
-        #self._coord_label = QLineEdit()
-        #self._coord_label.setFixedWidth(80)
-        #self._coord_label.setReadOnly(True)
-        #
-        #self._toolbar.addWidget(coord_label_label)
-        #self._toolbar.addWidget(self._coord_label)
-        #self._toolbar.addWidget(coord_value_label)
-        #self._toolbar.addWidget(self._coord_value)
-        #
-        #self._toolbar.addSeparator()
-        #self._toolbar.addWidget(coord_x_label)
-        #self._toolbar.addWidget(self._coord_x)
-        #self._toolbar.addWidget(coord_y_label)
-        #self._toolbar.addWidget(self._coord_y)
-        #self._toolbar.addWidget(coord_z_label)
-        #self._toolbar.addWidget(self._coord_z)
-        #
-        #self._toolbar.addSeparator()
-        #
-        ##end
         self.addToolBar(self._toolbar)
-
-    #def _update_xyzvl_toolbar(self, xyzvl):
-    #    self._coord_x.setText(xyzvl['x'])
-    #    self._coord_y.setText(str(108 - int(xyzvl['y'])))
-    #    self._coord_z.setText(xyzvl['z'])
-    #    self._coord_value.setText(xyzvl['value'])
-    #    self._coord_label.setText(xyzvl['label'])
 
     def _set_scale_factor(self, value):
         """
@@ -543,7 +494,7 @@ class BpMainWindow(QMainWindow):
                                         'Open standard file',
                                         template_dir,
                                         'Nifti files (*.nii.gz *.nii)')
-        if  template_name:
+        if not template_name.isEmpty():
             template_path = str(template_name)
             self._add_template_img(template_path)
 
@@ -625,14 +576,14 @@ class BpMainWindow(QMainWindow):
             QMessageBox.information(self, 'PyBP', 
                     'Cannot load ' + template_name + '.')
 
-    #generate by zgf....................................................................................................
+    #generate by zgf
     def _inputUpdate(self):
          """
         Display the image via changing the value of the spinbox...
         """
          new_coord = [self.list_view._coord_x.value(),self.list_view._coord_y.value(),self.list_view._coord_z.value()]
          self.image_view.set_coord(new_coord)
-    #generate by zgf...................................................................................................
+    #generate by zgf
 
 
     def _add_image(self):
@@ -648,7 +599,7 @@ class BpMainWindow(QMainWindow):
                                                 'Add new file',
                                                 temp_dir,
                                                 'Nifti files (*.nii.gz *.nii)')
-        if file_name:
+        if not file_name.isEmpty():
             file_path = str(file_name)
             self._add_img(file_path)
 
@@ -1063,9 +1014,6 @@ class BpMainWindow(QMainWindow):
         watershed_dialog = WatershedDialog(self.model, self)
         watershed_dialog.exec_()
 
-    def _repaint_slices(self):
-        self.model.update_current_rgba()
-
     def _update_undo(self):
         if self.model.current_undo_available():
             self._actions['undo'].setEnabled(True)
@@ -1202,6 +1150,7 @@ class BpMainWindow(QMainWindow):
 
         self.centralWidget().layout().removeWidget(self.image_view)
         self.image_view.set_display_type('grid')
+        self.model.scale_changed.disconnect()
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('grid'))
         self.image_view = GridView(self.model, self.painter_status,
@@ -1228,6 +1177,7 @@ class BpMainWindow(QMainWindow):
             self.image_view.get_vertical_srollbar_position()
         self.centralWidget().layout().removeWidget(self.image_view)
         self.image_view.set_display_type('orth')
+        self.model.scale_changed.disconnect()
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('orth'))
         self.image_view = OrthView(self.model, self.painter_status)
@@ -1302,4 +1252,3 @@ class BpMainWindow(QMainWindow):
         new_vol = globavariable.data[:,:,:,self.list_view.volume_index_spinbox.value()]
         source_data = self.model.setData(self.model.currentIndex(), new_vol, role=Qt.UserRole + 5)
 
-        #generated by zgf----------------------------------------------------------------
