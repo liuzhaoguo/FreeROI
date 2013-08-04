@@ -353,7 +353,7 @@ class VolumeListModel(QAbstractListModel):
             self._grid_scale_factor = value
         elif type == 'orth':
             self._orth_scale_factor = value
-        self.repaint_slices.emit(-1)
+        #self.repaint_slices.emit(-1)
         self.scale_changed.emit()
 
     def get_scale_factor(self, type):

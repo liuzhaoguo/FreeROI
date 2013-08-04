@@ -1014,9 +1014,6 @@ class BpMainWindow(QMainWindow):
         watershed_dialog = WatershedDialog(self.model, self)
         watershed_dialog.exec_()
 
-    def _repaint_slices(self):
-        self.model.update_current_rgba()
-
     def _update_undo(self):
         if self.model.current_undo_available():
             self._actions['undo'].setEnabled(True)
@@ -1153,6 +1150,7 @@ class BpMainWindow(QMainWindow):
 
         self.centralWidget().layout().removeWidget(self.image_view)
         self.image_view.set_display_type('grid')
+        self.model.scale_changed.disconnect()
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('grid'))
         self.image_view = GridView(self.model, self.painter_status,
@@ -1179,6 +1177,7 @@ class BpMainWindow(QMainWindow):
             self.image_view.get_vertical_srollbar_position()
         self.centralWidget().layout().removeWidget(self.image_view)
         self.image_view.set_display_type('orth')
+        self.model.scale_changed.disconnect()
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('orth'))
         self.image_view = OrthView(self.model, self.painter_status)
