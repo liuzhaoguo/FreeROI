@@ -58,14 +58,14 @@ class BpMainWindow(QMainWindow):
     >>> app.exec_()
 
     """
-    temp_path = os.path.dirname(os.path.join(os.getcwd(), __file__))
-    temp_path = temp_path.split('/')
-    temp_path.pop()
-    temp_path.append('data')
-    label_path = '/'.join(temp_path)
-    label_config_dir = os.path.join(label_path, 'labelconfig')
-    label_config_suffix = 'lbl'
-    config_file = 'pybpconfig.lbl'
+    #temp_path = os.path.dirname(os.path.join(os.getcwd(), __file__))
+    #temp_path = temp_path.split('/')
+    #temp_path.pop()
+    #temp_path.append('data')
+    #label_path = '/'.join(temp_path)
+    #label_config_dir = os.path.join(label_path, 'labelconfig')
+    #label_config_suffix = 'lbl'
+    #config_file = 'pybpconfig.lbl'
 
     def __init__(self, parent=None):
         """
@@ -75,10 +75,46 @@ class BpMainWindow(QMainWindow):
         # Inherited from QMainWindow
         super(BpMainWindow, self).__init__(parent)
 
+        # load data directory configuration
+        #self.label_path = data_dir
+        #self.label_config_dir = os.path.join(self.label_path, 'labelconfig')
+        #self.label_config_suffix = 'lbl'
+
         # Get module path
-        module_path = os.path.dirname(os.path.join(os.getcwd(), __file__))
-        self._icon_dir = os.path.join(module_path, 'icon')
+        #module_path = os.path.dirname(os.path.join(os.getcwd(), __file__))
+        #self._icon_dir = os.path.join(module_path, 'icon')
         
+        # set window title
+        #self.setWindowTitle('FreeROI')
+        #self.resize(1280, 1000)
+        #self.center()
+        # set window icon
+        #self.setWindowIcon(QIcon(os.path.join(self._icon_dir, 'icon.png')))
+
+        #self._init_configuration()
+        #self._init_label_config_center()
+
+        # create actions
+        #self._create_actions()
+        # create menus
+        #self._create_menus()
+
+        # temporary variable
+        self._temp_dir = None
+
+    def config_extra_settings(self, data_dir, icon_dir):
+        """
+        Set data directory and update some configurations.
+
+        """
+        # load data directory configuration
+        self.label_path = data_dir
+        self.label_config_dir = os.path.join(self.label_path, 'labelconfig')
+        self.label_config_suffix = 'lbl'
+
+        # set icon configuration
+        self._icon_dir = icon_dir
+
         # set window title
         self.setWindowTitle('FreeROI')
         #self.resize(1280, 1000)
@@ -88,13 +124,12 @@ class BpMainWindow(QMainWindow):
 
         self._init_configuration()
         self._init_label_config_center()
+        
         # create actions
         self._create_actions()
+
         # create menus
         self._create_menus()
-
-        # temporary variable
-        self._temp_dir = None
 
     def center(self):
         qr = self.frameGeometry()
@@ -484,8 +519,8 @@ class BpMainWindow(QMainWindow):
         Open a dialog window and select a template file.
 
         """
-        tmp_dir = os.path.dirname(src_pkg.__file__)
-        template_dir = os.path.join(tmp_dir, 'data', 'standard', 
+        #tmp_dir = os.path.dirname(src_pkg.__file__)
+        template_dir = os.path.join(self.label_path, 'standard', 
                                     'MNI152_T1_2mm_brain.nii.gz')
         template_name = QFileDialog.getOpenFileName(
                                         self,
@@ -514,7 +549,7 @@ class BpMainWindow(QMainWindow):
         if self.model.addItem(template_path, None, name, header,
                               view_min, view_max, alpha, colormap):
             # initialize views and model
-            self.list_view = LayerView(self._label_config_center)
+            self.list_view = LayerView(self._label_config_center, self)
             self.list_view.setModel(self.model)
             self.image_view = GridView(self.model, self.painter_status)
 
@@ -1149,6 +1184,7 @@ class BpMainWindow(QMainWindow):
         self.centralWidget().layout().removeWidget(self.image_view)
         self.image_view.set_display_type('grid')
         self.model.scale_changed.disconnect()
+        self.model.repaint_slices.disconnect()
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('grid'))
         self.image_view = GridView(self.model, self.painter_status,
@@ -1176,6 +1212,7 @@ class BpMainWindow(QMainWindow):
         self.centralWidget().layout().removeWidget(self.image_view)
         self.image_view.set_display_type('orth')
         self.model.scale_changed.disconnect()
+        self.model.repaint_slices.disconnect()
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('orth'))
         self.image_view = OrthView(self.model, self.painter_status)
