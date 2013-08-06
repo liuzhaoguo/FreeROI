@@ -4,3 +4,4 @@
 *.so
 *.pyd
 *.dll
+_build
