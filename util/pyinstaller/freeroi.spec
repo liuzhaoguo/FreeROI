@@ -1,10 +1,38 @@
 # -*- mode: python -*-
 a = Analysis(['F:\\FreeROI\\FreeROI\\bin\\freeroi'],
              pathex=['F:\\FreeROI\\pyinstaller-2.0'],
-             #hiddenimports=['scipy.signal', 'skimage.transform'],
              hiddenimports=[],
              hookspath=None)
-             #hookspath='F:\FreeROI\pyinstaller-2.0\freeroi\pri_hook')
+def extra_datas(mydir, type):
+    def rec_glob(p, files):
+        import os
+        import glob
+        for d in glob.glob(p):
+            if os.path.isfile(d):
+                files.append(d)
+            rec_glob("%s/*" %d, files)
+    files = []
+    rec_glob("%s/*" %mydir, files)
+    extra_datas = []
+    if type == 'icon':
+        for f in files:
+            extra_datas.append((os.path.join('icon', 
+                                             os.path.basename(f)),
+                               f, 'DATA'))
+    elif type == 'data':
+        for f in files:
+            temp = f.split('\\')
+            idx = temp.index('data')
+            extra_datas.append((os.path.join(*temp[idx:]), f, 'DATA'))
+    return extra_datas
+
+import froi
+froi_dir = os.path.dirname(froi.__file__)
+data_dir = os.path.join(froi_dir, 'data')
+icon_dir = os.path.join(froi_dir, 'gui', 'icon')
+a.datas += extra_datas(data_dir, 'data')
+a.datas += extra_datas(icon_dir, 'icon')
+
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,
