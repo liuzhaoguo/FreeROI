@@ -33,7 +33,7 @@ if 'mingw32' in sys.argv:
                         os.path.dirname(PyQt4.__file__)))
     qt_libraries = [lib + '4' for lib in qt_libraries]
 
-qimageview = Extension('nkroi.algorithm.qimageview',
+qimageview = Extension('froi.algorithm.qimageview',
                        sources = [r'3rdparty/qimageview.sip'],
                        include_dirs = [numpy.get_include(),
                                        qt_inc_dir,
@@ -57,7 +57,7 @@ class build_ext(sipdistutils.build_ext):
                    config.pyqt_sip_flags.split() + 
                    ['-I', config.pyqt_sip_dir, source])
 
-for line in file('nkroi/version.py'):
+for line in file('froi/version.py'):
     if line.startswith('__version__'):
         exec line
 
@@ -66,13 +66,13 @@ setup(name = 'freeroi',
       description = 'Toolbox for ROI defining',
       author = 'Lijie Huang, Zetian Yang, Guangfu Zhou and Zonglei Zhen, from Neuroinformatic Team@LiuLab',
       author_email = ['huanglijie.seal@gmail.com','zetian.yang@gmail.com'],
-      packages = ['nkroi',
-                  'nkroi.algorithm',
-                  'nkroi.gui',
-                  'nkroi.gui.base',
-                  'nkroi.gui.component'],
+      packages = ['froi',
+                  'froi.algorithm',
+                  'froi.gui',
+                  'froi.gui.base',
+                  'froi.gui.component'],
       scripts = ['bin/freeroi', 'bin/freeroi-sess'],
-      package_data = {'nkroi':['data/label/face-object/*', 
+      package_data = {'froi':['data/label/face-object/*', 
                                'data/labelconfig/face.lbl',
                                'data/standard/MNI152_T1_2mm_brain.nii.gz',
                                'gui/icon/*']},
