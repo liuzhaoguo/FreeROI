@@ -666,7 +666,7 @@ class BpMainWindow(QMainWindow):
 
             if self._actions['add_template'].isEnabled():
                # initialize views and model
-               self.list_view = LayerView(self._label_config_center)
+               self.list_view = LayerView(self._label_config_center, self)
                self.list_view.setModel(self.model)
                self.image_view = GridView(self.model, self.painter_status)
 
