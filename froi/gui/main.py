@@ -27,7 +27,8 @@ from component.eraserdialog import EraserDialog
 from component.watersheddialog import WatershedDialog
 from component.regularroidialog import RegularROIDialog
 from component.intersectdialog import IntersectDialog
-from component.growdialog import GrowDialog
+#from component.growdialog import GrowDialog
+from component.growdialog_liu import GrowDialog
 from component.autolabeldialog import AutoLabelDialog
 from component.opendialog import OpenDialog
 from component.localmaxdialog import LocalMaxDialog
@@ -494,6 +495,7 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['intersect'])
         self._toolbar.addAction(self._actions['open'])
         self._toolbar.addAction(self._actions['lmax'])
+        self._toolbar.addAction(self._actions['grow'])
         self._toolbar.addAction(self._actions['watershed'])
         self._toolbar.addAction(self._actions['roifilter'])
         self._toolbar.addAction(self._actions['roimerge'])
@@ -576,6 +578,7 @@ class BpMainWindow(QMainWindow):
             self._actions['orth_view'].setEnabled(True)
             self._actions['original_view'].setEnabled(True)
             self._actions['watershed'].setEnabled(True)
+            self._actions['grow'].setEnabled(True)
             self._actions['binaryzation'].setEnabled(True)
             self._actions['binarydilation'].setEnabled(True)
             self._actions['binaryerosion'].setEnabled(True)
@@ -595,6 +598,7 @@ class BpMainWindow(QMainWindow):
             self.model.redo_stack_changed.connect(self._update_redo)
 
             self._actions['watershed'].setEnabled(True)
+            self._actions['grow'].setEnabled(True)
             self.list_view.setCurrentIndex(self.model.index(0))
 
             # update_xyzvl when necessarily
@@ -692,6 +696,7 @@ class BpMainWindow(QMainWindow):
                self._actions['orth_view'].setEnabled(True)
                self._actions['original_view'].setEnabled(True)
                self._actions['watershed'].setEnabled(True)
+               self._actions['grow'].setEnabled(True)
                self._actions['binaryzation'].setEnabled(True)
                self._actions['binarydilation'].setEnabled(True)
                self._actions['binaryerosion'].setEnabled(True)
@@ -711,6 +716,7 @@ class BpMainWindow(QMainWindow):
                self.model.redo_stack_changed.connect(self._update_redo)
 
                self._actions['watershed'].setEnabled(True)
+               self._actions['grow'].setEnabled(True)
                self.list_view.setCurrentIndex(self.model.index(0))
 
                # update_xyzvl when necessarily
@@ -768,7 +774,7 @@ class BpMainWindow(QMainWindow):
             self._actions['remove_image'].setEnabled(False)
             self._actions['intersect'].setEnabled(False)
             self._actions['regular_roi'].setEnabled(False)
-            self._actions['grow'].setEnabled(False)
+            #self._actions['grow'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
             self._actions['open'].setEnabled(False)
             self._actions['lmax'].setEnabled(False)
