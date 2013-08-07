@@ -2,5 +2,6 @@
 *~
 *.swp
 *.so
-.idea/*
-.idea/.*
+*.pyd
+*.dll
+_build

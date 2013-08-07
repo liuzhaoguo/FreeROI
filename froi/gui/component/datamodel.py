@@ -99,7 +99,7 @@ class VolumeListModel(QAbstractListModel):
         elif role == Qt.UserRole + 8:
             return self._data[row].get_lthr()
 
-        return None
+        return QVariant()
 
     def setData(self, index, value, role):
         """
@@ -111,8 +111,7 @@ class VolumeListModel(QAbstractListModel):
 
         row = index.row()
         if role == Qt.EditRole:
-            # value_str = value.toPyObject()
-            value_str = value
+            value_str = value.toPyObject()
             if not value_str == '':
                 if not self._data[row].get_name() == value_str:
                     self._data[row].set_name(str(value_str))
@@ -121,8 +120,8 @@ class VolumeListModel(QAbstractListModel):
             else:
                 return False
         elif role == Qt.CheckStateRole:
-            if not self._data[row].is_visible() == bool(value):
-                self._data[row].set_visible(bool(value))
+            if not self._data[row].is_visible() == value.toBool():
+                self._data[row].set_visible(value.toBool())
             else:
                 return False
         elif role == Qt.UserRole:
@@ -354,7 +353,7 @@ class VolumeListModel(QAbstractListModel):
             self._grid_scale_factor = value
         elif type == 'orth':
             self._orth_scale_factor = value
-        self.repaint_slices.emit(-1)
+        #self.repaint_slices.emit(-1)
         self.scale_changed.emit()
 
     def get_scale_factor(self, type):
