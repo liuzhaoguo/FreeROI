@@ -29,25 +29,22 @@ class GrowDialog(QDialog):
         # initialize widgets
         source_label = QLabel("Source")
         self.source_combo = QComboBox()
-        dist_label = QLabel("Distance")
-        self.dist_edit = QLineEdit()
-        self.dist_edit.setText('50')
 
 
         pointx_label = QLabel("Seed point x")
         self.pointx_edit = QLineEdit()
-        self.pointx_edit.setText('45')
+        self.pointx_edit.setText('50')
         pointy_label = QLabel("Seed point y")
         self.pointy_edit = QLineEdit()
-        self.pointy_edit.setText('45')
+        self.pointy_edit.setText('50')
         pointz_label = QLabel("Seed point z")
         self.pointz_edit = QLineEdit()
-        self.pointz_edit.setText('45')
+        self.pointz_edit.setText('50')
 
 
         number_label = QLabel("Number of voxels")
         self.number_edit = QLineEdit()
-        self.number_edit.setText('500')
+        self.number_edit.setText('100')
 
         vol_list = self._model.getItemList()
         self.source_combo.addItems(vol_list)
@@ -60,20 +57,18 @@ class GrowDialog(QDialog):
         grid_layout = QGridLayout()
         grid_layout.addWidget(source_label, 0, 0)
         grid_layout.addWidget(self.source_combo, 0, 1)
-        grid_layout.addWidget(dist_label, 1, 0)
-        grid_layout.addWidget(self.dist_edit, 1, 1)
-        grid_layout.addWidget(pointx_label, 2, 0)
-        grid_layout.addWidget(self.pointx_edit, 2, 1)
-        grid_layout.addWidget(pointy_label, 3, 0)
-        grid_layout.addWidget(self.pointy_edit, 3, 1)
-        grid_layout.addWidget(pointz_label, 4, 0)
-        grid_layout.addWidget(self.pointz_edit, 4, 1)
+        grid_layout.addWidget(pointx_label, 1, 0)
+        grid_layout.addWidget(self.pointx_edit, 1, 1)
+        grid_layout.addWidget(pointy_label, 2, 0)
+        grid_layout.addWidget(self.pointy_edit, 2, 1)
+        grid_layout.addWidget(pointz_label, 3, 0)
+        grid_layout.addWidget(self.pointz_edit, 3, 1)
 
-        grid_layout.addWidget(number_label, 5, 0)
-        grid_layout.addWidget(self.number_edit, 5, 1)
+        grid_layout.addWidget(number_label, 4, 0)
+        grid_layout.addWidget(self.number_edit, 4, 1)
 
-        grid_layout.addWidget(out_label, 6, 0)
-        grid_layout.addWidget(self.out_edit, 6, 1)
+        grid_layout.addWidget(out_label, 5, 0)
+        grid_layout.addWidget(self.out_edit, 5, 1)
 
         # button config
         self.run_button = QPushButton("Run")
@@ -92,7 +87,6 @@ class GrowDialog(QDialog):
 
     def _create_actions(self):
         self.source_combo.currentIndexChanged.connect(self._create_output)
-        self.dist_edit.editingFinished.connect(self._create_output)
         self.run_button.clicked.connect(self._grow)
         self.cancel_button.clicked.connect(self.done)
 
@@ -103,7 +97,6 @@ class GrowDialog(QDialog):
 
     def _grow(self):
         vol_name = str(self.out_edit.text())
-        dist = self.dist_edit.text()
         pointx = self.pointx_edit.text()
         pointy = self.pointy_edit.text()
         pointz = self.pointz_edit.text()
@@ -111,9 +104,6 @@ class GrowDialog(QDialog):
 
         if not vol_name:
             self.out_edit.setFocus()
-            return
-        if not dist:
-            self.dist_edit.setFocus()
             return
         if not pointx:
             self.pointx_edit.setFocus()
@@ -129,19 +119,18 @@ class GrowDialog(QDialog):
             return
 
         try:
-            dist = int(dist)
             pointx=int(pointx)
             pointy=int(pointy)
             pointz=int(pointz)
             number=int(number)
         except ValueError:
-            self.dist_edit.selectAll()
+            self.number_edit.selectAll()
             return
 
         source_row = self.source_combo.currentIndex()
         source_data = self._model.data(self._model.index(source_row),
                                        Qt.UserRole + 5)
-        new_vol =rg.region_growing(source_data, (pointx,pointy,pointz),dist,number)
+        new_vol =rg.region_growing(source_data, (pointx,pointy,pointz),number)
         self._model.addItem(new_vol,
                             None,
                             vol_name,
