@@ -22,7 +22,6 @@ class LayerView(QWidget):
 
     """
     current_changed = pyqtSignal()
-    input_changed = pyqtSignal()
 
     builtin_colormap = ['gray', 'red2yellow', 'blue2cyanblue', 'red', 'green', 'blue', 'rainbow', 'single ROI']
 
@@ -34,16 +33,11 @@ class LayerView(QWidget):
         super(LayerView, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
         self.setMaximumWidth(230)
-        # Get module path
-        #module_path = os.path.dirname(os.path.join(os.getcwd(), __file__))
-        #temp = os.path.split(module_path)
-        #self._icon_dir = os.path.join(temp[0], 'icon')
         self._icon_dir = main_win._icon_dir
         self.label_config_center = label_config_center
 
         # initialize the model
         self._model = None
-        self._init_gui()
 
     def _init_gui(self):
         """
@@ -52,9 +46,9 @@ class LayerView(QWidget):
         """
         # initialize QListView
         self._list_view = QListView()
+        
         # initialize up/down push button
         button_size=QSize(12,12)
-
         self._up_button = QPushButton()
         self._up_button.setIcon(QIcon(os.path.join(
                             self._icon_dir, 'arrow_up.png'))) 
@@ -67,10 +61,6 @@ class LayerView(QWidget):
         # layout config for list_view panel
         button_layout = QHBoxLayout()
 
-
-       # button_layout.addWidget(self._up_button)
-       # button_layout.addWidget(self._down_button)
-        
         # initialize parameter selection widgets
         visibility_label = QLabel('Visibility')
         self._visibility = QSlider(Qt.Horizontal)
@@ -80,7 +70,6 @@ class LayerView(QWidget):
 
         button_layout.addWidget(visibility_label)    
         button_layout.addWidget(self._visibility)
-
         button_layout.addWidget(self._up_button)
         button_layout.addWidget(self._down_button)
 
@@ -98,14 +87,11 @@ class LayerView(QWidget):
         grid_layout.addWidget(colormap_label, 1, 0)
         grid_layout.addWidget(self._colormap, 1, 1, 1, 3)
 
-
         para_layout = QHBoxLayout()
         para_layout.addWidget(min_label)
         para_layout.addWidget(self._view_min)
         para_layout.addWidget(max_label)
         para_layout.addWidget(self._view_max)
-        
-
 
         list_view_layout = QVBoxLayout()
         list_view_layout.addWidget(self._list_view)
@@ -113,26 +99,26 @@ class LayerView(QWidget):
         list_view_layout.addLayout(para_layout) 
         list_view_layout.addLayout(grid_layout)
 
-        #label config center
-        labcon_panel=self.label_config_center
+        # label config center
+        labcon_panel = self.label_config_center
         # initialize cursor coord&value widgets
-        xyz_layout=QHBoxLayout()
+        xyz_layout = QHBoxLayout()
+        # FIXME should match data shape
         coord_x_label = QLabel('x: ')
         self._coord_x = QSpinBox()
-        self._coord_x.setRange(0,90)
+        self._coord_x.setRange(0, self._model.getX())
         coord_y_label = QLabel('y: ')
         self._coord_y = QSpinBox()
-        self._coord_y.setRange(0,108)
+        self._coord_y.setRange(0, self._model.getY())
         coord_z_label = QLabel('z: ')
         self._coord_z = QSpinBox()
-        self._coord_z.setRange(0,90)
+        self._coord_z.setRange(0, self._model.getZ())
         xyz_layout.addWidget(coord_x_label)
         xyz_layout.addWidget(self._coord_x)
         xyz_layout.addWidget(coord_y_label)
         xyz_layout.addWidget(self._coord_y)
         xyz_layout.addWidget(coord_z_label)
         xyz_layout.addWidget(self._coord_z)
-
         
         coord_value_label = QLabel('value:')
         self._coord_value = QLineEdit()
@@ -141,20 +127,23 @@ class LayerView(QWidget):
         self._coord_label = QLineEdit()
         self._coord_label.setReadOnly(True)
 
-        self.data_select_combo = QComboBox()
-        self.data_select_combo.addItem('3D Volume')
-        self.data_select_combo.addItem('4D Volume')
-        self.volume_index_spinbox = QSpinBox()
-        self.volume_index_spinbox.setValue(0)
+        # Set time point
+        #self.data_select_combo = QComboBox()
+        #self.data_select_combo.addItem('3D Volume')
+        #self.data_select_combo.addItem('4D Volume')
+        time_point_label = QLabel('time point:')
+        self._volume_index_spinbox = QSpinBox()
+        self._volume_index_spinbox.setValue(0)
 
         glayout = QGridLayout()
-        glayout.addLayout(xyz_layout,0,0,1,6)    
-        glayout.addWidget(coord_value_label,1,0)
-        glayout.addWidget(self._coord_value,1,1,1,5)
-        glayout.addWidget(coord_label_label,2,0)
-        glayout.addWidget(self._coord_label,2,1,1,5)
-        glayout.addWidget(self.data_select_combo,3,0)
-        glayout.addWidget(self.volume_index_spinbox,3,1,1,5)
+        glayout.addLayout(xyz_layout, 0, 0, 1, 6)    
+        glayout.addWidget(coord_value_label, 1, 0)
+        glayout.addWidget(self._coord_value, 1, 1, 1, 5)
+        glayout.addWidget(coord_label_label, 2, 0)
+        glayout.addWidget(self._coord_label, 2, 1, 1, 5)
+        #glayout.addWidget(self.data_select_combo, 3, 0)
+        glayout.addWidget(time_point_label, 3, 0)
+        glayout.addWidget(self._volume_index_spinbox, 3, 1, 1, 5)
        
         self._cursor_info_panel = QGroupBox('Cursor')
         self._cursor_info_panel.setLayout(glayout)
@@ -172,6 +161,7 @@ class LayerView(QWidget):
         """
         if isinstance(model, QAbstractListModel):
             self._model = model
+            self._init_gui()
             self._list_view.setModel(model)
             self._create_actions()
         else:
@@ -189,7 +179,6 @@ class LayerView(QWidget):
         self._list_view.selectionModel().currentChanged.connect(
                 self.current_changed)
         
-
         # When dataset changed, refresh display.
         self._model.dataChanged.connect(self._disp_current_para)
 
@@ -209,12 +198,19 @@ class LayerView(QWidget):
         self._visibility.sliderReleased.connect(self._set_alpha)
         self._up_button.clicked.connect(self._up_action)
         self._down_button.clicked.connect(self._down_action)
+        self._volume_index_spinbox.valueChanged.connect(self._set_time_point)
 
-        #generated by zgf------------------------------------------------------
-        self._coord_x.valueChanged.connect(self.update_current_pos)
-        self._coord_y.valueChanged.connect(self.update_current_pos)
-        self._coord_z.valueChanged.connect(self.update_current_pos)
-        #generated by zgf------------------------------------------------------
+        self._coord_x.valueChanged.connect(self.set_cross_pos)
+        self._coord_y.valueChanged.connect(self.set_cross_pos)
+        self._coord_z.valueChanged.connect(self.set_cross_pos)
+
+    def _set_time_point(self):
+        """
+        Set time point for model.
+
+        """
+        tpoint = self._volume_index_spinbox.value()
+        self._model.set_time_point(tpoint)
 
     def _disp_current_para(self):
         """
@@ -250,7 +246,16 @@ class LayerView(QWidget):
             current_alpha = self._model.data(index, Qt.UserRole + 2) * \
                     100 / 255
             self._visibility.setValue(current_alpha)
-        
+
+            # time point setting
+            if self._model.data(index, Qt.UserRole + 8):
+                self._volume_index_spinbox.setEnabled(True)
+                time_point = self._model.data(index, Qt.UserRole + 9)
+                if not time_point == self._volume_index_spinbox.value():
+                    self._volume_index_spinbox.setValue(time_point)
+            else:
+                self._volume_index_spinbox.setEnabled(False)
+
             self._list_view.setFocus()
 
             # Set current index
@@ -354,6 +359,10 @@ class LayerView(QWidget):
         self._list_view.setCurrentIndex(index)
 
     def update_xyzvl(self, xyzvl):
+        """
+        Update the information of crosshair position.
+
+        """
         self._coord_x.setValue(int(xyzvl['x']))
         # self._coord_y.setValue(108 - int(xyzvl['y'])) #comment by zgf
         self._coord_y.setValue(int(xyzvl['y']))
@@ -361,8 +370,12 @@ class LayerView(QWidget):
         self._coord_value.setText(xyzvl['value'])
         self._coord_label.setText(xyzvl['label'])
 
-    #generated by zgf------------------------------------------------------
-    def update_current_pos(self):
-        # new_coord = [int(self._coord_x.text()),int(self._coord_x.text()),int(self._coord_x.text())]
-        self.input_changed.emit()
-    #generated by zgf------------------------------------------------------
+    def set_cross_pos(self):
+        """
+        Set position of crosshair.
+
+        """
+        new_coord = [int(self._coord_x.value()),
+                     int(self._coord_y.value()),
+                     int(self._coord_z.value())]
+        self._model.set_cross_pos(new_coord)

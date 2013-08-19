@@ -10,7 +10,6 @@ from PyQt4.QtCore import *
 
 from ..base.bpdataset import VolumeDataset
 
-
 class VolumeListModel(QAbstractListModel):
     """
     Definition of class VolumeListModel.
@@ -19,6 +18,7 @@ class VolumeListModel(QAbstractListModel):
     # customized signal
     repaint_slices = pyqtSignal(int, name='repaint_slices')
     scale_changed = pyqtSignal()
+    cross_pos_changed = pyqtSignal()
     undo_stack_changed = pyqtSignal()
     redo_stack_changed = pyqtSignal()
 
@@ -36,24 +36,54 @@ class VolumeListModel(QAbstractListModel):
         self._selected_indexes = []
         self._grid_scale_factor = 1.0
         self._orth_scale_factor = 1.0
-        self._current_pos = [45, 54, 45]
+        # FIXME current position should be initialized when the first volume added.
+        # The current position is a 4D data.
+        self._cross_pos = [0, 0, 0]
+        self._display_cross = True
         self._connect_undo_redo()
         self._label_config_center = label_config_center
-        self._label_config_center.single_roi_view_update_for_model.connect(self.update_all_rgba)
+        self._label_config_center.single_roi_view_update_for_model.connect(
+                self.update_all_rgba)
 
-    def get_current_pos(self):
+    def get_cross_pos(self):
         """
         Get current cursor position.
 
         """
-        return self._current_pos
+        return self._cross_pos
 
-    def set_current_pos(self, new_coord):
+    def set_cross_pos(self, new_coord):
         """
         Set current cursor position.
 
         """
-        self._current_pos = new_coord
+        self._cross_pos = new_coord
+        self.update_orth_rgba()
+        self.cross_pos_changed.emit()
+
+    def update_orth_rgba(self):
+        """
+        Update RGBA data for OrthView.
+
+        """
+        for data in self._data:
+            data.set_cross_pos(self.get_cross_pos())
+
+    def display_cross(self):
+        """
+        Return the status of current position indicator.
+
+        """
+        return self._display_cross
+
+    def set_cross_status(self, status):
+        """
+        Set the status of current position indicator.
+
+        """
+        if instance(status, bool) and not status == self.display_cross:
+            self._display_cross = status
+            self.cross_pos_changed.emit()
 
     def rowCount(self, parent=QModelIndex()):
         """
@@ -97,7 +127,9 @@ class VolumeListModel(QAbstractListModel):
             # get label config
             return self._label_config_center.get_current_label_config(), self._label_config_center.get_current_list_view_index()
         elif role == Qt.UserRole + 8:
-            return self._data[row].get_lthr()
+            return self._data[row].is_4d()
+        elif role == Qt.IserRole + 9:
+            return self._data[row].get_time_point()
 
         return QVariant()
 
@@ -144,6 +176,7 @@ class VolumeListModel(QAbstractListModel):
                 self._data[row].set_colormap(value)
             else:
                 return False
+        # FIXME Following argument should be checked out.
         elif role == Qt.UserRole + 4:
             if value in self._data[row].get_roi_index().items():
                 return False
@@ -151,11 +184,14 @@ class VolumeListModel(QAbstractListModel):
                 self._data[row].set_roi_name([value])
         elif role == Qt.UserRole + 5:
             self._data[row]._data  = np.rot90(value)
-
-
+        elif role == Qt.UserRole + 9:
+            if not self._data[row].get_time_point() == value:
+                self._data[row].set_time_point(value)
+            else:
+                return False
 
         # Update RGBA list after setting
-        self._data[row].update_rgba()     
+        #self._data[row].update_rgba()     
         self.dataChanged.emit(index, index)
         self.repaint_slices.emit(-1)
         return True
@@ -225,13 +261,25 @@ class VolumeListModel(QAbstractListModel):
 
         """
         vol = VolumeDataset(source, self._label_config_center, name, header,
-                            view_min, view_max, alpha, colormap)
-        ok = self.insertRow(0, vol)
-        if ok:
-            self.repaint_slices.emit(-1)
-            return True
+                            view_min, view_max, alpha, colormap, self._cross_pos)
+        if self.rowCount():
+            if self._data[0].get_data_shape[0:3] == vol.get_data_shape[0:3]:
+                ok = self.insertRow(0, vol)
+                if ok:
+                    self.repaint_slices.emit(-1)
+                    return True
+                else:
+                    return False
+            else:
+                print 'Mismatch data size!'
+                return False
         else:
-            return False
+            ok = self.insertRow(0, vol)
+            if ok:
+                self.repaint_slices.emit(-1)
+                return True
+            else:
+                return False
 
     def delItem(self, row):
         """
@@ -256,18 +304,20 @@ class VolumeListModel(QAbstractListModel):
 
         """
         if data is None:
-            new_data = np.zeros(self._data[0].get_data_shape(), dtype=np.int_)
+            new_data = np.zeros(self._data[0].get_data_shape()[0:3], dtype=np.int_)
         else:
             new_data = data
+        new_header = self._data[0].get_header().copy()
+        new_header.set_data_shape(new_data.shape)
         if colormap is None:
             colormap = self._label_config_center.get_first_label_config()
         if name is None:
             self.addItem(new_data, label_config, 'new_image_%s' % self.new_no,
-                         self._data[0].get_header(), 0, 100, 255, colormap)
+                         new_header, 0, 100, 255, colormap)
             self.new_no += 1
         else:
             self.addItem(new_data, label_config, name,
-                         self._data[0].get_header(), 0, 100, 255, colormap)
+                         new_header, 0, 100, 255, colormap)
         
     def moveUp(self, row, parent=QModelIndex()):
         """
@@ -316,7 +366,7 @@ class VolumeListModel(QAbstractListModel):
 
     def setSelectedIndexes(self):
         """
-        Return all selected items.
+        Return all selected items and save into _selected_indexes.
 
         """
         self._selected_indexes = []
@@ -397,6 +447,13 @@ class VolumeListModel(QAbstractListModel):
         row = self.currentIndex().row()
         return self._data[row].get_coord_val(x, y, z)
 
+    def get_current_time_point(self):
+        row = self.currentIndex().row()
+        if self._data[row].is_4d():
+            return self._data[row].get_time_point()
+        else:
+            return False
+
     def rgba_list(self, index):
         """
         Get RGBA array for `index`th label.
@@ -425,6 +482,16 @@ class VolumeListModel(QAbstractListModel):
 
         """
         return self._data[0].get_data_shape()[2]
+
+    def set_time_point(self, tpoint):
+        """
+        Set time point for every volume.
+
+        """
+        if isinstance(tpoint, int) and not tpoint <= 0:
+            for data in self._data:
+                data.set_time_point(tpoint)
+        self.repaint_slices.emit(-1)
 
     def get_current_label_config(self):
         row = self.currentIndex().row()
@@ -472,32 +539,68 @@ class VolumeListModel(QAbstractListModel):
     def update_all_rgba(self):
         self.repaint_slices.emit(-1)
 
-    def sagital_rgba_list(self, slice):
-        index_list = [idx.row() for idx in self.selectedIndexes()]
-        rgba_list = []
-        for index in index_list:
-            f = self._data[index]._rendering_factory()
-            temp = f(np.rot90(self._data[index]._data[:, slice, :]))
-            rgba_list.append(temp)
-        return rgba_list
+    def get_sagital_rgba_list(self):
+        """
+        Get RGBA array for sagital direction in OrthView.
 
-    def axial_rgba_list(self, slice):
-        index_list = [idx.row() for idx in self.selectedIndexes()]
-        rgba_list = []
-        for index in index_list:
-            f = self._data[index]._rendering_factory()
-            temp = f(self._data[index]._data[:, :, slice])
-            rgba_list.append(temp)
-        return rgba_list 
+        """
+        return [self._data[idx.row()].get_sagital_rgba() for 
+                idx in self.selectedIndexes()]
+    
+    def get_axial_rgba_list(self):
+        """
+        get RGBA array for axial direction in OrthView.
 
-    def coronal_rgba_list(self, slice):
-        index_list = [idx.row() for idx in self.selectedIndexes()]
-        rgba_list = []
-        for index in index_list:
-            f = self._data[index]._rendering_factory()
-            temp = f(np.rot90(self._data[index]._data[slice, :, :]))
-            rgba_list.append(temp)
-        return rgba_list
+        """
+        return [self._data[idx.row()].get_axial_rgba() for
+                idx in self.selectedIndexes()]
+
+    def get_coronal_rgba_list(self):
+        """
+        get RGBA array for axial direction in OrthView.
+
+        """
+        return [self._data[idx.row()].get_coronal_rgba() for
+                idx in self.selectedIndexes()]
+
+    #def sagital_rgba_list(self, slice):
+    #    index_list = [idx.row() for idx in self.selectedIndexes()]
+    #    rgba_list = []
+    #    for index in index_list:
+    #        f = self._data[index]._rendering_factory()
+    #        if self._data[index].is_4d():
+    #            temp = f(np.rot90(self._data[index]._data[:, slice, :, 
+    #                                        self._data[index]._time_point]))
+    #        else:
+    #            temp = f(np.rot90(self._data[index]._data[:, slice, :]))
+    #        rgba_list.append(temp)
+    #    return rgba_list
+
+    #def axial_rgba_list(self, slice):
+    #    index_list = [idx.row() for idx in self.selectedIndexes()]
+    #    rgba_list = []
+    #    for index in index_list:
+    #        f = self._data[index]._rendering_factory()
+    #        if self._data[index].is_4d():
+    #            temp = f(self._data[index]._data[:, :, slice,
+    #                        self._data[index]._time_point])
+    #        else:
+    #            temp = f(self._data[index]._data[:, :, slice])
+    #        rgba_list.append(temp)
+    #    return rgba_list 
+
+    #def coronal_rgba_list(self, slice):
+    #    index_list = [idx.row() for idx in self.selectedIndexes()]
+    #    rgba_list = []
+    #    for index in index_list:
+    #        f = self._data[index]._rendering_factory()
+    #        if self._data[index].is_4d():
+    #            temp = f(np.rot90(self._data[index]._data[slice, :, :, 
+    #                        self._data[index]._time_point]))
+    #        else:
+    #            temp = f(np.rot90(self._data[index]._data[slice, :, :]))
+    #        rgba_list.append(temp)
+    #    return rgba_list
 
     def set_cur_label(self, label_config):
         row = self.currentIndex().row()

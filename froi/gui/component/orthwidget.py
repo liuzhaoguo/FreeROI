@@ -16,8 +16,6 @@ class OrthView(QWidget):
     Implementation a widget for image display in a orthographic style.
 
     """
-    xyz_updated = pyqtSignal(list)
-    
     def __init__(self, model=None, draw_settings=None, parent=None):
         """
         Initialize the widget.
@@ -27,14 +25,12 @@ class OrthView(QWidget):
 
         self._model = model
         self._model.scale_changed.connect(self.resize_item)
+        self._model.cross_pos_changed.connect(self.update_cross_pos)
         self.set_draw_settings(draw_settings)
         
         self._saglabel = SagittalImageLabel(model, draw_settings, self)
         self._axilabel = AxialImageLabel(model, draw_settings, self)
         self._corlabel = CoronalImageLabel(model, draw_settings, self)
-
-        # current position of cursor
-        self._current_pos = self._model.get_current_pos()
         
         # get expanding factor
         self.set_expanding_factor()
@@ -88,13 +84,6 @@ class OrthView(QWidget):
         """
         self.repaint()
 
-    def setModel(self, model):
-        """
-        Set model.
-
-        """
-        self._model = model
-
     def set_draw_settings(self, draw_settings):
         """
         Set scale factor.
@@ -102,20 +91,11 @@ class OrthView(QWidget):
         """
         self._draw_settings = draw_settings
 
-    def get_coord(self):
-        """
-        Get current cursor coordinates.
-
-        """
-        return self._current_pos
-
-    def set_coord(self, new_coord):
+    def update_cross_pos(self):
         """
         Set current coordinate as a new value.
 
         """
-        self._current_pos = new_coord
-        self._model.set_current_pos(new_coord)
         self.repaint()
 
     def repaint(self):
@@ -123,9 +103,9 @@ class OrthView(QWidget):
         repaint.
 
         """
-        self._saglabel.update_image(self._current_pos)
-        self._axilabel.update_image(self._current_pos)
-        self._corlabel.update_image(self._current_pos)
+        self._saglabel.update_image()
+        self._axilabel.update_image()
+        self._corlabel.update_image()
 
     def reset_view(self):
         """
