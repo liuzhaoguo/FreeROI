@@ -94,7 +94,7 @@ class BpMainWindow(QMainWindow):
         self.setWindowIcon(QIcon(os.path.join(self._icon_dir, 'icon.png')))
 
         self._init_configuration()
-        #self._init_label_config_center()
+        self._init_label_config_center()
         
         # create actions
         self._create_actions()
