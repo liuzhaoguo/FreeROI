@@ -32,7 +32,8 @@ class LayerView(QWidget):
         """
         super(LayerView, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
-        self.setMaximumWidth(230)
+        #self.setMaximumWidth(230)
+        self.setMaximumWidth(300)
         self._icon_dir = main_win._icon_dir
         self.label_config_center = label_config_center
 
@@ -128,9 +129,6 @@ class LayerView(QWidget):
         self._coord_label.setReadOnly(True)
 
         # Set time point
-        #self.data_select_combo = QComboBox()
-        #self.data_select_combo.addItem('3D Volume')
-        #self.data_select_combo.addItem('4D Volume')
         time_point_label = QLabel('time point:')
         self._volume_index_spinbox = QSpinBox()
         self._volume_index_spinbox.setValue(0)
@@ -141,7 +139,6 @@ class LayerView(QWidget):
         glayout.addWidget(self._coord_value, 1, 1, 1, 5)
         glayout.addWidget(coord_label_label, 2, 0)
         glayout.addWidget(self._coord_label, 2, 1, 1, 5)
-        #glayout.addWidget(self.data_select_combo, 3, 0)
         glayout.addWidget(time_point_label, 3, 0)
         glayout.addWidget(self._volume_index_spinbox, 3, 1, 1, 5)
        

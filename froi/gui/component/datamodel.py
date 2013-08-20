@@ -242,7 +242,7 @@ class VolumeListModel(QAbstractListModel):
         Remove items from the list.
         
         """
-        print type(row),'----------------------',type(count)
+        #print type(row),'----------------------',type(count)
         self.beginRemoveRows(parent, row, (row + count - 1))
         for index in range(count):
             self._data.pop(row)
