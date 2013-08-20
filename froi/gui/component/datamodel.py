@@ -128,7 +128,7 @@ class VolumeListModel(QAbstractListModel):
             return self._label_config_center.get_current_label_config(), self._label_config_center.get_current_list_view_index()
         elif role == Qt.UserRole + 8:
             return self._data[row].is_4d()
-        elif role == Qt.IserRole + 9:
+        elif role == Qt.UserRole + 9:
             return self._data[row].get_time_point()
 
         return QVariant()
@@ -263,7 +263,7 @@ class VolumeListModel(QAbstractListModel):
         vol = VolumeDataset(source, self._label_config_center, name, header,
                             view_min, view_max, alpha, colormap, self._cross_pos)
         if self.rowCount():
-            if self._data[0].get_data_shape[0:3] == vol.get_data_shape[0:3]:
+            if self._data[0].get_data_shape()[0:3] == vol.get_data_shape()[0:3]:
                 ok = self.insertRow(0, vol)
                 if ok:
                     self.repaint_slices.emit(-1)

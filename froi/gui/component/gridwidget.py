@@ -110,13 +110,13 @@ class GridView(QScrollArea):
         """
         self._draw_settings = draw_settings
 
-    def update_cross_pos(self, new_coord):
+    def update_cross_pos(self):
         """
         Set crosshair coordinate as a new value.
 
         """
         old_slice = self._cross_pos[2]
-        self._cross_pos = new_coord
+        self._cross_pos = self._model.get_cross_pos()
         self.image_labels[old_slice].repaint()
         self.image_labels[self._cross_pos[2]].repaint()
 

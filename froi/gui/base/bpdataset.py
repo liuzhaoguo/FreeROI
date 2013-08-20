@@ -101,6 +101,7 @@ class VolumeDataset(object):
             # FIXME: only fit in Unix/Linux systems
             basename = os.path.basename(source.strip('/'))
             self._name = re.sub(r'(.*)\.nii(\.gz)?', r'\1', basename)
+            data = img.get_data()
             self._data = np.rot90(data)
             self._header = img.get_header()
 
@@ -362,19 +363,19 @@ class VolumeDataset(object):
         return self._rgba_list[index]
 
     def get_sagital_rgba(self):
-        if self._sagital_rgba:
+        if self._sagital_rgba.tolist():
             return self._sagital_rgba
         else:
             return False
 
     def get_axial_rgba(self):
-        if self._axial_rgba:
-            return self._sagital_rgba
+        if self._axial_rgba.tolist():
+            return self._axial_rgba
         else:
             return False
 
     def get_coronal_rgba(self):
-        if self._coronal_rgba:
+        if self._coronal_rgba.tolist():
             return self._coronal_rgba
         else:
             return False

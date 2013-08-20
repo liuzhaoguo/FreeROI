@@ -818,9 +818,9 @@ class CoronalImageLabel(ImageLabel3d):
             self.draw_voxels(self.holder.voxels)
             
         # draw cross line on picture
-        if self.display_cross:
+        if self.model.display_cross:
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
-            current_pos = self.model.get_cross()
+            current_pos = self.model.get_cross_pos()
             horizon_src = (0, (self.model.getZ() - 1 - current_pos[2]) * \
                               scale + self.pic_src_point[1])
             horizon_targ = (self.size().width(),
@@ -954,7 +954,7 @@ class CoronalImageLabel(ImageLabel3d):
                 y = e.y() - self.pic_src_point[1]
                 x = int(np.floor(x/scale))
                 y = 90 - int(np.floor(y/scale))
-                current_pos = [x, self.model.get_cross()[1], y]
+                current_pos = [x, self.model.get_cross_pos()[1], y]
                 self.model.set_cross_pos(current_pos)
         elif self.painter_status.is_hand():
             if self.cursor().shape() == Qt.ArrowCursor:

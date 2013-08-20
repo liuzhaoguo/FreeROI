@@ -191,6 +191,9 @@ class LayerView(QWidget):
         # When layout changed, refresh display.
         self._model.layoutChanged.connect(self._disp_current_para)
 
+        # When crosshair position changed, refresh coordinate display
+        self._model.cross_pos_changed.connect(self.update_xyzvl)
+
         # Config setting actions
         self._view_min.editingFinished.connect(self._set_view_min)
         self._view_max.editingFinished.connect(self._set_view_max)
@@ -358,17 +361,29 @@ class LayerView(QWidget):
         """
         self._list_view.setCurrentIndex(index)
 
-    def update_xyzvl(self, xyzvl):
+    def update_xyzvl(self):
         """
         Update the information of crosshair position.
 
         """
-        self._coord_x.setValue(int(xyzvl['x']))
+        # disable signal connection when value changed
+        self._coord_x.valueChanged.disconnect()
+        self._coord_y.valueChanged.disconnect()
+        self._coord_z.valueChanged.disconnect()
+
+        xyz = self._model.get_cross_pos()
+        self._coord_x.setValue(int(xyz[0]))
         # self._coord_y.setValue(108 - int(xyzvl['y'])) #comment by zgf
-        self._coord_y.setValue(int(xyzvl['y']))
-        self._coord_z.setValue(int(xyzvl['z']))
-        self._coord_value.setText(xyzvl['value'])
-        self._coord_label.setText(xyzvl['label'])
+        self._coord_y.setValue(int(xyz[1]))
+        self._coord_z.setValue(int(xyz[2]))
+        value = self._model.get_current_value([xyz[1], xyz[0], xyz[2]])
+        self._coord_value.setText(str(value))
+        self._coord_label.setText(self._model.get_current_value_label(value))
+
+        # resume signal connection
+        self._coord_x.valueChanged.connect(self.set_cross_pos)
+        self._coord_y.valueChanged.connect(self.set_cross_pos)
+        self._coord_z.valueChanged.connect(self.set_cross_pos)
 
     def set_cross_pos(self):
         """

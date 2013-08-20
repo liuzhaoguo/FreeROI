@@ -4,6 +4,7 @@
 
 """
 
+import sys
 import os
 import ConfigParser
 import glob
@@ -65,7 +66,13 @@ class BpMainWindow(QMainWindow):
         
         """
         # Inherited from QMainWindow
-        super(BpMainWindow, self).__init__(parent)
+        if sys.platform == 'darwin':
+            # Workaround for Qt issue on OS X that causes QMainWindow to
+            # hide when adding QToolBar, see
+            # https://bugreports.qt-project.org/browse/QTBUG-4300
+            super(BpMainWindow, self).__init__(parent, Qt.MacWindowToolBarButtonHint)
+        else:
+            super(BpMainWindow, self).__init__(parent)
 
         # temporary variable
         self._temp_dir = None
@@ -437,8 +444,8 @@ class BpMainWindow(QMainWindow):
         self._spinbox.valueChanged.connect(self._set_scale_factor)
 
         # Add a toolbar
-        self._toolbar = QToolBar()
-        #self._toolbar.addWidget(self._spinbox)
+        #self._toolbar = QToolBar()
+        self._toolbar = self.addToolBar("Tools")
       
         # Add file actions
         self._toolbar.addAction(self._actions['add_image'])
@@ -471,12 +478,11 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['roifilter'])
         self._toolbar.addAction(self._actions['roimerge'])
         self._toolbar.addAction(self._actions['roidialog'])
-        
 
         self._toolbar.addSeparator() 
         self._toolbar.addWidget(self._spinbox)
 
-        self.addToolBar(self._toolbar)
+        #self.addToolBar(self._toolbar)
 
     def _set_scale_factor(self, value):
         """
@@ -554,10 +560,10 @@ class BpMainWindow(QMainWindow):
                 central_widget.setLayout(layout)
                 central_widget.layout().addWidget(self.list_view)
                 central_widget.layout().addWidget(self.image_view)
-                self._init_data_select()
                 self.setCentralWidget(central_widget)
                 # add a toolbar
                 self._add_toolbar()
+                self.setUnifiedTitleAndToolBarOnMac(True)
                 # change button status
                 self._actions['save_image'].setEnabled(True)
                 self._actions['ld_lbl'].setEnabled(True)
@@ -581,31 +587,25 @@ class BpMainWindow(QMainWindow):
                 # connect signals with slots
                 self.list_view.current_changed.connect(self._update_undo)
                 self.list_view.current_changed.connect(self._update_redo)
-                self.list_view.volume_index_spinbox.valueChanged.connect(
-                        self._volume_index_changed)
-                self.list_view.current_changed.connect(
-                        self._current_layer_xyzvl_changed)
                 self.model.undo_stack_changed.connect(self._update_undo)
                 self.model.redo_stack_changed.connect(self._update_redo)
                 # set current volume index
                 self.list_view.setCurrentIndex(self.model.index(0))
-                # update_xyzvl when necessarily
-                self.image_view.xyz_updated.connect(self._update_xyzvl)
-                self.image_view.xyz_updated.emit([self.model.get_current_pos()[1],
-                                                  self.model.get_current_pos()[0],
-                                                  self.model.get_current_pos()[2]])
+                # set crosshair as the center of the data
+                self.model.set_cross_pos([self.model.getY()/2,
+                                          self.model.getX()/2,
+                                          self.model.getZ()/2])
                 ## Enable cursor tracking
                 # self.list_view._list_view.selectionModel().currentChanged.connect(
                 #                self._switch_cursor_status)
-                # select time point
-                # TODO: refactor later for 4D dataset
-                self._init_data_select()
             elif self.model.rowCount() > 1:
                 self._actions['remove_image'].setEnabled(True)
                 self._actions['intersect'].setEnabled(True)
                 self._actions['auto_label'].setEnabled(True)
                 self._actions['roifilter'].setEnabled(True)
                 self._actions['roimerge'].setEnabled(True)
+                # set current volume index
+                self.list_view.setCurrentIndex(self.model.index(0))
         else:
             QMessageBox.information(self,'FreeROI', 'Cannot load ' + file_name + '.')
 
@@ -1072,7 +1072,7 @@ class BpMainWindow(QMainWindow):
         self.image_view.set_display_type('grid')
         self.model.scale_changed.disconnect()
         self.model.repaint_slices.disconnect()
-        self.model.cross_pos_changed.disconnect()
+        self.model.cross_pos_changed.disconnect(self.image_view.update_cross_pos)
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('grid'))
         self.image_view = GridView(self.model, self.painter_status,
@@ -1096,7 +1096,7 @@ class BpMainWindow(QMainWindow):
         self.image_view.set_display_type('orth')
         self.model.scale_changed.disconnect()
         self.model.repaint_slices.disconnect()
-        self.model.cross_pos_changed.disconnect()
+        self.model.cross_pos_changed.disconnect(self.image_view.update_cross_pos)
         self.image_view.deleteLater()
         self._spinbox.setValue(100 * self.model.get_scale_factor('orth'))
         self.image_view = OrthView(self.model, self.painter_status)
