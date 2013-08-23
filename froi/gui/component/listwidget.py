@@ -251,7 +251,7 @@ class LayerView(QWidget):
             if self._model.data(index, Qt.UserRole + 8):
                 self._volume_index_spinbox.setEnabled(True)
                 self._volume_index_spinbox.setRange(0, 
-                        self._model.data(index, Qt.UserRole + 10))
+                        self._model.data(index, Qt.UserRole + 10)-1)
                 time_point = self._model.data(index, Qt.UserRole + 9)
                 if not time_point == self._volume_index_spinbox.value():
                     self._volume_index_spinbox.setValue(time_point)
