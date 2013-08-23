@@ -563,7 +563,7 @@ class BpMainWindow(QMainWindow):
                 self.setCentralWidget(central_widget)
                 # add a toolbar
                 self._add_toolbar()
-                self.setUnifiedTitleAndToolBarOnMac(True)
+                #self.setUnifiedTitleAndToolBarOnMac(True)
                 # change button status
                 self._actions['save_image'].setEnabled(True)
                 self._actions['ld_lbl'].setEnabled(True)
