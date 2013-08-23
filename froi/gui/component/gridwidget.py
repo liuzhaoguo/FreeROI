@@ -16,8 +16,6 @@ class GridView(QScrollArea):
     """
     # number of slice each row
     _row_count = 7
-    # define new signal
-    xyz_updated = pyqtSignal(list)
 
     def __init__(self, model=None, draw_settings=None, 
                  vertical_srollbar_position=0, parent=None):
@@ -28,20 +26,19 @@ class GridView(QScrollArea):
         super(GridView, self).__init__(parent)
 
         # set scroll bar position
-        #self._horizontal_scrollbar_position = horizontal_scrollbar_position
         self._vertical_scrollbar_position = vertical_srollbar_position
 
         # model settings
-        self.setModel(model)
+        self._model = model
         self._model.scale_changed.connect(self.resize_item)
+        self._model.cross_pos_changed.connect(self.update_cross_pos)
         self.set_draw_settings(draw_settings)
 
-        # current cursor position
-        self._current_pos = self._model.get_current_pos()
+        # store corsshair position
+        self._cross_pos = self._model.get_cross_pos()
 
-        #self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         # imagelabel instances
-        self.image_labels = [ImageLabel(model, draw_settings, n_slice, self) for
+        self.image_labels = [ImageLabel(model, draw_settings, n_slice) for
                              n_slice in xrange(model.getZ())]
         self.update_row_count()
         self.update_layout()
@@ -49,17 +46,6 @@ class GridView(QScrollArea):
 
         self._type = 'grid'
         
-        #if self._horizontal_scrollbar_position and \
-           #self._horizontal_scrollbar_position <= \
-                #self.horizontalScrollBar().maximum():
-            #self.horizontalScrollBar().setValue(
-                    #self._horizontal_scrollbar_position)
-        #if self._vertical_scrollbar_position and \
-           #self._vertical_scrollbar_position <= \
-                #self.verticalScrollBar().maximum():
-            #self.verticalScrollBar().setValue(
-                    #self._vertical_scrollbar_position)
-
     def update_layout(self):
         layout = QGridLayout()
         layout.setSpacing(5)
@@ -82,9 +68,6 @@ class GridView(QScrollArea):
 
     def set_display_type(self, type):
         self._type = type
-
-    #def get_horizontal_scrollbar_position(self):
-        #return self.horizontalScrollBar().value()
 
     def get_vertical_srollbar_position(self):
         return self.verticalScrollBar().value()
@@ -115,23 +98,11 @@ class GridView(QScrollArea):
             self.layout.removeWidget(image)
         self.update_row_count(self.size().width())
         self.update_layout()
-        #for image in self.image_labels:
-            #self.layout.addWidget(image)
-        #view_widget = QWidget()
-        #view_widget.setLayout(self.layout)
-        #self.setWidget(view_widget)
 
     def resizeEvent(self, e):
         self.update_row_count(e.size().width())
         self.update_layout()
         
-    def setModel(self, model):
-        """
-        Set model of the viewer.
-
-        """
-        self._model = model
-
     def set_draw_settings(self, draw_settings):
         """
         Set scale factor.
@@ -139,21 +110,13 @@ class GridView(QScrollArea):
         """
         self._draw_settings = draw_settings
 
-    def get_coord(self):
+    def update_cross_pos(self):
         """
-        Get current curosr coordinate.
+        Set crosshair coordinate as a new value.
 
         """
-        return self._current_pos
-
-    def set_coord(self, new_coord):
-        """
-        Set current coordinate as a new value.
-
-        """
-        old_slice = self._current_pos[2]
-        self._current_pos = new_coord
-        self._model.set_current_pos(new_coord)
+        old_slice = self._cross_pos[2]
+        self._cross_pos = self._model.get_cross_pos()
         self.image_labels[old_slice].repaint()
-        self.image_labels[self.get_coord()[2]].repaint()
+        self.image_labels[self._cross_pos[2]].repaint()
 

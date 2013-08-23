@@ -15,9 +15,6 @@ from PyQt4.QtGui import *
 from froi.algorithm import array2qimage as aq
 from labelconfig import LabelConfig
 
-threeD_fourD_flag = False
-data = ''
-
 class DoStack(QObject):
     """
     For Undo and Redo
@@ -37,7 +34,10 @@ class DoStack(QObject):
         t = self._stack.pop()
         self.stack_changed.emit()
         return t
-    
+
+    def clear(self):
+        self._stack = []
+
     def stack_not_empty(self):
         if self._stack:
             return True
@@ -46,20 +46,21 @@ class DoStack(QObject):
 
 class VolumeDataset(object):
     """
-    Base dataset in PyBP GUI system.
+    Base dataset in FreeROI GUI system.
     
     """
     def __init__(self, source, label_config_center, name=None, header=None, 
-                 view_min=None, view_max=None, alpha=255, colormap='gray'):
+                 view_min=None, view_max=None, alpha=255, colormap='gray',
+                 cross_pos=None):
         """
         Create a dataset from an NiftiImage which has following 
         atributes:
         
         Parameters
         ----------
-        source : Nifti file path or 3D numpy array
-            Nifti dataset, specified either as a filename (single file 3D 
-            image) or a 3D numpy array. When source is a numpy array,
+        source : Nifti file path or 3D/4D numpy array
+            Nifti dataset, specified either as a filename (single file 3D/4D 
+            image) or a 3D/4D numpy array. When source is a numpy array,
             parameter header is required.
         label_config : label configuration
         name : name of the volume
@@ -75,6 +76,8 @@ class VolumeDataset(object):
         colormap : string
             The string can represents the colormap used for corresponding
             values, it can be 'gray', 'red2yellow', 'blue2green', 'ranbow'...
+        cross_pos : a list containing [x, y, z]
+            Default is None
 
         Returns
         -------
@@ -91,8 +94,6 @@ class VolumeDataset(object):
                 raise ValueError("Parameter header must be specified!")
             elif header.get_data_shape() == source.shape:
                 self._header = header
-            elif len(header.get_data_shape())-1 == len(source.shape):
-                self._header = header #added by zgf....
             else:
                 raise ValueError("Data dimension does not match.")
         else:
@@ -100,21 +101,8 @@ class VolumeDataset(object):
             # FIXME: only fit in Unix/Linux systems
             basename = os.path.basename(source.strip('/'))
             self._name = re.sub(r'(.*)\.nii(\.gz)?', r'\1', basename)
-
-            #----------------------------------zgf-----------------------------------------------------------------
-            global data,threeD_fourD_flag
             data = img.get_data()
-            length = len(data.shape)
-            if length == 3:
-               self._data = np.rot90(data)
-               threeD_fourD_flag = False
-            elif length == 4:
-                self._data = np.rot90(data[:,:,:,0])
-                threeD_fourD_flag = True
-            else:
-                print 'error!'
-            #----------------------------------zgf-----------------------------------------------------------------
-            # self._data = np.rot90(data)
+            self._data = np.rot90(data)
             self._header = img.get_header()
 
         if view_min == None:
@@ -133,6 +121,14 @@ class VolumeDataset(object):
  
         # bool status for the item
         self._visible = True
+        if len(self.get_data_shape()) == 3:
+            self._4d = False
+        else:
+            self._4d = True
+        self._time_point = 0
+
+        # temporal variant for OrthView
+        self._cross_pos = cross_pos
 
         # define a dictionary 
         self.label_config_center = label_config_center
@@ -143,6 +139,8 @@ class VolumeDataset(object):
         self.redo_stack = DoStack()
 
         self.update_rgba()
+        if self._cross_pos:
+            self.update_orth_rgba()
 
     def get_data_shape(self):
         """
@@ -166,12 +164,15 @@ class VolumeDataset(object):
             except ValueError:
                 current_roi = None
             return aq.array2qrgba(array, self._alpha, colormap,
-                                  normalize=(self._view_min, self._view_max), roi=current_roi)
+                                  normalize=(self._view_min, self._view_max), 
+                                  roi=current_roi)
         return shadow
 
     def update_single_roi(self):
         if self._colormap == 'single ROI':
             self.update_rgba()
+            if self._cross_pos:
+                self.update_orth_rgba()
             self.label_config_center.single_roi_view_update_for_model.emit() 
 
     def update_rgba(self, index=None):
@@ -183,11 +184,68 @@ class VolumeDataset(object):
         f = self._rendering_factory()
 
         if index == None:
-            layer_list = [self._data[..., i] for i in 
-                                range(self.get_data_shape()[2])]
+            if self.is_4d():
+                layer_list = [self._data[..., i, self._time_point] for i in 
+                                    range(self.get_data_shape()[2])]
+            else:
+                layer_list = [self._data[..., i] for i in 
+                                    range(self.get_data_shape()[2])]
             self._rgba_list = map(f, layer_list)
         else:
-            self._rgba_list[index] = f(self._data[..., index])
+            if self.is_4d():
+                self._rgba_list[index] = f(self._data[..., index, self._time_point])
+            else:
+                self._rgba_list[index] = f(self._data[..., index])
+
+    def set_cross_pos(self, cross_pos):
+        """
+        Update RGBA data in sagital, axial and coronal directions.
+
+        """
+        if self._cross_pos:
+            if not cross_pos[0] == self._cross_pos[0]:
+                self._cross_pos[0] = cross_pos[0]
+                self.update_sagital_rgba()
+            if not cross_pos[1] == self._cross_pos[1]:
+                self._cross_pos[1] = cross_pos[1]
+                self.update_coronal_rgba()
+            if not cross_pos[2] == self._cross_pos[2]:
+                self._cross_pos[2] = cross_pos[2]
+                self.update_axial_rgba()
+        else:
+            self._cross_pos = cross_pos
+            self.update_sagital_rgba()
+            self.update_coronal_rgba()
+            self.update_axial_rgba()
+    
+    def update_orth_rgba(self):
+        self.update_sagital_rgba()
+        self.update_coronal_rgba()
+        self.update_axial_rgba()
+
+    def update_sagital_rgba(self):
+        f = self._rendering_factory()
+        idx = self._cross_pos[0]
+        if self.is_4d():
+            self._sagital_rgba = f(np.rot90(self._data[:, idx, :, self._time_point]))
+        else:
+            self._sagital_rgba = f(np.rot90(self._data[:, idx, :]))
+
+    def update_axial_rgba(self):
+        f = self._rendering_factory()
+        idx = self._cross_pos[2]
+        if self.is_4d():
+            self._axial_rgba = f(self._data[:, :, idx, self._time_point])
+        else:
+            self._axial_rgba = f(self._data[:, :, idx])
+
+    def update_coronal_rgba(self):
+        f = self._rendering_factory()
+        idx = self._cross_pos[1]
+        if self.is_4d():
+            self._coronal_rgba = f(np.rot90(self._data[idx, :, :, self._time_point]))
+        else:
+            self._coronal_rgba = f(np.rot90(self._data[idx, :, :]))
 
     def set_alpha(self, alpha):
         """Set alpha value."""
@@ -196,6 +254,8 @@ class VolumeDataset(object):
                 if self._alpha != alpha:
                     self._alpha = alpha
                     self.update_rgba()
+                    if self._cross_pos:
+                        self.update_orth_rgba()
         else:
             raise ValueError("Value must be an integer between 0 and 255.")
 
@@ -203,12 +263,35 @@ class VolumeDataset(object):
         """Get alpha value."""
         return self._alpha
 
+    def set_time_point(self, tpoint):
+        """Set time point"""
+        if self.is_4d():
+            if isinstance(tpoint, int):
+                if tpoint >= 0 and tpoint < self.get_data_shape()[3]:
+                    self._time_point = tpoint
+                    self.undo_stack.clear()
+                    self.redo_stack.clear()
+                    self.update_rgba()
+                    if self._cross_pos:
+                        self.update_orth_rgba()
+            else:
+                raise ValueError("Value must be an integer.")
+    
+    def get_time_point(self):
+        """
+        Get time point.
+
+        """
+        return self._time_point
+
     def set_view_min(self, view_min):
         """Set lower limition of display range."""
         try:
             view_min = float(view_min)
             self._view_min = view_min
             self.update_rgba()
+            if self._cross_pos:
+                self.update_orth_rgba()
         except ValueError:
             print "view_min must be a number."
 
@@ -222,6 +305,8 @@ class VolumeDataset(object):
             view_max = float(view_max)
             self._view_max = view_max
             self.update_rgba()
+            if self._cross_pos:
+                self.update_orth_rgba()
         except ValueError:
             print"view_max must be a number."
 
@@ -242,6 +327,9 @@ class VolumeDataset(object):
 
         """
         self._colormap = map_name
+        self.update_rgba()
+        if self._cross_pos:
+            self.update_orth_rgba()
 
     def get_colormap(self):
         """Get item's colormap.
@@ -259,6 +347,13 @@ class VolumeDataset(object):
         else:
             raise ValueError("Input must a bool.")
 
+    def is_4d(self):
+        """
+        If the data is including several time points, return True.
+
+        """
+        return self._4d
+
     def is_visible(self):
         """Query the status of visibility."""
         return self._visible
@@ -267,24 +362,51 @@ class VolumeDataset(object):
         """Get rgba array based on the index of the layer."""
         return self._rgba_list[index]
 
+    def get_sagital_rgba(self):
+        if self._sagital_rgba.tolist():
+            return self._sagital_rgba
+        else:
+            return False
+
+    def get_axial_rgba(self):
+        if self._axial_rgba.tolist():
+            return self._axial_rgba
+        else:
+            return False
+
+    def get_coronal_rgba(self):
+        if self._coronal_rgba.tolist():
+            return self._coronal_rgba
+        else:
+            return False
+
     def set_voxel(self, x, y, z, value, ignore=True):
         """
         Set value of the voxel whose coordinate is (x, y, z).
         
         """
         try:
-            orig_data = self._data[x, y, z]
+            if self.is_4d():
+                orig_data = self._data[x, y, z, self._time_point]
+            else:
+                orig_data = self._data[x, y, z]
             if np.any(orig_data != 0) and not ignore:
                 force = QMessageBox.question(None, "Replace?", "Would you like to replace the original values?", QMessageBox.Yes, QMessageBox.No)
                 if force == QMessageBox.No:
                     return
-            self.undo_stack.push((x, y, z, self._data[x, y, z]))
-            self._data[x, y, z] = value
+            if self.is_4d():
+                self.undo_stack.push((x, y, z, self._data[x, y, z, self._time_point]))
+                self._data[x, y, z, self._time_point] = value
+            else:
+                self.undo_stack.push((x, y, z, self._data[x, y, z]))
+                self._data[x, y, z] = value
             try:
                 for z_ in range(min(z), max(z)+1):
                     self.update_rgba(z_)
             except TypeError:
                 self.update_rgba(z)
+            if self._cross_pos:
+                self.update_orth_rgba()
         except:
             raise
             print "Input coordinates are invalid."
@@ -294,7 +416,10 @@ class VolumeDataset(object):
         Get value of the voxel whose coordinate is (x, y, z)
 
         """
-        return self._data[x, y, z]
+        if self.is_4d():
+            return self._data[x, y, z, self._time_point]
+        else:
+            return self._data[x, y, z]
 
     def save2nifti(self, file_path):
         """Save to a nifti file."""
@@ -338,16 +463,17 @@ class VolumeDataset(object):
         return self._header
 
     def get_value(self, xyz):
-        return self._data[xyz[0], xyz[1], xyz[2]]
-
-    def get_lthr(self):
-        return self._view_min
+        if self.is_4d():
+            return self._data[xyz[0], xyz[1], xyz[2], self._time_point]
+        else:
+            return self._data[xyz[0], xyz[1], xyz[2]]
 
     def get_lthr_data(self):
         """
         return whole data which low-thresholded.
 
         """
+        # FIXME one time point or whole data
         temp = self._data.copy()
         temp[temp < self._view_min] = 0
         return temp
@@ -371,8 +497,14 @@ class VolumeDataset(object):
         return self.label_config.is_global
 
     def get_roi_coords(self, roi):
-        data = self._data
+        if self.is_4d():
+            data = self._data[..., self._time_point]
+        else:
+            data = self._data
         return (data==roi).nonzero()
 
     def get_coord_val(self, x, y, z):
-        return self._data[y, x, z]
+        if self.is_4d():
+            return self._data[y, x, z, self._time_point]
+        else:
+            return self._data[y, x, z]

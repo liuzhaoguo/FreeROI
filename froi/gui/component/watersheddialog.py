@@ -84,7 +84,7 @@ class WatershedDialog(QDialog):
     def _create_output(self):
         vol_row = self.vol_combo.currentIndex()
         vol_view_min = self._model.data(self._model.index(vol_row),
-                                        Qt.UserRole + 8)
+                                        Qt.UserRole)
 
         self.sigma_edit.setText('1')
         self.thresh_edit.setText(str(vol_view_min))
