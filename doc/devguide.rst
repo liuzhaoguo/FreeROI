@@ -16,7 +16,7 @@ ready to be included (merged) into the main repository.
 
 .. _github: https://github.com/BNUCNL/FreeROI
 
-Working with **FreeROI** source code
+Working with FreeROI source code
 ------------------------------------
 
 1. If you are a first-time contributor:
@@ -24,10 +24,10 @@ Working with **FreeROI** source code
   * Go to github_ and click the "fork" button to create your own copy of the 
     project.
   * Clone the project to your local computer:
-      ::
+    ::
       git clone https://github.com/your-username/FreeROI.git
   * Add upstream repository:
-      ::
+    ::
       git remote upstream https://github.com/BNUCNL/FreeROI.git
   * Now, you have remote repositories named:
     + *upstream*, which refers to the **FreeROI** repository
