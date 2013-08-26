@@ -30,6 +30,7 @@ Working with FreeROI source code
     ::
       git remote upstream https://github.com/BNUCNL/FreeROI.git
   * Now, you have remote repositories named:
+
     + *upstream*, which refers to the **FreeROI** repository
     + *origin*, which refers to your personal fork
 
