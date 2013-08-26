@@ -2,11 +2,11 @@
 Developer Guidelines
 ********************
 
-Git Repository
-===============
+Development process
+===================
 
-Layout
-------
+Git Repository
+--------------
 
 The git repository is structured by a number of branches and clones (forks) at
 github_.
@@ -16,19 +16,67 @@ ready to be included (merged) into the main repository.
 
 .. _github: https://github.com/BNUCNL/FreeROI
 
-Branches
---------
+Working with **FreeROI** source code
+------------------------------------
 
-Theoretically, any developer can have an infinite number of branches.
+1. If you are a first-time contributor:
 
-The main release branch is called *master*.  This is a merge-only branch.
-Features finished or updated by some developer are merged from the
-corresponding branch into *master*.  At a certain point the current state of 
-*master* is tagged -- a release is done.
+  * Go to github_ and click the "fork" button to create your own copy of the 
+    project.
+  * Clone the project to your local computer:
+      ::
+      git clone https://github.com/your-username/FreeROI.git
+  * Add upstream repository:
+      ::
+      git remote upstream https://github.com/BNUCNL/FreeROI.git
+  * Now, you have remote repositories named:
+    + *upstream*, which refers to the **FreeROI** repository
+    + *origin*, which refers to your personal fork
 
-Only usable feature should end-up in *master*.  Ideally *master* should be
-releasable at all times.  Something must not be merged into master if *any*
-unit test fails.
+#. Develop your contribution:
+   
+  * Pull the latest changes from upstream:
+      ::
+      git checkout master
+      git pull upstream master
+  * Create a branch for the feature you want to work on. Since the branch name
+    will appear in the merge message, use a sensible name such as 
+    'add-region-grow':
+      ::
+      git checkout -b add-region-grow
+  * Commit locally as you progress (git add and git commit)
+
+#. To submit your contribution:
+
+  * Push your changes back to your fork on GitHub:
+      ::
+      git push origin ad-region-grow
+  * Go to GitHub. The new branch will show up with a Pull Request button - 
+    ckick it.
+
+Divergence between upstream master and your feature branch
+----------------------------------------------------------
+
+Do *not* ever merge the main branch into your. If GitHub indicates that the
+branch of your Pull Request can no longer be merged automatically, rebase
+onto master:
+  ::
+  git checkout mster
+  git pull upstream master
+  git checkout add-region-grow
+  git rebase master
+
+If any conflicts occur, fix the according files and continue:
+  ::
+  git add conflict-file1 conflict-file2
+  git rebase --continue
+
+However, you should only rebase your own branches and must generally not
+rebase any branch which you collaborate on with someone else.
+
+Finally, you must push your rebase branch:
+  ::
+  git push --force origin add-region-grow
 
 Commits
 -------
