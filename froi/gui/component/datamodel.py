@@ -18,6 +18,7 @@ class VolumeListModel(QAbstractListModel):
     # customized signal
     repaint_slices = pyqtSignal(int, name='repaint_slices')
     scale_changed = pyqtSignal()
+    time_changed = pyqtSignal()
     cross_pos_changed = pyqtSignal()
     undo_stack_changed = pyqtSignal()
     redo_stack_changed = pyqtSignal()
@@ -490,9 +491,10 @@ class VolumeListModel(QAbstractListModel):
         Set time point for every volume.
 
         """
-        if isinstance(tpoint, int) and not tpoint <= 0:
+        if isinstance(tpoint, int) and not tpoint < 0:
             for data in self._data:
                 data.set_time_point(tpoint)
+        self.time_changed.emit()
         self.repaint_slices.emit(-1)
 
     def get_current_label_config(self):

@@ -32,7 +32,6 @@ class LayerView(QWidget):
         """
         super(LayerView, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
-        #self.setMaximumWidth(230)
         self.setMaximumWidth(300)
         self._icon_dir = main_win._icon_dir
         self.label_config_center = label_config_center
@@ -80,7 +79,8 @@ class LayerView(QWidget):
         self._view_min = QLineEdit()
         colormap_label = QLabel('Colormap:')
         self._colormap = QComboBox()
-        colormaps = self.builtin_colormap + self.label_config_center.get_all_labelconfig_names()
+        colormaps = self.builtin_colormap + \
+                self.label_config_center.get_all_labelconfig_names()
         self._colormap.addItems(colormaps)
 
         # initialize parameter selection panel
@@ -175,6 +175,8 @@ class LayerView(QWidget):
         # When select one item, display its undo/redo settings
         self._list_view.selectionModel().currentChanged.connect(
                 self.current_changed)
+        self._list_view.selectionModel().currentChanged.connect(
+                self.update_xyzvl)
         
         # When dataset changed, refresh display.
         self._model.dataChanged.connect(self._disp_current_para)
@@ -190,6 +192,10 @@ class LayerView(QWidget):
 
         # When crosshair position changed, refresh coordinate display
         self._model.cross_pos_changed.connect(self.update_xyzvl)
+
+        # When time point changed, refresh coordinate display.
+        self._model.time_changed.connect(self.update_xyzvl)
+        self._model.time_changed.connect(self.current_changed)
 
         # Config setting actions
         self._view_min.editingFinished.connect(self._set_view_min)
