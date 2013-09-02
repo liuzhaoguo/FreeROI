@@ -22,46 +22,46 @@ Working with FreeROI source code
 
 1. If you are a first-time contributor:
 
-  * Go to github_ and click the "fork" button to create your own copy of the 
-    project.
+   * Go to github_ and click the "fork" button to create your own copy of the 
+     project.
 
-  * Clone the project to your local computer:
-    ::
-      git clone https://github.com/your-username/FreeROI.git
+   * Clone the project to your local computer:
+     ::
+       git clone https://github.com/your-username/FreeROI.git
   
-  * Add upstream repository:
-    ::
-      git remote upstream https://github.com/BNUCNL/FreeROI.git
+   * Add upstream repository:
+     ::
+       git remote upstream https://github.com/BNUCNL/FreeROI.git
   
-  * Now, you have remote repositories named:
+   * Now, you have remote repositories named:
 
-    + *upstream*, which refers to the **FreeROI** repository
+     + *upstream*, which refers to the **FreeROI** repository
     
-    + *origin*, which refers to your personal fork
+     + *origin*, which refers to your personal fork
 
 #. Develop your contribution:
    
-  * Pull the latest changes from upstream:
-    ::
-      git checkout master
-      git pull upstream master
+   * Pull the latest changes from upstream:
+     ::
+       git checkout master
+       git pull upstream master
   
-  * Create a branch for the feature you want to work on. Since the branch name
-    will appear in the merge message, use a sensible name such as 
-    'add-region-grow':
-    ::
-      git checkout -b add-region-grow
+   * Create a branch for the feature you want to work on. Since the branch name
+     will appear in the merge message, use a sensible name such as 
+     'add-region-grow':
+     ::
+       git checkout -b add-region-grow
   
-  * Commit locally as you progress (git add and git commit)
+   * Commit locally as you progress (git add and git commit)
 
 #. To submit your contribution:
 
-  * Push your changes back to your fork on GitHub:
-    ::
-      git push origin ad-region-grow
+   * Push your changes back to your fork on GitHub:
+     ::
+       git push origin ad-region-grow
   
-  * Go to GitHub. The new branch will show up with a Pull Request button - 
-    ckick it.
+   * Go to GitHub. The new branch will show up with a Pull Request button - 
+     ckick it.
 
 Divergence between upstream master and your feature branch
 ----------------------------------------------------------
