@@ -106,20 +106,20 @@ Please prefix all commit summaries with one (or more) of the following labels.
 This should help others to easily classify the commits inti meaningful
 categoroes:
 
-  * *BF* : bug fix
+* *BF* : bug fix
 
-  * *RF* : refactoring
+* *RF* : refactoring
 
-  * *NF* : new feature
+* *NF* : new feature
 
-  * *ENH* : enhancement of an existing feature/facility
+* *ENH* : enhancement of an existing feature/facility
 
-  * *BW* : address backward-compatibility
+* *BW* : address backward-compatibility
 
-  * *OPT* : optimization
+* *OPT* : optimization
 
-  * *BK* : breaks someing and or tests fail
+* *BK* : breaks someing and or tests fail
 
-  * *PL* : making pylint happier
+* *PL* : making pylint happier
 
-  * *DOC* : for all kinds of document related commits
+* *DOC* : for all kinds of document related commits
