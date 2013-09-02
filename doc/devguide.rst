@@ -87,6 +87,18 @@ Finally, you must push your rebase branch:
 ::
   git push --force origin add-region-grow
 
+Some other things you might want to do
+---------------------------------------
+
+1. Delete a branch on github
+   ::
+     git checkout master
+     # delete branch locally
+     git branch -D my-unwanted-branch
+     # delete branch in github
+     git push origin :my-unwanted-branch
+
+
 Commits
 -------
 
