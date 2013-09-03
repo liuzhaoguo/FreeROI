@@ -82,7 +82,7 @@ class VolumeListModel(QAbstractListModel):
         Set the status of current position indicator.
 
         """
-        if isinstance(status, bool) and not status == self._display_cross:
+        if isinstance(status, bool) and not status == self.display_cross():
             self._display_cross = status
             self.cross_pos_changed.emit()
 
