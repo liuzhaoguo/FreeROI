@@ -102,7 +102,7 @@ class ImageLabel(QLabel):
             self.draw_voxels(self.voxels)
 
         # draw crosshair on picture
-        if self.model.display_cross and self.is_current_slice():
+        if self.model.display_cross() and self.is_current_slice():
             scale = self.model.get_scale_factor('grid')
             current_pos = self.model.get_cross_pos()
             horizon_src = (current_pos[0] * scale, 0)
@@ -408,7 +408,7 @@ class SagittalImageLabel(ImageLabel3d):
             self.draw_voxels(self.holder.voxels)
 
         # draw cross line on picture
-        if self.model.display_cross:
+        if self.model.display_cross():
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.model.get_cross_pos()
             horizon_src = (0, (self.model.getZ() - 1 - current_pos[2]) * \
@@ -616,7 +616,7 @@ class AxialImageLabel(ImageLabel3d):
             self.draw_voxels(self.holder.voxels)
 
         # draw cross line on picture
-        if self.model.display_cross:
+        if self.model.display_cross():
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.model.get_cross_pos()
             horizon_src = (0, current_pos[1] * scale + self.pic_src_point[1])
@@ -818,7 +818,7 @@ class CoronalImageLabel(ImageLabel3d):
             self.draw_voxels(self.holder.voxels)
             
         # draw cross line on picture
-        if self.model.display_cross:
+        if self.model.display_cross():
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.model.get_cross_pos()
             horizon_src = (0, (self.model.getZ() - 1 - current_pos[2]) * \
