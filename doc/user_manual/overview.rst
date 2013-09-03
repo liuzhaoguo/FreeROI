@@ -10,7 +10,7 @@ Features
 As its name revealed, FreeROI is focused on the `region of interest <http://en.wikipedia.org/wiki/Region_of_interest>`_ data analysis method.
 It has:
 
-* Powerful ROI labeling and generating methods and toolset, which could be used to reliabily and efficiently creating ROIs specifically for multi-modal neuroimaging analysis (eg. fMRI, Resting, DTI...), see :ref:`ROI Analysis <roi-anlaysis>`
+* Powerful ROI labeling and generating methods and toolset, which could be used to reliabily and efficiently creating ROIs specifically for multi-modal neuroimaging analysis (eg. fMRI, Resting, DTI...), see :ref:`ROI Analysis <roi-analysis>`
 
 * Three modes to view and explore neuroimage data, including a sigle-orientation slicing viewer, a three-orientation slicing viewer and a 3D volume viewer, see :ref:`Data Viewing <data-viewing>`
   
