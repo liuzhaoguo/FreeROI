@@ -1115,11 +1115,11 @@ class BpMainWindow(QMainWindow):
 
     def _display_cross_hover(self):
         if self.model._display_cross:
-            self.model._display_cross = False
+            self.model.set_cross_status(False)
             self._actions['cross_hover_view'].setText('Enable cross hover')
             self._actions['cross_hover_view'].setIcon(QIcon(os.path.join(self._icon_dir,'cross_hover_disable.png')))
         else:
-            self.model._display_cross = True
+            self.model.set_cross_status(True)
             self._actions['cross_hover_view'].setText('Disable cross hover')
             self._actions['cross_hover_view'].setIcon(QIcon(os.path.join(self._icon_dir,'cross_hover_enable.png')))
 
