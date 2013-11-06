@@ -532,6 +532,10 @@ class VolumeListModel(QAbstractListModel):
         row = self.currentIndex().row()
         return self._data[row].get_value(xyz)
 
+    def get_current_voxel_timepoints(self, xyz):
+        row = self.currentIndex().row()
+        return self._data[row].get_voxel_timepoints(xyz)
+
     def get_current_value_label(self, value):
         return self._label_config_center.get_value_label(value)
 
@@ -548,9 +552,9 @@ class VolumeListModel(QAbstractListModel):
         Get RGBA array for sagital direction in OrthView.
 
         """
-        return [self._data[idx.row()].get_sagital_rgba() for 
+        return [self._data[idx.row()].get_sagital_rgba() for
                 idx in self.selectedIndexes()]
-    
+
     def get_axial_rgba_list(self):
         """
         get RGBA array for axial direction in OrthView.
