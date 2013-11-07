@@ -528,13 +528,9 @@ class VolumeListModel(QAbstractListModel):
         row = self.currentIndex().row()
         return self._data[row].redo_stack_not_empty()
 
-    def get_current_value(self, xyz):
+    def get_current_value(self, xyz,time_course=False):
         row = self.currentIndex().row()
-        return self._data[row].get_value(xyz)
-
-    def get_current_voxel_timepoints(self, xyz):
-        row = self.currentIndex().row()
-        return self._data[row].get_voxel_timepoints(xyz)
+        return self._data[row].get_value(xyz,time_course)
 
     def get_current_value_label(self, value):
         return self._label_config_center.get_value_label(value)

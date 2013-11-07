@@ -411,25 +411,6 @@ class VolumeDataset(object):
             raise
             print "Input coordinates are invalid."
 
-    def get_voxel_value(self, x, y, z):
-        """
-        Get value of the voxel whose coordinate is (x, y, z)
-
-        """
-        if self.is_4d():
-            return self._data[x, y, z, self._time_point]
-        else:
-            return self._data[x, y, z]
-
-    def get_voxel_timepoints(self,xyz):
-        """
-        Get value of the voxel whose coordinate is (x, y, z)
-        """
-        if self.is_4d():
-           return self._data[xyz[0], xyz[1], xyz[2],:]
-        else:
-           return self._data[xyz[0],xyz[1],xyz[2]]
-
     def save2nifti(self, file_path):
         """Save to a nifti file."""
         data = np.rot90(self._data, 3)
@@ -471,11 +452,17 @@ class VolumeDataset(object):
     def get_header(self):
         return self._header
 
-    def get_value(self, xyz):
-        if self.is_4d():
-            return self._data[xyz[0], xyz[1], xyz[2], self._time_point]
+    def get_value(self, xyz, time_course=False):
+        if not time_course:
+           if self.is_4d():
+               return self._data[xyz[0], xyz[1], xyz[2], self._time_point]
+           else:
+               return self._data[xyz[0], xyz[1], xyz[2]]
         else:
-            return self._data[xyz[0], xyz[1], xyz[2]]
+            if self.is_4d():
+               return self._data[xyz[0], xyz[1], xyz[2],:]
+            else:
+               return self._data[xyz[0], xyz[1], xyz[2]]
 
     def get_lthr_data(self):
         """
