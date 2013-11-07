@@ -421,6 +421,15 @@ class VolumeDataset(object):
         else:
             return self._data[x, y, z]
 
+    def get_voxel_timepoints(self,xyz):
+        """
+        Get value of the voxel whose coordinate is (x, y, z)
+        """
+        if self.is_4d():
+           return self._data[xyz[0], xyz[1], xyz[2],:]
+        else:
+           return self._data[xyz[0],xyz[1],xyz[2]]
+
     def save2nifti(self, file_path):
         """Save to a nifti file."""
         data = np.rot90(self._data, 3)

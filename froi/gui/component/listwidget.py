@@ -378,7 +378,6 @@ class LayerView(QWidget):
 
         xyz = self._model.get_cross_pos()
         self._coord_x.setValue(int(xyz[0]))
-        # self._coord_y.setValue(108 - int(xyzvl['y'])) #comment by zgf
         self._coord_y.setValue(int(xyz[1]))
         self._coord_z.setValue(int(xyz[2]))
         value = self._model.get_current_value([xyz[1], xyz[0], xyz[2]])
@@ -399,3 +398,6 @@ class LayerView(QWidget):
                      int(self._coord_y.value()),
                      int(self._coord_z.value())]
         self._model.set_cross_pos(new_coord)
+
+
+
