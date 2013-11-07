@@ -38,11 +38,8 @@ class VoxelTimePointCurveDialog(QDialog):
         # it takes the `figure` instance as a parameter to __init__
         self.canvas = FigureCanvas(self.figure)
 
-        # this is the Navigation widget
-        # it takes the Canvas widget and a parent
+        # this is the Navigation widget,it takes the Canvas widget and a parent
         self.toolbar = NavigationToolbar(self.canvas, self)
-
-        # Just some button connected to `plot` method
 
         self.meanlabel = QLabel("Mean:")
         self.varlabel = QLabel("Variance:")
