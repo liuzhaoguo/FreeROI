@@ -78,7 +78,8 @@ class LabelConfig(object):
         return index in self.label_index.values()
 
     def get_label_list(self):
-        return self.labe
+        return self.label_index.keys()
+
     def get_label_index(self, label):
         if label:
             if self.has_label(label):

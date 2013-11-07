@@ -357,7 +357,7 @@ class LayerView(QWidget):
         Return the row of current selected item.
 
         """
-        return self._list_view.currentIndex().row();
+        return self._list_view.currentIndex().row()
 
     def setCurrentIndex(self, index):
         """

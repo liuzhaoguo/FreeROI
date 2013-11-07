@@ -460,7 +460,7 @@ class VolumeDataset(object):
             voxel_set = self.redo_stack.pop()
             self.set_voxel(*voxel_set, ignore=True)
             return voxel_set[2]
-        return Nonel
+        return None
 
     def connect_undo(self, slot):
         self.undo_stack.stack_changed.connect(slot)
