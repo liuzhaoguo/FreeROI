@@ -62,7 +62,7 @@ class VoxelTimePointCurveDialog(QDialog):
     def _plot(self):
         ''' plot time time point curve.'''
         xyz = self._model.get_cross_pos()
-        points = self._model.get_current_value([xyz[1], xyz[0], xyz[2]],True)
+        points = self._model.get_current_value([xyz[1], xyz[0], xyz[2]],time_course=True)
         self.meanlabel.setText("Mean:"+str(points.mean()))
         self.varlabel.setText("Variance:"+str(points.var()))
         # create an axis
