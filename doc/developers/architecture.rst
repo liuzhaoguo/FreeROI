@@ -44,12 +44,12 @@ The module *bpdataset* defines the baisc data structure (VolumeDataset) -- a sin
 neuroimage data (NIFTI-1 format, either 3D or 4D) and many functions used to read/modify 
 the value of single voxel and related parameters for display purpose.
 
-To illustrate the usage of class VolumeData, a toy example is present.
- ::
-   # import module bpdataset
-   from froi.gui.base import bpdataset
-   # initialize a new neuroimage dataset
-   new_img = bpdataset.VolumeDataset(source='nifti-file', label_config_center)
+To illustrate the usage of class VolumeData, a toy example is present. 
+::
+  # import module bpdataset
+  from froi.gui.base import bpdataset
+  # initialize a new neuroimage dataset
+  new_img = bpdataset.VolumeDataset(source='nifti-file', label_config_center)
 
 Note: argument label_config_center is a setting class used for label display implemented
 in the FreeROI.
