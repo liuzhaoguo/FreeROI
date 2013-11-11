@@ -29,6 +29,7 @@ from component.regularroidialog import RegularROIDialog
 from component.intersectdialog import IntersectDialog
 #from component.growdialog import GrowDialog
 from component.growdialog_liu import GrowDialog
+from component.edgedetectiondialog import Edge_detectionDialog
 from component.autolabeldialog import AutoLabelDialog
 from component.opendialog import OpenDialog
 from component.localmaxdialog import LocalMaxDialog
@@ -412,7 +413,14 @@ class BpMainWindow(QMainWindow):
                                         self.tr("Region Grow"), self)
         self._actions['grow'].triggered.connect(self._grow)
         self._actions['grow'].setEnabled(False)
-        
+
+        # Edge Detection
+        self._actions['edge_detection'] = QAction(QIcon(os.path.join(
+            self._icon_dir, 'edge_detection.png')),
+                                                  self.tr("Multi Label Edge Detection"), self)
+        self._actions['edge_detection'].triggered.connect(self._edge_detection)
+        self._actions['edge_detection'].setEnabled(False)
+
         # Auto Labeling
         self._actions['auto_label'] = QAction(QIcon(os.path.join(
                                         self._icon_dir, 'auto_labeling.png')),
@@ -496,6 +504,7 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['open'])
         self._toolbar.addAction(self._actions['lmax'])
         self._toolbar.addAction(self._actions['grow'])
+        self._toolbar.addAction(self._actions['edge_detection'])
         self._toolbar.addAction(self._actions['watershed'])
         self._toolbar.addAction(self._actions['roifilter'])
         self._toolbar.addAction(self._actions['roimerge'])
@@ -579,6 +588,7 @@ class BpMainWindow(QMainWindow):
             self._actions['original_view'].setEnabled(True)
             self._actions['watershed'].setEnabled(True)
             self._actions['grow'].setEnabled(True)
+            self._actions['edge_detection'].setEnabled(True)
             self._actions['binaryzation'].setEnabled(True)
             self._actions['binarydilation'].setEnabled(True)
             self._actions['binaryerosion'].setEnabled(True)
@@ -662,6 +672,7 @@ class BpMainWindow(QMainWindow):
             self._actions['intersect'].setEnabled(True)
             self._actions['auto_label'].setEnabled(True)
             self._actions['grow'].setEnabled(True)
+            self._actions['edge_detection'].setEnabled(True)
             self._actions['open'].setEnabled(True)
             self._actions['regular_roi'].setEnabled(True)
             self._actions['lmax'].setEnabled(True)
@@ -697,6 +708,7 @@ class BpMainWindow(QMainWindow):
                self._actions['original_view'].setEnabled(True)
                self._actions['watershed'].setEnabled(True)
                self._actions['grow'].setEnabled(True)
+               self._actions['edge_detection'].setEnabled(True)
                self._actions['binaryzation'].setEnabled(True)
                self._actions['binarydilation'].setEnabled(True)
                self._actions['binaryerosion'].setEnabled(True)
@@ -747,6 +759,7 @@ class BpMainWindow(QMainWindow):
         self._actions['intersect'].setEnabled(True)
         self._actions['regular_roi'].setEnabled(True)
         self._actions['grow'].setEnabled(True)
+        self._actions['edge_detection'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
         self._actions['open'].setEnabled(True)
         self._actions['lmax'].setEnabled(True)
@@ -757,6 +770,7 @@ class BpMainWindow(QMainWindow):
         self._actions['remove_image'].setEnabled(True)
         self._actions['intersect'].setEnabled(True)
         self._actions['grow'].setEnabled(True)
+        self._actions['edge_detection'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
         self._actions['open'].setEnabled(True)
         self._actions['lmax'].setEnabled(True)
@@ -774,7 +788,8 @@ class BpMainWindow(QMainWindow):
             self._actions['remove_image'].setEnabled(False)
             self._actions['intersect'].setEnabled(False)
             self._actions['regular_roi'].setEnabled(False)
-            #self._actions['grow'].setEnabled(False)
+            self._actions['grow'].setEnabled(False)
+            self._actions['edge_detection'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
             self._actions['open'].setEnabled(False)
             self._actions['lmax'].setEnabled(False)
@@ -821,6 +836,7 @@ class BpMainWindow(QMainWindow):
         self._actions['intersect'].setEnabled(False)
         self._actions['regular_roi'].setEnabled(False)
         self._actions['grow'].setEnabled(False)
+        self._actions['edge_detection'].setEnabled(False)
         self._actions['auto_label'].setEnabled(False)
         self._actions['watershed'].setEnabled(False)
         self._actions['open'].setEnabled(False)
@@ -872,6 +888,7 @@ class BpMainWindow(QMainWindow):
         self.tool_menu.addAction(self._actions['regular_roi'])
         self.tool_menu.addAction(self._actions['intersect'])
         self.tool_menu.addAction(self._actions['grow'])
+        self.tool_menu.addAction(self._actions['edge_detection'])
         self.tool_menu.addAction(self._actions['auto_label'])
         self.tool_menu.addAction(self._actions['watershed'])
         self.tool_menu.addAction(self._actions['open'])
@@ -1137,6 +1154,10 @@ class BpMainWindow(QMainWindow):
 
     def _grow(self):
         new_dialog = GrowDialog(self.model)
+        new_dialog.exec_()
+
+    def _edge_detection(self):
+        new_dialog = Edge_detectionDialog(self.model)
         new_dialog.exec_()
 
     def _auto_label(self):
