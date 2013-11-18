@@ -1,19 +1,29 @@
 TO DO LIST
 
-** Long-Term Aim
-1. The cursor could be clicked and `moved` in OrthView to select different 
-   slice dynamically.    -- HLJ (Complete!)
-2. Link the OrthView to the ROI selector.     -- HLJ (Complete!)
-3. Label size in OrthView could change dynamically to fit the size of the
-   window.    --HLJ (Complete!)
-4. Slice number in GridView should change dynamically to fit the width of 
-   the ImageView widget.                  -- YZT (Complete!)
-5. Add Analyses module (descriptive statistic for ROI).
-6. Coordinate panel could be used to select a specified position.
-7. Add Region Grow Algorithm.
-8. Add regular ROI generation.     -- HLJ (Complete!)
 
-All features above could be added `smoothly`.
+1. Add Analyses module (descriptive statistic for ROI).
+2. Display MNI coordinate.
+3. Image smooth and sharpen in physical unit (mm).
+4. New segmentation methods: Livewire, N-cut, K-means.
+5. color scheme editor.
+6. Global max and local max detector.
+7. Boundary detection.
+8. Transformation form ROI (volume) to label (surface).
+-------------------------------------------------------------------------
+
+** Version: 0.1.3
+
+1. The cursor could be clicked and `moved` in OrthView to select different 
+   slice dynamically.    -- HLJ 
+2. Link the OrthView to the ROI selector.     -- HLJ
+3. Label size in OrthView could change dynamically to fit the size of the
+   window.    --HLJ
+4. Slice number in GridView should change dynamically to fit the width of 
+   the ImageView widget.                  -- YZT
+5. Coordinate panel could be used to select a specified position. -- ZGF
+6. Add Region Grow Algorithm. -- LZG & DXB
+7. Add regular ROI generation.     -- HLJ
+8. 4D data support.  -- HLJ
 ---------------------------------------------------------------------------
 
 ** Version: 0.1.2
