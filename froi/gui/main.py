@@ -1166,7 +1166,7 @@ class BpMainWindow(QMainWindow):
 
     def _binarydilation(self):
         binarydilation_dialog = BinarydilationDialog(self.model)
-        binarydilation_dialog.exec_()
+        binarydilation_dialog.exec_()l
 
     def _greyerosion(self):
         greyerosiondialog = GreyerosionDialog(self.model)

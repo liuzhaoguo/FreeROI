@@ -385,7 +385,7 @@ class LayerView(QWidget):
         self._coord_label.setText(self._model.get_current_value_label(value))
 
         # resume signal connection
-        self._coord_x.valueChanged.connect(self.set_cross_pos)
+        self._coord_x.valueChanged.connect(self.set_crosls_pos)
         self._coord_y.valueChanged.connect(self.set_cross_pos)
         self._coord_z.valueChanged.connect(self.set_cross_pos)
 
@@ -399,5 +399,11 @@ class LayerView(QWidget):
                      int(self._coord_z.value())]
         self._model.set_cross_pos(new_coord)
 
+    def contextMenuEvent(self, event):
+        popMenu = QMenu()
+        popMenu.addAction(QAction(QIcon(""),self.tr("&Open menu item"),self))
+        popMenu.addAction(QAction(QIcon(""),self.tr("&Save menu item"),self))
+
+        popMenu.exec_(QCursor.pos())
 
 
