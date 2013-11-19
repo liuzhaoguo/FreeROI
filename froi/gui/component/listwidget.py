@@ -385,7 +385,7 @@ class LayerView(QWidget):
         self._coord_label.setText(self._model.get_current_value_label(value))
 
         # resume signal connection
-        self._coord_x.valueChanged.connect(self.set_crosls_pos)
+        self._coord_x.valueChanged.connect(self.set_cross_pos)
         self._coord_y.valueChanged.connect(self.set_cross_pos)
         self._coord_z.valueChanged.connect(self.set_cross_pos)
 

@@ -532,6 +532,9 @@ class VolumeListModel(QAbstractListModel):
         row = self.currentIndex().row()
         return self._data[row].get_value(xyz,time_course)
 
+    def get_row_value(self, xyz,row):
+        return self._data[row].get_value(xyz)
+
     def get_current_value_label(self, value):
         return self._label_config_center.get_value_label(value)
 
