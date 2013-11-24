@@ -399,5 +399,11 @@ class LayerView(QWidget):
                      int(self._coord_z.value())]
         self._model.set_cross_pos(new_coord)
 
+    def contextMenuEvent(self, event):
+        popMenu = QMenu()
+        popMenu.addAction(QAction(QIcon(""),self.tr("&Open menu item"),self))
+        popMenu.addAction(QAction(QIcon(""),self.tr("&Save menu item"),self))
+
+        popMenu.exec_(QCursor.pos())
 
 
