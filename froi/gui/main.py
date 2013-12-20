@@ -1053,11 +1053,11 @@ class BpMainWindow(QMainWindow):
         new_dialog.exec_()
 
     def _grow(self):
-        new_dialog = GrowDialog(self.model)
+        new_dialog = GrowDialog(self.model, self)
         new_dialog.exec_()
 
     def _edge_detection(self):
-        new_dialog = Edge_detectionDialog(self.model)
+        new_dialog = Edge_detectionDialog(self.model, self)
         new_dialog.exec_()
 
     def _auto_label(self):
@@ -1069,7 +1069,7 @@ class BpMainWindow(QMainWindow):
         new_dialog.exec_()
 
     def _lmax(self):
-        new_dialog = LocalMaxDialog(self.model)
+        new_dialog = LocalMaxDialog(self.model, self)
         new_dialog.exec_()
 
     def _roifilter(self):
