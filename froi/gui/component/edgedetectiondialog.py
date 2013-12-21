@@ -10,10 +10,10 @@ class Edge_detectionDialog(QDialog):
     A dialog for action of edge_detection.
 
     """
-    def __init__(self, model, parent=None):
+    def __init__(self, model, main_win, parent=None):
         super(Edge_detectionDialog, self).__init__(parent)
         self._model = model
-
+        self._main_win = main_win
         self._init_gui()
         self._create_actions()
 
@@ -84,4 +84,5 @@ class Edge_detectionDialog(QDialog):
                             vol_name,
                             self._model._data[0].get_header(),
                             None, None, 255, 'green')
+        self._main_win.new_image_action()
         self.done(0)
