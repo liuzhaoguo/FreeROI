@@ -2,20 +2,26 @@ Aims for long term evolution
 -----------------------------
 1. image orientation detection.
 2. color scheme editor. 
-3. Transformation form ROI (volume) to label (surface). -- For DXB
 4. New segmentation methods: N-cut, K-means.
 
 TO DO LIST
 ----------
 
+** Version: 0.1.5
+
+1. Fix bugs.
+2. Improve GUI and group related functions together. -- For ZGF
+------------------------------------------------------------------------
+
 ** Version: 0.1.4
 
 1. Add Analyses module (descriptive statistic for 3D ROI), including related 
-   algorithms and graphic interface.  -- For LZG
+   algorithms and graphic interface.  -- For ZGF
 2. ROI boundary detection.  -- LZG
 3. Extract time courses from a voxel or a ROI (a pre-defined ROI or defined 
    manually on the image, such as a square, a circle or a irregular shape draw
    with Livewire algorithm).  -- ZGF
+4. Transformation form ROI (volume) to label (surface). -- For DXB
 -------------------------------------------------------------------------
 
 ** Version: 0.1.3
