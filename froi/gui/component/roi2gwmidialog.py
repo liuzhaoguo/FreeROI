@@ -27,11 +27,19 @@ class Roi2gwmiDialog(QDialog):
         self.setWindowTitle("Project ROI to interface")
 
         # initialize widgets
-        source_label = QLabel("ROI")
-        interface_label = QLabel("GWMI")
+        self.mode_list = ['bin','count','value']
+        self.source_label = QLabel("ROI volume:")
+        self.interface_label = QLabel("Target volume:")
+        self.mode_label = QLabel(" Threshold mode:")
         self.roi_volume = QComboBox()
         self.interface_volume = QComboBox()
-
+        
+        self.modeComboBox = QComboBox()
+        self.modeComboBox.addItems(self.mode_list)
+        self.thr_label = QLabel(" Threshold :")
+        self.thr_edit = QLineEdit()
+        self.thr_edit.setText("1.0")
+        
         vol_list = self._model.getItemList()
         self.roi_volume.addItems(vol_list)
         self.interface_volume.addItems(vol_list)
@@ -41,13 +49,17 @@ class Roi2gwmiDialog(QDialog):
 
         # layout config
         grid_layout = QGridLayout()
-        grid_layout.addWidget(source_label, 0, 0)
+        grid_layout.addWidget(self.source_label, 0, 0)
         grid_layout.addWidget(self.roi_volume, 0, 1)
-        grid_layout.addWidget(interface_label, 1, 0)
+        grid_layout.addWidget(self.interface_label, 1, 0)
         grid_layout.addWidget(self.interface_volume, 1, 1)
+        grid_layout.addWidget(self.mode_label, 2,0)
+        grid_layout.addWidget(self.modeComboBox, 2,1)
+        grid_layout.addWidget(self.thr_label, 3,0)
+        grid_layout.addWidget(self.thr_edit, 3,1)
 
-        grid_layout.addWidget(out_label, 2, 0)
-        grid_layout.addWidget(self.out_edit, 2, 1)
+        grid_layout.addWidget(out_label, 4, 0)
+        grid_layout.addWidget(self.out_edit, 4, 1)
 
         # button config
         self.run_button = QPushButton("Run")
@@ -79,12 +91,14 @@ class Roi2gwmiDialog(QDialog):
         
         roi_volume = self.roi_volume.currentIndex()
         interface_volume = self.interface_volume.currentIndex()
-        
+        mode = self.modeComboBox.currentIndex()
+        thr = self.thr_edit.text()
         roi_data = self._model.data(self._model.index(roi_volume),
                                        Qt.UserRole + 5)
         interface_data = self._model.data(self._model.index(interface_volume),
                                        Qt.UserRole + 5)
-        new_vol =r2i.roi_to_gwmi_1(roi_data, interface_data)
+       
+        new_vol =r2i.roi_projection(roi_data, interface_data,100,thr,mode)
         self._model.addItem(new_vol,
                             None,
                             vol_name,

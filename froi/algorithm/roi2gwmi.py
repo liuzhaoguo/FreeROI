@@ -4,12 +4,10 @@
 """
 Project the ROI to the gray white matter interface.
 """
-import os
-import sys
 import numpy as np
-import nibabel as nib
 from froi.algorithm import imtool as imt
 import time as time
+from scipy.spatial import distance as ds
 
 def is_inside(v, shape):
     """
@@ -63,9 +61,7 @@ def get_neighbors_surface(coor,radius,shape):
         neighbors_all = get_neighbors(coor,radius,shape)
         neighbors_in = get_neighbors(coor,radius-1,shape)
         neigh = [i for i in neighbors_all.tolist() if i not in neighbors_in.tolist()]
-       # print neighbors_all
-       # print neighbors_in
-        #print np.array(neigh).shape
+
         return neigh
 
 def roi_to_gwmi(img,brain_wm,nth):
@@ -73,7 +69,7 @@ def roi_to_gwmi(img,brain_wm,nth):
     Transform the functional roi to wm.
     Algorithm: find the nearest wm voxel.
     """
-    st = time.time()
+    #st = time.time()
     data = img
     wmdata = imt.multi_label_edge_detection(brain_wm)
     shape = data.shape
@@ -145,7 +141,7 @@ def roi_to_gwmi_1(img,brain_wm):
     Transform the functional roi to wm.
     Algorithm: find the nearest wm voxel.
     """
-    st = time.time()
+    #st = time.time()
     neighbors  = [[1,0,0],\
                  [-1,0,0],\
                  [0,1,0],\
@@ -183,7 +179,7 @@ def roi_to_gwmi_1(img,brain_wm):
     roi = [int(i) for i in roi]
     
     wmdata = wmdata!=0
-    result_mask = np.zeros(data.shape)
+    result_mask = np.zeros(shape)
     #print wmdata   
     
     #First, get the nonzero voxel index in image data.
@@ -198,10 +194,10 @@ def roi_to_gwmi_1(img,brain_wm):
         #Second, find the nearest wm voxel for each indexs.
         #print roi_id,indexs.shape[0]
         for coor in indexs:
-           # print coor
+
             #x = coor[0]
             #y = coor[1]
-           # z = coor[2]
+            # z = coor[2]
             if wmdata[coor[0],coor[1],coor[2]]==1:
                 pass
                 #result_mask[x,y,z] = roi_id
@@ -219,4 +215,54 @@ def roi_to_gwmi_1(img,brain_wm):
         #print roi_id, roi_size
     """
     #print "Time use: %s"%(time.time()-st)
+    return result_mask
+
+
+def roi_projection(img,roi,dis_th,val_th,mode):
+    
+    #st = time.time()
+    data = img
+    
+    roi = imt.multi_label_edge_detection(roi)
+    result_mask = np.zeros(data.shape)
+    con_mask = np.zeros(data.shape)
+    
+    tmp_mask = data > 0 
+    roi_mask = roi > 0
+
+    img_indexs = np.transpose(tmp_mask.nonzero())
+    roi_indexs = np.transpose(roi_mask.nonzero())
+    
+    spacedist = ds.cdist(img_indexs,roi_indexs,'euclidean')
+    #print spacedist
+    mode = int(mode)
+    val_th = float(val_th)
+    #  print mode,val_th
+    if mode ==0:
+        for dist in spacedist:
+            index = dist.argmin()
+            if dist.min()< dis_th:
+                coor = roi_indexs[index]
+                result_mask[coor[0]][coor[1]][coor[2]] = 1
+    elif mode == 1:
+        for dist in spacedist:
+            index = dist.argmin()
+            if dist.min()< dis_th:
+                coor = roi_indexs[index]
+                result_mask[coor[0]][coor[1]][coor[2]] = result_mask[coor[0]][coor[1]][coor[2]]+1
+        result_mask[  result_mask < val_th] = 0 
+    #    print result_mask[result_mask.nonzero()]
+        
+    elif mode == 2:
+        for i,dist in enumerate(spacedist):
+            index = dist.argmin()
+            if dist.min()< dis_th:
+                dcoor = img_indexs[i]   # source coor
+                coor = roi_indexs[index]        #target coor
+                result_mask[coor[0]][coor[1]][coor[2]] = result_mask[coor[0]][coor[1]][coor[2]]+data[dcoor[0]][dcoor[1]][dcoor[2]]
+                con_mask[coor[0]][coor[1]][coor[2]] = con_mask[coor[0]][coor[1]][coor[2]]+1
+        result_mask = result_mask/(con_mask+0.0000001)
+        result_mask[  result_mask < val_th] = 0 
+    #    print result_mask[result_mask.nonzero()]
+    # print "Time : %s"%(time.time()-st)
     return result_mask
