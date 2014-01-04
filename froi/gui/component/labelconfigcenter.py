@@ -38,7 +38,6 @@ class LabelConfigCenter(QGroupBox, DrawSettings):
     A Qwidget for label config chooser.
 
     """
-
     single_roi_view_update = pyqtSignal()
     single_roi_view_update_for_model = pyqtSignal()
 
@@ -64,8 +63,8 @@ class LabelConfigCenter(QGroupBox, DrawSettings):
         Initialize GUI.
 
         """
-        self.setTitle('Label Config Center')
         config_label = 'Configs'
+
         self.config_combobox = QComboBox()
         self.config_combobox.addItems(self.config_names)
         self.null_model = QStringListModel()
