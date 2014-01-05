@@ -6,6 +6,7 @@ and parameters alternating.
 """
 
 import os
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -14,6 +15,7 @@ from drawsettings import DrawSettings
 from ..base.labelconfig import LabelConfig
 from labelconfigcenter import *
 from toolstabwidget import ToolsTabWidget
+import froi
 
 class LayerView(QWidget):
     """
@@ -26,7 +28,7 @@ class LayerView(QWidget):
 
     builtin_colormap = ['gray', 'red2yellow', 'blue2cyanblue', 'red', 'green', 'blue', 'rainbow', 'single ROI']
 
-    def __init__(self, label_config_center, main_win, parent=None):
+    def __init__(self, label_config_center, parent=None):
         """
         Initialize the widget.
 
@@ -34,10 +36,10 @@ class LayerView(QWidget):
         super(LayerView, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
         self.setMaximumWidth(300)
-        self._icon_dir = main_win._icon_dir
-        self.label_config_center = label_config_center
 
-        self._main_window = main_win
+        froi_dir = os.path.dirname(froi.__file__)
+        self._icon_dir = os.path.join(froi_dir,'gui/icon/')
+        self.label_config_center = label_config_center
 
         # initialize the model
         self._model = None
@@ -152,7 +154,7 @@ class LayerView(QWidget):
 
         self._unity_info_panel = QGroupBox('Tools ')
         self._unity_tabwidget = QTabWidget()
-        self.tools_widget = ToolsTabWidget(self._main_window)
+        self.tools_widget = ToolsTabWidget()
         self._unity_tabwidget.addTab(labcon_panel,"Label Configure Center")
         self._unity_tabwidget.addTab(self.tools_widget,"Tools")
         hlayout = QHBoxLayout(self._unity_info_panel)
