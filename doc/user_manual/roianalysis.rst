@@ -1,4 +1,15 @@
-.. _roi-analysis:
+.. _roi-generation:
 
-ROI Analysis
-============
+ROI Generation
+==============
+
+ROI by handpicking subregion
+-----------------------------
+
+ROI By Handdrawing
+-------------------
+
+Regular shape generation
+-----------------------------
+
+
