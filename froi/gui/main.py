@@ -95,7 +95,7 @@ class BpMainWindow(QMainWindow):
         self.label_config_suffix = 'lbl'
 
         # set icon configuration
-        self._icon_dir=dir(self)
+        self._icon_dir=dir()
 
         # set window title
         self.setWindowTitle('FreeROI')
