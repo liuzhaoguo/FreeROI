@@ -6,6 +6,7 @@ and parameters alternating.
 """
 
 import os
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
@@ -13,6 +14,8 @@ from froi.algorithm.array2qimage import idx2rgb
 from drawsettings import DrawSettings
 from ..base.labelconfig import LabelConfig
 from labelconfigcenter import *
+from toolstabwidget import ToolsTabWidget
+import froi
 
 class LayerView(QWidget):
     """
@@ -25,7 +28,7 @@ class LayerView(QWidget):
 
     builtin_colormap = ['gray', 'red2yellow', 'blue2cyanblue', 'red', 'green', 'blue', 'rainbow', 'single ROI']
 
-    def __init__(self, label_config_center, main_win, parent=None):
+    def __init__(self, label_config_center, parent=None):
         """
         Initialize the widget.
 
@@ -33,7 +36,9 @@ class LayerView(QWidget):
         super(LayerView, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
         self.setMaximumWidth(300)
-        self._icon_dir = main_win._icon_dir
+
+        froi_dir = os.path.dirname(froi.__file__)
+        self._icon_dir = os.path.join(froi_dir,'gui/icon/')
         self.label_config_center = label_config_center
 
         # initialize the model
@@ -103,7 +108,7 @@ class LayerView(QWidget):
         # label config center
         labcon_panel = self.label_config_center
         # initialize cursor coord&value widgets
-        xyz_layout = QHBoxLayout()
+        xyzt_layout = QHBoxLayout()
         # FIXME should match data shape
         coord_x_label = QLabel('x: ')
         self._coord_x = QSpinBox()
@@ -114,12 +119,18 @@ class LayerView(QWidget):
         coord_z_label = QLabel('z: ')
         self._coord_z = QSpinBox()
         self._coord_z.setRange(0, self._model.getZ())
-        xyz_layout.addWidget(coord_x_label)
-        xyz_layout.addWidget(self._coord_x)
-        xyz_layout.addWidget(coord_y_label)
-        xyz_layout.addWidget(self._coord_y)
-        xyz_layout.addWidget(coord_z_label)
-        xyz_layout.addWidget(self._coord_z)
+        # Set time point
+        time_point_label = QLabel('t:')
+        self._volume_index_spinbox = QSpinBox()
+        self._volume_index_spinbox.setValue(0)
+        xyzt_layout.addWidget(coord_x_label)
+        xyzt_layout.addWidget(self._coord_x)
+        xyzt_layout.addWidget(coord_y_label)
+        xyzt_layout.addWidget(self._coord_y)
+        xyzt_layout.addWidget(coord_z_label)
+        xyzt_layout.addWidget(self._coord_z)
+        xyzt_layout.addWidget(time_point_label)
+        xyzt_layout.addWidget(self._volume_index_spinbox)
         
         coord_value_label = QLabel('value:')
         self._coord_value = QLineEdit()
@@ -127,29 +138,33 @@ class LayerView(QWidget):
         coord_label_label = QLabel('label:')
         self._coord_label = QLineEdit()
         self._coord_label.setReadOnly(True)
+        vl_hlayout = QHBoxLayout()
+        vl_hlayout.addWidget(coord_value_label)
+        vl_hlayout.addWidget(self._coord_value)
+        vl_hlayout.addWidget(coord_label_label)
+        vl_hlayout.addWidget(self._coord_label)
 
-        # Set time point
-        time_point_label = QLabel('time point:')
-        self._volume_index_spinbox = QSpinBox()
-        self._volume_index_spinbox.setValue(0)
 
         glayout = QGridLayout()
-        glayout.addLayout(xyz_layout, 0, 0, 1, 6)    
-        glayout.addWidget(coord_value_label, 1, 0)
-        glayout.addWidget(self._coord_value, 1, 1, 1, 5)
-        glayout.addWidget(coord_label_label, 2, 0)
-        glayout.addWidget(self._coord_label, 2, 1, 1, 5)
-        glayout.addWidget(time_point_label, 3, 0)
-        glayout.addWidget(self._volume_index_spinbox, 3, 1, 1, 5)
+        glayout.addLayout(xyzt_layout, 0, 0, 1, 6)
+        glayout.addLayout(vl_hlayout,1,0,1,6)
        
         self._cursor_info_panel = QGroupBox('Cursor')
         self._cursor_info_panel.setLayout(glayout)
 
+        self._unity_info_panel = QGroupBox('Tools ')
+        self._unity_tabwidget = QTabWidget()
+        self.tools_widget = ToolsTabWidget()
+        self._unity_tabwidget.addTab(labcon_panel,"Label Configure Center")
+        self._unity_tabwidget.addTab(self.tools_widget,"Tools")
+        hlayout = QHBoxLayout(self._unity_info_panel)
+        hlayout.addWidget(self._unity_tabwidget)
+
         # layout config of whole widget
         self.setLayout(QVBoxLayout())
         self.layout().addLayout(list_view_layout)
-        self.layout().addWidget(labcon_panel)
         self.layout().addWidget(self._cursor_info_panel)
+        self.layout().addWidget(self._unity_info_panel)
 
     def setModel(self, model):
         """
@@ -405,5 +420,6 @@ class LayerView(QWidget):
         popMenu.addAction(QAction(QIcon(""),self.tr("&Save menu item"),self))
 
         popMenu.exec_(QCursor.pos())
+
 
 

@@ -500,11 +500,11 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['original_view'])
         self._toolbar.addAction(self._actions['cross_hover_view'])
         # Add draw tools
-        self._toolbar.addSeparator()
-        self._toolbar.addAction(self._actions['hand'])
-        self._toolbar.addAction(self._actions['cursor'])
-        self._toolbar.addAction(self._actions['brush'])
-        self._toolbar.addAction(self._actions['roibrush'])
+        # self._toolbar.addSeparator()
+        # self._toolbar.addAction(self._actions['hand'])
+        # self._toolbar.addAction(self._actions['cursor'])
+        # self._toolbar.addAction(self._actions['brush'])
+        # self._toolbar.addAction(self._actions['roibrush'])
         # Add undo redo
         self._toolbar.addSeparator()
         self._toolbar.addAction(self._actions['undo'])
@@ -595,7 +595,7 @@ class BpMainWindow(QMainWindow):
             # If only one data in VolumeList, then initialize views.
             if self.model.rowCount() == 1:
                 # initialize views
-                self.list_view = LayerView(self._label_config_center, self)
+                self.list_view = LayerView(self._label_config_center)
                 self.list_view.setModel(self.model)
                 self.image_view = GridView(self.model, self.painter_status)
                 # initialize display layout
