@@ -421,7 +421,5 @@ class LayerView(QWidget):
 
         popMenu.exec_(QCursor.pos())
 
-    def tagwidget_index_changed(self):
-        self.tools_widget.update_brush()
 
 

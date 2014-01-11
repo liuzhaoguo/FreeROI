@@ -636,7 +636,6 @@ class BpMainWindow(QMainWindow):
                 # connect signals with slots
                 self.list_view.current_changed.connect(self._update_undo)
                 self.list_view.current_changed.connect(self._update_redo)
-                self._label_config_center.label_config_changed_signal().connect(self.list_view.tagwidget_index_changed)
                 self.model.undo_stack_changed.connect(self._update_undo)
                 self.model.redo_stack_changed.connect(self._update_redo)
                 # set current volume index
