@@ -12,7 +12,7 @@ def get_icon_dir():
     base_dir = apath(pjoin(froi_dir, os.pardir))
     base_dir = apath(pjoin(base_dir, os.pardir))
     if not os.path.exists(pjoin(base_dir, 'data')):
-        _icon_dir = os.path.join(froi_dir,'gui','icon')
+        _icon_dir = pjoin(froi_dir,'gui','icon')
     else:
-        _icon_dir = os.path.join(froi_dir,'icon')
+        _icon_dir = pjoin(base_dir,'icon')
     return _icon_dir
