@@ -16,6 +16,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from base.labelconfig import LabelConfig
+from base.utils import get_icon_dir
 from component.listwidget import LayerView
 from component.gridwidget import GridView
 from component.orthwidget import OrthView
@@ -85,7 +86,7 @@ class BpMainWindow(QMainWindow):
         # pre-define a model variable
         self.model = None
 
-    def config_extra_settings(self, data_dir, icon_dir):
+    def config_extra_settings(self, data_dir):
         """
         Set data directory and update some configurations.
 
@@ -96,14 +97,14 @@ class BpMainWindow(QMainWindow):
         self.label_config_suffix = 'lbl'
 
         # set icon configuration
-        self._icon_dir = icon_dir
+        self._icon_dir=get_icon_dir()
 
         # set window title
         self.setWindowTitle('FreeROI')
         #self.resize(1280, 1000)
         self.center()
         # set window icon
-        self.setWindowIcon(QIcon(os.path.join(self._icon_dir, 'icon.png')))
+        self.setWindowIcon(QIcon(os.path.join(self._icon_dir,'icon.png')))
 
         self._init_configuration()
         self._init_label_config_center()
