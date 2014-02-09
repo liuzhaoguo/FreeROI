@@ -137,7 +137,7 @@ class GrowDialog(QDialog):
                             self._model._data[0].get_header(),
                             None, None, 255, 'red')
 
-        self._main_win.new_image_action()
+        #self._main_win.new_image_action()
         self.done(0)
 
 

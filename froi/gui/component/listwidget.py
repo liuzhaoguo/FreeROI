@@ -154,7 +154,7 @@ class LayerView(QWidget):
 
         self._unity_info_panel = QGroupBox('Tools ')
         self._unity_tabwidget = QTabWidget()
-        self.tools_widget = ToolsTabWidget()
+        self.tools_widget = ToolsTabWidget(self._model,parent=None)
         self._unity_tabwidget.addTab(labcon_panel,"Label Configure Center")
         self._unity_tabwidget.addTab(self.tools_widget,"Tools")
         hlayout = QHBoxLayout(self._unity_info_panel)

@@ -28,13 +28,9 @@ from component.eraserdialog import EraserDialog
 from component.watersheddialog import WatershedDialog
 from component.regularroidialog import RegularROIDialog
 from component.intersectdialog import IntersectDialog
-#from component.growdialog import GrowDialog
-from component.growdialog_liu import GrowDialog
 from component.roi2gwmidialog import Roi2gwmiDialog
-from component.edgedetectiondialog import Edge_detectionDialog
 from component.autolabeldialog import AutoLabelDialog
 from component.opendialog import OpenDialog
-from component.localmaxdialog import LocalMaxDialog
 from component.labelconfigcenter import LabelConfigCenter
 from component.roifilterdialog import ROIFilterDialog
 from component.roilabeldialog import ROILabelDialog
@@ -413,12 +409,6 @@ class BpMainWindow(QMainWindow):
         self._actions['watershed'].triggered.connect(self._watershed)
         self._actions['watershed'].setShortcut(self.tr("Ctrl+W"))
 
-        # Region Grow
-        self._actions['grow'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'grow.png')),
-                                        self.tr("Region Grow"), self)
-        self._actions['grow'].triggered.connect(self._grow)
-        self._actions['grow'].setEnabled(False)
         # ROI to Interface
         self._actions['r2i'] = QAction(QIcon(os.path.join(
         self._icon_dir, 'r2i.png')),
@@ -426,12 +416,6 @@ class BpMainWindow(QMainWindow):
         
         self._actions['r2i'].triggered.connect(self._r2i)
         self._actions['r2i'].setEnabled(False)
-        # Edge Detection
-        self._actions['edge_detection'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'edge_detection.png')),
-                                                  self.tr("Multi Label Edge Detection"), self)
-        self._actions['edge_detection'].triggered.connect(self._edge_detection)
-        self._actions['edge_detection'].setEnabled(False)
 
         # Auto Labeling
         self._actions['auto_label'] = QAction(QIcon(os.path.join(
@@ -447,14 +431,6 @@ class BpMainWindow(QMainWindow):
         self._actions['open'].setShortcut("Ctrl+P")
         self._actions['open'].triggered.connect(self._open)
         self._actions['open'].setEnabled(False)
-
-        # Local Max
-        self._actions['lmax'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'localmax.png')),
-                                        self.tr("Local Max"), self)
-        self._actions['lmax'].setShortcut("Ctrl+L")
-        self._actions['lmax'].triggered.connect(self._lmax)
-        self._actions['lmax'].setEnabled(False)
 
         # ROI filter
         self._actions['roifilter'] = QAction(QIcon(os.path.join(
@@ -515,10 +491,7 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['regular_roi'])
         self._toolbar.addAction(self._actions['intersect'])
         self._toolbar.addAction(self._actions['open'])
-        self._toolbar.addAction(self._actions['lmax'])
-        self._toolbar.addAction(self._actions['grow'])
         self._toolbar.addAction(self._actions['r2i'])
-        self._toolbar.addAction(self._actions['edge_detection'])
         self._toolbar.addAction(self._actions['watershed'])
         self._toolbar.addAction(self._actions['roifilter'])
         self._toolbar.addAction(self._actions['roimerge'])
@@ -620,11 +593,8 @@ class BpMainWindow(QMainWindow):
                 self._actions['original_view'].setEnabled(True)
                 self._actions['open'].setEnabled(True)
                 self._actions['regular_roi'].setEnabled(True)
-                self._actions['lmax'].setEnabled(True)
                 self._actions['watershed'].setEnabled(True)
-                self._actions['grow'].setEnabled(True)
                 self._actions['r2i'].setEnabled(True)
-                self._actions['edge_detection'].setEnabled(True)
                 self._actions['binaryzation'].setEnabled(True)
                 self._actions['binarydilation'].setEnabled(True)
                 self._actions['binaryerosion'].setEnabled(True)
@@ -677,24 +647,18 @@ class BpMainWindow(QMainWindow):
         self._actions['remove_image'].setEnabled(True)
         self._actions['intersect'].setEnabled(True)
         self._actions['regular_roi'].setEnabled(True)
-        self._actions['grow'].setEnabled(True)
         self._actions['r2i'].setEnabled(True)
-        self._actions['edge_detection'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
         self._actions['open'].setEnabled(True)
-        self._actions['lmax'].setEnabled(True)
         self._actions['roifilter'].setEnabled(True)
         self._actions['roimerge'].setEnabled(True)
 
     def new_image_action(self):
         self._actions['remove_image'].setEnabled(True)
         self._actions['intersect'].setEnabled(True)
-        self._actions['grow'].setEnabled(True)
         self._actions['r2i'].setEnabled(True)
-        self._actions['edge_detection'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
         self._actions['open'].setEnabled(True)
-        self._actions['lmax'].setEnabled(True)
         self._actions['roifilter'].setEnabled(True)
         self._actions['roimerge'].setEnabled(True)
 
@@ -709,11 +673,9 @@ class BpMainWindow(QMainWindow):
             self._actions['remove_image'].setEnabled(False)
             self._actions['intersect'].setEnabled(False)
             self._actions['regular_roi'].setEnabled(False)
-            self._actions['grow'].setEnabled(False)
             self._actions['r2i'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
             self._actions['open'].setEnabled(False)
-            self._actions['lmax'].setEnabled(False)
             self._actions['roifilter'].setEnabled(False)
             self._actions['roimerge'].setEnabled(False)
 
@@ -757,13 +719,10 @@ class BpMainWindow(QMainWindow):
         self._actions['close'].setEnabled(False)
         self._actions['intersect'].setEnabled(False)
         self._actions['regular_roi'].setEnabled(False)
-        self._actions['grow'].setEnabled(False)
         self._actions['r2i'].setEnabled(False)
-        self._actions['edge_detection'].setEnabled(False)
         self._actions['auto_label'].setEnabled(False)
         self._actions['watershed'].setEnabled(False)
         self._actions['open'].setEnabled(False)
-        self._actions['lmax'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
         self._actions['original_view'].setEnabled(False)
@@ -814,13 +773,10 @@ class BpMainWindow(QMainWindow):
         self.tool_menu = self.menuBar().addMenu(self.tr("Tools"))
         self.tool_menu.addAction(self._actions['regular_roi'])
         self.tool_menu.addAction(self._actions['intersect'])
-        self.tool_menu.addAction(self._actions['grow'])
         self.tool_menu.addAction(self._actions['r2i'])
-        self.tool_menu.addAction(self._actions['edge_detection'])
         self.tool_menu.addAction(self._actions['auto_label'])
         self.tool_menu.addAction(self._actions['watershed'])
         self.tool_menu.addAction(self._actions['open'])
-        self.tool_menu.addAction(self._actions['lmax'])
         self.tool_menu.addAction(self._actions['binaryzation'])
         self.tool_menu.addAction(self._actions['binarydilation'])
         self.tool_menu.addAction(self._actions['binaryerosion'])
@@ -1074,16 +1030,8 @@ class BpMainWindow(QMainWindow):
         new_dialog = IntersectDialog(self.model)
         new_dialog.exec_()
 
-    def _grow(self):
-        new_dialog = GrowDialog(self.model, self)
-        new_dialog.exec_()
-        
     def _r2i(self):
         new_dialog = Roi2gwmiDialog(self.model)
-        new_dialog.exec_()
-        
-    def _edge_detection(self):
-        new_dialog = Edge_detectionDialog(self.model, self)
         new_dialog.exec_()
 
     def _auto_label(self):
@@ -1092,10 +1040,6 @@ class BpMainWindow(QMainWindow):
 
     def _open(self):
         new_dialog = OpenDialog(self.model)
-        new_dialog.exec_()
-
-    def _lmax(self):
-        new_dialog = LocalMaxDialog(self.model, self)
         new_dialog.exec_()
 
     def _roifilter(self):
