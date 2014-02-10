@@ -16,6 +16,7 @@ from ..base.labelconfig import LabelConfig
 from labelconfigcenter import *
 from toolstabwidget import ToolsTabWidget
 from segmentationwidget import SegmentationWidget
+from statswidget import StatsWidget
 import froi
 
 class LayerView(QWidget):
@@ -157,10 +158,12 @@ class LayerView(QWidget):
         self._unity_tabwidget = QTabWidget()
         self.segmentation_widget = SegmentationWidget(self._model,self)
         self.ROItools_widget = ToolsTabWidget(self._model,self)
+        self.stats_widget = StatsWidget(self._model,self)
 
-        self._unity_tabwidget.addTab(labcon_panel,"Labeling")
-        self._unity_tabwidget.addTab(self.segmentation_widget,"Segmentation")
-        self._unity_tabwidget.addTab(self.ROItools_widget,"ROI_tools")
+        self._unity_tabwidget.addTab(labcon_panel,"Label")
+        self._unity_tabwidget.addTab(self.segmentation_widget,"Segmen")
+        self._unity_tabwidget.addTab(self.ROItools_widget,"ROItools")
+        self._unity_tabwidget.addTab(self.stats_widget,"Stats")
 
         hlayout = QHBoxLayout(self._unity_info_panel)
         hlayout.addWidget(self._unity_tabwidget)
