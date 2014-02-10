@@ -25,7 +25,6 @@ from component.imagelabel import ImageLabel
 from component.drawsettings import PainterStatus, ViewSettings, MoveSettings
 from component.labeldialog import LabelDialog
 from component.eraserdialog import EraserDialog
-from component.watersheddialog import WatershedDialog
 from component.regularroidialog import RegularROIDialog
 from component.intersectdialog import IntersectDialog
 from component.roi2gwmidialog import Roi2gwmiDialog
@@ -401,14 +400,6 @@ class BpMainWindow(QMainWindow):
         self._actions['intersect'].triggered.connect(self._intersect)
         self._actions['intersect'].setEnabled(False)
 
-        # Watershed
-        self._actions['watershed'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'watershed.png')),
-                                             self.tr("Watershed"), self)
-        self._actions['watershed'].setEnabled(False)
-        self._actions['watershed'].triggered.connect(self._watershed)
-        self._actions['watershed'].setShortcut(self.tr("Ctrl+W"))
-
         # ROI to Interface
         self._actions['r2i'] = QAction(QIcon(os.path.join(
         self._icon_dir, 'r2i.png')),
@@ -492,7 +483,6 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['intersect'])
         self._toolbar.addAction(self._actions['open'])
         self._toolbar.addAction(self._actions['r2i'])
-        self._toolbar.addAction(self._actions['watershed'])
         self._toolbar.addAction(self._actions['roifilter'])
         self._toolbar.addAction(self._actions['roimerge'])
         self._toolbar.addAction(self._actions['roidialog'])
@@ -593,7 +583,6 @@ class BpMainWindow(QMainWindow):
                 self._actions['original_view'].setEnabled(True)
                 self._actions['open'].setEnabled(True)
                 self._actions['regular_roi'].setEnabled(True)
-                self._actions['watershed'].setEnabled(True)
                 self._actions['r2i'].setEnabled(True)
                 self._actions['binaryzation'].setEnabled(True)
                 self._actions['binarydilation'].setEnabled(True)
@@ -721,7 +710,6 @@ class BpMainWindow(QMainWindow):
         self._actions['regular_roi'].setEnabled(False)
         self._actions['r2i'].setEnabled(False)
         self._actions['auto_label'].setEnabled(False)
-        self._actions['watershed'].setEnabled(False)
         self._actions['open'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
@@ -775,7 +763,6 @@ class BpMainWindow(QMainWindow):
         self.tool_menu.addAction(self._actions['intersect'])
         self.tool_menu.addAction(self._actions['r2i'])
         self.tool_menu.addAction(self._actions['auto_label'])
-        self.tool_menu.addAction(self._actions['watershed'])
         self.tool_menu.addAction(self._actions['open'])
         self.tool_menu.addAction(self._actions['binaryzation'])
         self.tool_menu.addAction(self._actions['binarydilation'])
@@ -907,9 +894,6 @@ class BpMainWindow(QMainWindow):
         self._actions['cursor'].setChecked(True)
         self._cursor_enable()
 
-    def _watershed(self):
-        watershed_dialog = WatershedDialog(self.model, self)
-        watershed_dialog.exec_()
 
     def _regular_roi(self):
         regular_roi_dialog = RegularROIDialog(self.model, self)

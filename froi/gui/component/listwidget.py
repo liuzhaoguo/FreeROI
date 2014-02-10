@@ -15,6 +15,7 @@ from drawsettings import DrawSettings
 from ..base.labelconfig import LabelConfig
 from labelconfigcenter import *
 from toolstabwidget import ToolsTabWidget
+from segmentationwidget import SegmentationWidget
 import froi
 
 class LayerView(QWidget):
@@ -154,9 +155,13 @@ class LayerView(QWidget):
 
         self._unity_info_panel = QGroupBox('Tools ')
         self._unity_tabwidget = QTabWidget()
-        self.tools_widget = ToolsTabWidget(self._model,parent=None)
-        self._unity_tabwidget.addTab(labcon_panel,"Label Configure Center")
-        self._unity_tabwidget.addTab(self.tools_widget,"Tools")
+        self.segmentation_widget = SegmentationWidget(self._model,self)
+        self.ROItools_widget = ToolsTabWidget(self._model,self)
+
+        self._unity_tabwidget.addTab(labcon_panel,"Labeling")
+        self._unity_tabwidget.addTab(self.segmentation_widget,"Segmentation")
+        self._unity_tabwidget.addTab(self.ROItools_widget,"ROI_tools")
+
         hlayout = QHBoxLayout(self._unity_info_panel)
         hlayout.addWidget(self._unity_tabwidget)
 
@@ -420,6 +425,5 @@ class LayerView(QWidget):
         popMenu.addAction(QAction(QIcon(""),self.tr("&Save menu item"),self))
 
         popMenu.exec_(QCursor.pos())
-
 
 
