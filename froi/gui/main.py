@@ -31,10 +31,8 @@ from component.roi2gwmidialog import Roi2gwmiDialog
 from component.autolabeldialog import AutoLabelDialog
 from component.opendialog import OpenDialog
 from component.labelconfigcenter import LabelConfigCenter
-from component.roifilterdialog import ROIFilterDialog
 from component.roilabeldialog import ROILabelDialog
 from component.roieraserdialog import ROIEraserDialog
-from component.roimergedialog import ROIMergeDialog
 from component.roidialog import ROIDialog
 from component.binaryzationdialog import BinaryzationDialog
 from component.binaryerosiondialog import BinaryerosionDialog
@@ -423,20 +421,6 @@ class BpMainWindow(QMainWindow):
         self._actions['open'].triggered.connect(self._open)
         self._actions['open'].setEnabled(False)
 
-        # ROI filter
-        self._actions['roifilter'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'filtering.png')),self.tr("ROI Filtering"), self)
-        self._actions['roifilter'].setShortcut("Ctrl+F")
-        self._actions['roifilter'].triggered.connect(self._roifilter)
-        self._actions['roifilter'].setEnabled(False)
-
-        # ROI merge
-        self._actions['roimerge'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'merging.png')),
-                                            self.tr("ROI Merging"), self)
-        self._actions['roimerge'].setShortcut("Ctrl+M")
-        self._actions['roimerge'].triggered.connect(self._roimerge)
-        self._actions['roimerge'].setEnabled(False)
 
     def _add_toolbar(self):
         """
@@ -483,8 +467,6 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['intersect'])
         self._toolbar.addAction(self._actions['open'])
         self._toolbar.addAction(self._actions['r2i'])
-        self._toolbar.addAction(self._actions['roifilter'])
-        self._toolbar.addAction(self._actions['roimerge'])
         self._toolbar.addAction(self._actions['roidialog'])
 
         self._toolbar.addSeparator()
@@ -611,8 +593,6 @@ class BpMainWindow(QMainWindow):
                 self._actions['remove_image'].setEnabled(True)
                 self._actions['intersect'].setEnabled(True)
                 self._actions['auto_label'].setEnabled(True)
-                self._actions['roifilter'].setEnabled(True)
-                self._actions['roimerge'].setEnabled(True)
                 # set current volume index
                 self.list_view.setCurrentIndex(self.model.index(0))
             self.is_save_configure = True
@@ -639,8 +619,6 @@ class BpMainWindow(QMainWindow):
         self._actions['r2i'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
         self._actions['open'].setEnabled(True)
-        self._actions['roifilter'].setEnabled(True)
-        self._actions['roimerge'].setEnabled(True)
 
     def new_image_action(self):
         self._actions['remove_image'].setEnabled(True)
@@ -648,8 +626,6 @@ class BpMainWindow(QMainWindow):
         self._actions['r2i'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
         self._actions['open'].setEnabled(True)
-        self._actions['roifilter'].setEnabled(True)
-        self._actions['roimerge'].setEnabled(True)
 
     def _remove_image(self):
         """
@@ -665,8 +641,6 @@ class BpMainWindow(QMainWindow):
             self._actions['r2i'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
             self._actions['open'].setEnabled(False)
-            self._actions['roifilter'].setEnabled(False)
-            self._actions['roimerge'].setEnabled(False)
 
     def _save_image(self):
         """
@@ -714,8 +688,6 @@ class BpMainWindow(QMainWindow):
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
         self._actions['original_view'].setEnabled(False)
-        self._actions['roifilter'].setEnabled(False)
-        self._actions['roimerge'].setEnabled(False)
         self._actions['binaryzation'].setEnabled(False)
         self._actions['binarydilation'].setEnabled(False)
         self._actions['binaryerosion'].setEnabled(False)
@@ -769,8 +741,6 @@ class BpMainWindow(QMainWindow):
         self.tool_menu.addAction(self._actions['binaryerosion'])
         self.tool_menu.addAction(self._actions['greydilation'])
         self.tool_menu.addAction(self._actions['greyerosion'])
-        self.tool_menu.addAction(self._actions['roifilter'])
-        self.tool_menu.addAction(self._actions['roimerge'])
         self.tool_menu.addAction(self._actions['roiorvoxelcurve'])
         self.tool_menu.addAction(self._actions['volumeintensity'])
 
@@ -1024,14 +994,6 @@ class BpMainWindow(QMainWindow):
 
     def _open(self):
         new_dialog = OpenDialog(self.model)
-        new_dialog.exec_()
-
-    def _roifilter(self):
-        new_dialog = ROIFilterDialog(self.model)
-        new_dialog.exec_()
-
-    def _roimerge(self):
-        new_dialog = ROIMergeDialog(self.model)
         new_dialog.exec_()
 
     def _ld_lbl(self):

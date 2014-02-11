@@ -9,6 +9,8 @@ import froi
 
 from edgedetectiondialog import Edge_detectionDialog
 from localmaxdialog import LocalMaxDialog
+from roifilterdialog import ROIFilterDialog
+from roimergedialog import ROIMergeDialog
 
 
 class ToolsTabWidget(QDialog):
@@ -58,11 +60,27 @@ class ToolsTabWidget(QDialog):
         self.localmax_button.setEnabled(True)
         self.localmax_button.setToolTip("Local Max")
 
+        self.roifilter_button = QPushButton()
+        self.roifilter_button.setFlat(True)
+        self.roifilter_button.setFocusPolicy(Qt.NoFocus)
+        self.roifilter_button.setIcon(QIcon(os.path.join(self._icon_dir,'filtering.png')))
+        self.roifilter_button.setEnabled(True)
+        self.roifilter_button.setToolTip("ROI Filtering")
+
+        self.roimerge_button = QPushButton()
+        self.roimerge_button.setFlat(True)
+        self.roimerge_button.setFocusPolicy(Qt.NoFocus)
+        self.roimerge_button.setIcon(QIcon(os.path.join(self._icon_dir,'merging.png')))
+        self.roimerge_button.setEnabled(True)
+        self.roimerge_button.setToolTip("ROI Merging")
+
         gridlayout = QGridLayout(self)
         gridlayout.addWidget(self.brush_pushbutton,0,0)
         gridlayout.addWidget(self.roibrush_pushbutton,0,1)
         gridlayout.addWidget(self.localmax_button,1,0)
         gridlayout.addWidget(self.detection_button,1,1)
+        gridlayout.addWidget(self.roifilter_button,2,0)
+        gridlayout.addWidget(self.roimerge_button,2,1)
 
 
     def _create_actions(self):
@@ -75,6 +93,8 @@ class ToolsTabWidget(QDialog):
         self.roibrush_pushbutton.clicked.connect(self._roibrush_clicked)
         self.detection_button.clicked.connect(self._edge_detection_clicked)
         self.localmax_button.clicked.connect(self._local_max_clicked)
+        self.roifilter_button.clicked.connect(self._roifilter_clicked)
+        self.roimerge_button.clicked.connect(self._roimerge_clicked)
 
 
     def _brush_clicked(self):
@@ -111,3 +131,18 @@ class ToolsTabWidget(QDialog):
             new_dialog = LocalMaxDialog(self._model, self)
             new_dialog.exec_()
 
+    def _roifilter_clicked(self):
+        '''
+        local max clicked
+        '''
+        if self.roifilter_button.isEnabled():
+            new_dialog = ROIFilterDialog(self._model, self)
+            new_dialog.exec_()
+
+    def _roimerge_clicked(self):
+        '''
+        local max clicked
+        '''
+        if self.roimerge_button.isEnabled():
+            new_dialog = ROIMergeDialog(self._model, self)
+            new_dialog.exec_()
