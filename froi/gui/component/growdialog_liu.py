@@ -120,7 +120,7 @@ class GrowDialog(QDialog):
 
         try:
             pointx=int(pointx)
-            pointy=int(pointy)
+            pointy=108-int(pointy)
             pointz=int(pointz)
             number=int(number)
         except ValueError:
