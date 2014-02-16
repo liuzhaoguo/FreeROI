@@ -8,21 +8,13 @@ import os
 import sys
 import argparse
 
-import froi
+from froi.gui.base import utils as froi_utils
 from PyQt4.QtGui import QApplication
 from froi.gui.main import BpMainWindow
 
 def main():
     # get data directory
-    pjoin = os.path.join
-    apath = os.path.abspath
-    froi_dir = os.path.dirname(froi.__file__)
-    base_dir = apath(pjoin(froi_dir, os.pardir))
-    base_dir = apath(pjoin(base_dir, os.pardir))
-    if not os.path.exists(pjoin(base_dir, 'data')):
-        data_dir = pjoin(froi_dir, 'data')
-    else:
-        data_dir = pjoin(base_dir, 'data')
+    data_dir = froi_utils.get_data_dir()
 
     # get labelconfig settings
     label_config_dir = os.path.join(data_dir, 'labelconfig')
