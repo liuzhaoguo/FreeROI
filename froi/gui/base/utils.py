@@ -6,13 +6,34 @@ import froi
 
 
 def get_icon_dir():
+    """
+    Get directory which contains icons.
+
+    """
     pjoin = os.path.join
     apath = os.path.abspath
     froi_dir = os.path.dirname(froi.__file__)
     base_dir = apath(pjoin(froi_dir, os.pardir))
     base_dir = apath(pjoin(base_dir, os.pardir))
     if not os.path.exists(pjoin(base_dir, 'data')):
-        _icon_dir = pjoin(froi_dir,'gui','icon')
+        icon_dir = pjoin(froi_dir,'gui','icon')
     else:
-        _icon_dir = pjoin(base_dir,'icon')
-    return _icon_dir
+        icon_dir = pjoin(base_dir,'icon')
+    return icon_dir
+
+def get_data_dir():
+    """
+    Get data directory path.
+
+    """
+    pjoin = os.path.join
+    apath = os.path.abspath
+    froi_dir = os.path.dirname(froi.__file__)
+    base_dir = apath(pjoin(froi_dir, os.pardir))
+    base_dir = apath(pjoin(base_dir, os.pardir))
+    if not os.path.exists(pjoin(base_dir, 'data')):
+        data_dir = pjoin(froi_dir,'data')
+    else:
+        data_dir = pjoin(base_dir,'data')
+    return data_dir
+
