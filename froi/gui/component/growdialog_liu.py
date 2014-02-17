@@ -120,7 +120,7 @@ class GrowDialog(QDialog):
 
         try:
             pointx=int(pointx)
-            pointy=int(pointy)
+            pointy=108-int(pointy)
             pointz=int(pointz)
             number=int(number)
         except ValueError:
@@ -137,7 +137,7 @@ class GrowDialog(QDialog):
                             self._model._data[0].get_header(),
                             None, None, 255, 'red')
 
-        self._main_win.new_image_action()
+        #self._main_win.new_image_action()
         self.done(0)
 
 
