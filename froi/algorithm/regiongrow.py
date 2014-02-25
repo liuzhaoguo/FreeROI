@@ -9,6 +9,7 @@ def region_growing(image,coordinate,number):
     """
     nt = number
     tmp_image = np.zeros_like(image)     #initialize all 0 image
+    rg_image = np.zeros_like(image)     #store new image after grow
     image_shape = image.shape
 
     x = coordinate[0]
@@ -90,6 +91,7 @@ def region_growing(image,coordinate,number):
 
 
         tmp_image[x,y,z] = 2   #segmental region with flag 2
+        rg_image[x,y,z] = image[x,y,z]
         region_size += 1      #increase the region_size
 
         x = neighbor_list[index][0]   #
@@ -103,9 +105,4 @@ def region_growing(image,coordinate,number):
         neighbor_pos -= 1  #the number of voxels in the neighbor_list decrease 1
 
 
-    for i in range(image_shape[0]):
-        for j in range(image_shape[1]):
-            for k in range(image_shape[2]):
-                if tmp_image[i,j,k]!=2:
-                    image[i,j,k]=0    #only segmental region with flag 2(>1)
-    return image
+    return rg_image
