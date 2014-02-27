@@ -33,13 +33,13 @@ class GrowDialog(QDialog):
 
         pointx_label = QLabel("Seed point x")
         self.pointx_edit = QLineEdit()
-        self.pointx_edit.setText('50')
+        self.pointx_edit.setText('45')
         pointy_label = QLabel("Seed point y")
         self.pointy_edit = QLineEdit()
-        self.pointy_edit.setText('50')
+        self.pointy_edit.setText('60')
         pointz_label = QLabel("Seed point z")
         self.pointz_edit = QLineEdit()
-        self.pointz_edit.setText('50')
+        self.pointz_edit.setText('45')
 
 
         number_label = QLabel("Number of voxels")
