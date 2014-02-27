@@ -32,7 +32,7 @@ class BinaryzationDialog(QDialog):
         self.source_combo = QComboBox()
         threshold_label = QLabel("Threshold")
         self.threshold_edit = QLineEdit()
-        self.threshold_edit.setText('5050')
+        self.threshold_edit.setText(str(self._model.get_current_value(self._model.get_cross_pos())))
         vol_list = self._model.getItemList()
         self.source_combo.addItems(vol_list)
         row = self._model.currentIndex().row()
