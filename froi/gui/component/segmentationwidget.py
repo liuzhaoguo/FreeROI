@@ -35,15 +35,16 @@ class SegmentationWidget(QDialog):
         """
 
         self.grow_button = QPushButton()
-        self.grow_button.setFlat(True)
-        self.grow_button.setFocusPolicy(Qt.NoFocus)
+        #self.grow_button.setFlat(True)
+        #self.grow_button.setFocusPolicy(Qt.NoFocus)
+        self.grow_button.resize(100,100)
         self.grow_button.setIcon(QIcon(os.path.join(self._icon_dir,'grow.png')))
         self.grow_button.setEnabled(True)
         self.grow_button.setToolTip("region growing")
 
         self.watershed_button = QPushButton()
-        self.watershed_button.setFlat(True)
-        self.watershed_button.setFocusPolicy(Qt.NoFocus)
+        #self.watershed_button.setFlat(True)
+        #self.watershed_button.setFocusPolicy(Qt.NoFocus)
         self.watershed_button.setIcon(QIcon(os.path.join(self._icon_dir,'watershed.png')))
         self.watershed_button.setEnabled(True)
         self.watershed_button.setToolTip("Watershed")

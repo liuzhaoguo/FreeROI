@@ -35,15 +35,15 @@ class StatsWidget(QDialog):
         """
 
         self.volume_button = QPushButton()
-        self.volume_button.setFlat(True)
-        self.volume_button.setFocusPolicy(Qt.NoFocus)
+        #self.volume_button.setFlat(True)
+        #self.volume_button.setFocusPolicy(Qt.NoFocus)
         self.volume_button.setIcon(QIcon(os.path.join(self._icon_dir,'volume_intensity.png')))
         self.volume_button.setEnabled(True)
         self.volume_button.setToolTip("Volume intensity")
 
         self.roiorvoxel_button = QPushButton()
-        self.roiorvoxel_button.setFlat(True)
-        self.roiorvoxel_button.setFocusPolicy(Qt.NoFocus)
+        #self.roiorvoxel_button.setFlat(True)
+        #self.roiorvoxel_button.setFocusPolicy(Qt.NoFocus)
         self.roiorvoxel_button.setIcon(QIcon(os.path.join(self._icon_dir,'voxel_curve.png')))
         self.roiorvoxel_button.setEnabled(True)
         self.roiorvoxel_button.setToolTip("Roiorvoxelcurve")

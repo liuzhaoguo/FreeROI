@@ -161,7 +161,7 @@ class LayerView(QWidget):
         self.stats_widget = StatsWidget(self._model,self)
 
         self._unity_tabwidget.addTab(labcon_panel,"Label")
-        self._unity_tabwidget.addTab(self.segmentation_widget,"Segmen")
+        self._unity_tabwidget.addTab(self.segmentation_widget,"Segment")
         self._unity_tabwidget.addTab(self.ROItools_widget,"ROItools")
         self._unity_tabwidget.addTab(self.stats_widget,"Stats")
 
