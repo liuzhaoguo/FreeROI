@@ -17,6 +17,7 @@ from labelconfigcenter import *
 from toolstabwidget import ToolsTabWidget
 from segmentationwidget import SegmentationWidget
 from statswidget import StatsWidget
+from basicwidget import BasicWidget
 import froi
 
 class LayerView(QWidget):
@@ -114,13 +115,13 @@ class LayerView(QWidget):
         # FIXME should match data shape
         coord_x_label = QLabel('x: ')
         self._coord_x = QSpinBox()
-        self._coord_x.setRange(0, self._model.getX())
+        self._coord_x.setRange(0, self._model.getY()-1)
         coord_y_label = QLabel('y: ')
         self._coord_y = QSpinBox()
-        self._coord_y.setRange(0, self._model.getY())
+        self._coord_y.setRange(0, self._model.getX()-1)
         coord_z_label = QLabel('z: ')
         self._coord_z = QSpinBox()
-        self._coord_z.setRange(0, self._model.getZ())
+        self._coord_z.setRange(0, self._model.getZ()-1)
         # Set time point
         time_point_label = QLabel('t:')
         self._volume_index_spinbox = QSpinBox()
@@ -157,11 +158,13 @@ class LayerView(QWidget):
         self._unity_info_panel = QGroupBox('Tools ')
         self._unity_tabwidget = QTabWidget()
         self.segmentation_widget = SegmentationWidget(self._model,self)
+        self.basic_widget = BasicWidget(self._model,self)
         self.ROItools_widget = ToolsTabWidget(self._model,self)
         self.stats_widget = StatsWidget(self._model,self)
 
         self._unity_tabwidget.addTab(labcon_panel,"Label")
         self._unity_tabwidget.addTab(self.segmentation_widget,"Segmen")
+        self._unity_tabwidget.addTab(self.basic_widget,"Basic")
         self._unity_tabwidget.addTab(self.ROItools_widget,"ROItools")
         self._unity_tabwidget.addTab(self.stats_widget,"Stats")
 
