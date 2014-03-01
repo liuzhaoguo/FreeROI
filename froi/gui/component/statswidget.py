@@ -1,15 +1,13 @@
 # emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
 # vi: set ft=python sts=4 ts=4 sw=4 et:
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-
 import os
-import froi
+
+from PyQt4.QtGui import *
 
 from volumedintensitydialog import VolumeIntensityDialog
 from roiorvoxelcurvedialog import  ROIOrVoxelCurveDialog
-
+from froi.gui.base.utils import *
 
 class StatsWidget(QDialog):
     """
@@ -20,8 +18,7 @@ class StatsWidget(QDialog):
     def __init__(self, model,main_win, parent=None):
         super(StatsWidget, self).__init__(parent)
 
-        froi_dir = os.path.dirname(froi.__file__)
-        self._icon_dir = os.path.join(froi_dir,'gui/icon/')
+        self._icon_dir = get_icon_dir()
 
         self._init_gui()
         self._create_actions()

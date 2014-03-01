@@ -5,9 +5,6 @@ __author__ = 'zhouguangfu'
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-import numpy as np
-from scipy.ndimage import morphology
-from froi.algorithm import imtool
 from froi.gui.component.voxeltimepointcurvedialog import VoxelTimePointCurveDialog
 
 class ROIOrVoxelCurveDialog(QDialog):

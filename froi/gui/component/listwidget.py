@@ -10,15 +10,12 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from froi.algorithm.array2qimage import idx2rgb
-from drawsettings import DrawSettings
 from ..base.labelconfig import LabelConfig
-from labelconfigcenter import *
 from toolstabwidget import ToolsTabWidget
 from segmentationwidget import SegmentationWidget
 from statswidget import StatsWidget
 from basicwidget import BasicWidget
-import froi
+from froi.gui.base.utils import *
 
 class LayerView(QWidget):
     """
@@ -39,9 +36,7 @@ class LayerView(QWidget):
         super(LayerView, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
         self.setMaximumWidth(300)
-
-        froi_dir = os.path.dirname(froi.__file__)
-        self._icon_dir = os.path.join(froi_dir,'gui/icon/')
+        self._icon_dir = get_icon_dir()
         self.label_config_center = label_config_center
 
         # initialize the model
@@ -59,7 +54,7 @@ class LayerView(QWidget):
         button_size=QSize(12,12)
         self._up_button = QPushButton()
         self._up_button.setIcon(QIcon(os.path.join(
-                            self._icon_dir, 'arrow_up.png'))) 
+                            self._icon_dir, 'arrow_up.png')))
         self._up_button.setIconSize(button_size)
         self._down_button = QPushButton()
         self._down_button.setIcon(QIcon(os.path.join(
@@ -157,16 +152,16 @@ class LayerView(QWidget):
 
         self._unity_info_panel = QGroupBox('Tools ')
         self._unity_tabwidget = QTabWidget()
-        self.segmentation_widget = SegmentationWidget(self._model,self)
-        self.basic_widget = BasicWidget(self._model,self)
-        self.ROItools_widget = ToolsTabWidget(self._model,self)
-        self.stats_widget = StatsWidget(self._model,self)
+        self.segmentation_widget = SegmentationWidget(self._model, self)
+        self.basic_widget = BasicWidget(self._model, self)
+        self.ROItools_widget = ToolsTabWidget(self._model, self)
+        self.stats_widget = StatsWidget(self._model, self)
 
-        self._unity_tabwidget.addTab(labcon_panel,"Label")
-        self._unity_tabwidget.addTab(self.segmentation_widget,"Segment")
-        self._unity_tabwidget.addTab(self.basic_widget,"Basic")
-        self._unity_tabwidget.addTab(self.ROItools_widget,"ROItools")
-        self._unity_tabwidget.addTab(self.stats_widget,"Stats")
+        self._unity_tabwidget.addTab(labcon_panel, "Label")
+        self._unity_tabwidget.addTab(self.segmentation_widget, "Segment")
+        self._unity_tabwidget.addTab(self.basic_widget, "Basic")
+        self._unity_tabwidget.addTab(self.ROItools_widget, "ROItools")
+        self._unity_tabwidget.addTab(self.stats_widget, "Stats")
 
         hlayout = QHBoxLayout(self._unity_info_panel)
         hlayout.addWidget(self._unity_tabwidget)
@@ -425,11 +420,5 @@ class LayerView(QWidget):
                      int(self._coord_z.value())]
         self._model.set_cross_pos(new_coord)
 
-    def contextMenuEvent(self, event):
-        popMenu = QMenu()
-        popMenu.addAction(QAction(QIcon(""),self.tr("&Open menu item"),self))
-        popMenu.addAction(QAction(QIcon(""),self.tr("&Save menu item"),self))
-
-        popMenu.exec_(QCursor.pos())
 
 

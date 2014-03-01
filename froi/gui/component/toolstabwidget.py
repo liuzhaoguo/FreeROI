@@ -1,18 +1,16 @@
 # emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
 # vi: set ft=python sts=4 ts=4 sw=4 et:
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-
 import os
-import froi
+
+from PyQt4.QtGui import *
 
 from edgedetectiondialog import Edge_detectionDialog
 from localmaxdialog import LocalMaxDialog
 from roifilterdialog import ROIFilterDialog
 from roimergedialog import ROIMergeDialog
 from roi2gwmidialog import Roi2gwmiDialog
-
+from froi.gui.base.utils import *
 
 class ToolsTabWidget(QDialog):
     """
@@ -22,9 +20,7 @@ class ToolsTabWidget(QDialog):
 
     def __init__(self, model,main_win, parent=None):
         super(ToolsTabWidget, self).__init__(parent)
-
-        froi_dir = os.path.dirname(froi.__file__)
-        self._icon_dir = os.path.join(froi_dir,'gui/icon/')
+        self._icon_dir = get_icon_dir()
 
         self._init_gui()
         self._create_actions()
