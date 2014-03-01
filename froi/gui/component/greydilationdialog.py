@@ -6,8 +6,6 @@ __author__ = 'zhouguangfu'
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-import numpy as np
-from froi.algorithm import imtool
 from scipy.ndimage import morphology
 
 class GreydilationDialog(QDialog):

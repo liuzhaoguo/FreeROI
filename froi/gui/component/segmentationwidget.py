@@ -1,14 +1,13 @@
 # emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
 # vi: set ft=python sts=4 ts=4 sw=4 et:
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-
 import os
-import froi
+
+from PyQt4.QtGui import *
 
 from growdialog_liu import GrowDialog
 from watersheddialog import WatershedDialog
+from froi.gui.base.utils import *
 
 
 class SegmentationWidget(QDialog):
@@ -17,15 +16,14 @@ class SegmentationWidget(QDialog):
 
     """
 
-    def __init__(self, model,main_win, parent=None):
+    def __init__(self, model, main_win, parent=None):
         super(SegmentationWidget, self).__init__(parent)
 
-        froi_dir = os.path.dirname(froi.__file__)
-        self._icon_dir = os.path.join(froi_dir,'gui/icon/')
+        self._icon_dir = get_icon_dir()
 
         self._init_gui()
         self._create_actions()
-        self._main_win=main_win
+        self._main_win = main_win
         self._model = model
 
 
@@ -38,20 +36,20 @@ class SegmentationWidget(QDialog):
         #self.grow_button.setFlat(True)
         #self.grow_button.setFocusPolicy(Qt.NoFocus)
         self.grow_button.resize(100,100)
-        self.grow_button.setIcon(QIcon(os.path.join(self._icon_dir,'grow.png')))
+        self.grow_button.setIcon(QIcon(os.path.join(self._icon_dir, 'grow.png')))
         self.grow_button.setEnabled(True)
         self.grow_button.setToolTip("region growing")
 
         self.watershed_button = QPushButton()
         #self.watershed_button.setFlat(True)
         #self.watershed_button.setFocusPolicy(Qt.NoFocus)
-        self.watershed_button.setIcon(QIcon(os.path.join(self._icon_dir,'watershed.png')))
+        self.watershed_button.setIcon(QIcon(os.path.join(self._icon_dir, 'watershed.png')))
         self.watershed_button.setEnabled(True)
         self.watershed_button.setToolTip("Watershed")
 
         gridlayout = QGridLayout(self)
-        gridlayout.addWidget(self.grow_button,1,0)
-        gridlayout.addWidget(self.watershed_button,1,1)
+        gridlayout.addWidget(self.grow_button, 1, 0)
+        gridlayout.addWidget(self.watershed_button, 1, 1)
 
 
     def _create_actions(self):

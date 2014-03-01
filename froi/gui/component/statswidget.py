@@ -1,15 +1,13 @@
 # emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
 # vi: set ft=python sts=4 ts=4 sw=4 et:
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-
 import os
-import froi
+
+from PyQt4.QtGui import *
 
 from volumedintensitydialog import VolumeIntensityDialog
 from roiorvoxelcurvedialog import  ROIOrVoxelCurveDialog
-
+from froi.gui.base.utils import *
 
 class StatsWidget(QDialog):
     """
@@ -17,15 +15,14 @@ class StatsWidget(QDialog):
 
     """
 
-    def __init__(self, model,main_win, parent=None):
+    def __init__(self, model, main_win, parent=None):
         super(StatsWidget, self).__init__(parent)
 
-        froi_dir = os.path.dirname(froi.__file__)
-        self._icon_dir = os.path.join(froi_dir,'gui/icon/')
+        self._icon_dir = get_icon_dir()
 
         self._init_gui()
         self._create_actions()
-        self._main_win=main_win
+        self._main_win = main_win
         self._model = model
 
 
@@ -37,20 +34,20 @@ class StatsWidget(QDialog):
         self.volume_button = QPushButton()
         #self.volume_button.setFlat(True)
         #self.volume_button.setFocusPolicy(Qt.NoFocus)
-        self.volume_button.setIcon(QIcon(os.path.join(self._icon_dir,'volume_intensity.png')))
+        self.volume_button.setIcon(QIcon(os.path.join(self._icon_dir, 'volume_intensity.png')))
         self.volume_button.setEnabled(True)
         self.volume_button.setToolTip("Volume intensity")
 
         self.roiorvoxel_button = QPushButton()
         #self.roiorvoxel_button.setFlat(True)
         #self.roiorvoxel_button.setFocusPolicy(Qt.NoFocus)
-        self.roiorvoxel_button.setIcon(QIcon(os.path.join(self._icon_dir,'voxel_curve.png')))
+        self.roiorvoxel_button.setIcon(QIcon(os.path.join(self._icon_dir, 'voxel_curve.png')))
         self.roiorvoxel_button.setEnabled(True)
         self.roiorvoxel_button.setToolTip("Roiorvoxelcurve")
 
         gridlayout = QGridLayout(self)
-        gridlayout.addWidget(self.volume_button,1,0)
-        gridlayout.addWidget(self.roiorvoxel_button,1,1)
+        gridlayout.addWidget(self.volume_button, 1, 0)
+        gridlayout.addWidget(self.roiorvoxel_button, 1, 1)
 
 
     def _create_actions(self):

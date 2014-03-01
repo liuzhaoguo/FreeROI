@@ -5,7 +5,6 @@ in a grid style.
 
 """
 
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from imagelabel import ImageLabel
 

@@ -6,7 +6,6 @@ in orthographic style.
 """
 
 import numpy as np
-from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from imagelabel import (SagittalImageLabel, AxialImageLabel, CoronalImageLabel)

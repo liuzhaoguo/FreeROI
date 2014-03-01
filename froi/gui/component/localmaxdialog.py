@@ -11,10 +11,9 @@ class LocalMaxDialog(QDialog):
     A dialog for action of intersection.
 
     """
-    def __init__(self, model, main_win, parent=None):
+    def __init__(self, model,parent=None):
         super(LocalMaxDialog, self).__init__(parent)
         self._model = model
-        self._main_win = main_win
         self._init_gui()
         self._create_actions()
 
@@ -99,7 +98,6 @@ class LocalMaxDialog(QDialog):
                             None,
                             vol_name,
                             self._model._data[0].get_header())
-        #self._main_win.new_image_action()
         self.done(0)
 
 

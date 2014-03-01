@@ -26,7 +26,6 @@ from component.drawsettings import PainterStatus, ViewSettings, MoveSettings
 from component.labeldialog import LabelDialog
 from component.eraserdialog import EraserDialog
 from component.regularroidialog import RegularROIDialog
-from component.intersectdialog import IntersectDialog
 from component.roi2gwmidialog import Roi2gwmiDialog
 from component.autolabeldialog import AutoLabelDialog
 from component.opendialog import OpenDialog
@@ -391,13 +390,6 @@ class BpMainWindow(QMainWindow):
         self._actions['regular_roi'].triggered.connect(self._regular_roi)
         self._actions['regular_roi'].setEnabled(False)
 
-        # Intersect
-        self._actions['intersect'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'intersect.png')),
-                                             self.tr("Intersection"), self)
-        self._actions['intersect'].triggered.connect(self._intersect)
-        self._actions['intersect'].setEnabled(False)
-
         # ROI to Interface
         self._actions['r2i'] = QAction(QIcon(os.path.join(
         self._icon_dir, 'r2i.png')),
@@ -413,13 +405,6 @@ class BpMainWindow(QMainWindow):
         self._actions['auto_label'].triggered.connect(self._auto_label)
         self._actions['auto_label'].setEnabled(False)
 
-        # Open
-        self._actions['open'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'opening.png')),
-                                        self.tr("Opening"), self)
-        self._actions['open'].setShortcut("Ctrl+P")
-        self._actions['open'].triggered.connect(self._open)
-        self._actions['open'].setEnabled(False)
 
 
     def _add_toolbar(self):
@@ -464,8 +449,6 @@ class BpMainWindow(QMainWindow):
         # Add automatic tools
         self._toolbar.addSeparator()
         self._toolbar.addAction(self._actions['regular_roi'])
-        self._toolbar.addAction(self._actions['intersect'])
-        self._toolbar.addAction(self._actions['open'])
         self._toolbar.addAction(self._actions['r2i'])
         self._toolbar.addAction(self._actions['roidialog'])
 
@@ -563,7 +546,6 @@ class BpMainWindow(QMainWindow):
                 self._actions['orth_view'].setEnabled(True)
                 self._actions['cross_hover_view'].setEnabled(True)
                 self._actions['original_view'].setEnabled(True)
-                self._actions['open'].setEnabled(True)
                 self._actions['regular_roi'].setEnabled(True)
                 self._actions['r2i'].setEnabled(True)
                 self._actions['binaryzation'].setEnabled(True)
@@ -591,7 +573,6 @@ class BpMainWindow(QMainWindow):
                 #                self._switch_cursor_status)
             elif self.model.rowCount() > 1:
                 self._actions['remove_image'].setEnabled(True)
-                self._actions['intersect'].setEnabled(True)
                 self._actions['auto_label'].setEnabled(True)
                 # set current volume index
                 self.list_view.setCurrentIndex(self.model.index(0))
@@ -614,18 +595,14 @@ class BpMainWindow(QMainWindow):
 
         # change button status
         self._actions['remove_image'].setEnabled(True)
-        self._actions['intersect'].setEnabled(True)
         self._actions['regular_roi'].setEnabled(True)
         self._actions['r2i'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
-        self._actions['open'].setEnabled(True)
 
     def new_image_action(self):
         self._actions['remove_image'].setEnabled(True)
-        self._actions['intersect'].setEnabled(True)
         self._actions['r2i'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
-        self._actions['open'].setEnabled(True)
 
     def _remove_image(self):
         """
@@ -636,11 +613,9 @@ class BpMainWindow(QMainWindow):
         self.model.delItem(row)
         if self.model.rowCount() == 1:
             self._actions['remove_image'].setEnabled(False)
-            self._actions['intersect'].setEnabled(False)
             self._actions['regular_roi'].setEnabled(False)
             self._actions['r2i'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
-            self._actions['open'].setEnabled(False)
 
     def _save_image(self):
         """
@@ -680,11 +655,9 @@ class BpMainWindow(QMainWindow):
         self._actions['ld_glbl'].setEnabled(False)
         self._actions['ld_lbl'].setEnabled(False)
         self._actions['close'].setEnabled(False)
-        self._actions['intersect'].setEnabled(False)
         self._actions['regular_roi'].setEnabled(False)
         self._actions['r2i'].setEnabled(False)
         self._actions['auto_label'].setEnabled(False)
-        self._actions['open'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
         self._actions['original_view'].setEnabled(False)
@@ -732,10 +705,8 @@ class BpMainWindow(QMainWindow):
 
         self.tool_menu = self.menuBar().addMenu(self.tr("Tools"))
         self.tool_menu.addAction(self._actions['regular_roi'])
-        self.tool_menu.addAction(self._actions['intersect'])
         self.tool_menu.addAction(self._actions['r2i'])
         self.tool_menu.addAction(self._actions['auto_label'])
-        self.tool_menu.addAction(self._actions['open'])
         self.tool_menu.addAction(self._actions['binaryzation'])
         self.tool_menu.addAction(self._actions['binarydilation'])
         self.tool_menu.addAction(self._actions['binaryerosion'])
@@ -976,14 +947,6 @@ class BpMainWindow(QMainWindow):
     def _redo(self):
         self.model.redo_current_image()
 
-    def _intersect(self):
-        """
-        Make a intersection between two layers.
-
-        """
-        new_dialog = IntersectDialog(self.model)
-        new_dialog.exec_()
-
     def _r2i(self):
         new_dialog = Roi2gwmiDialog(self.model)
         new_dialog.exec_()
@@ -991,10 +954,6 @@ class BpMainWindow(QMainWindow):
     def _auto_label(self):
         auto_dialog = AutoLabelDialog(self.model)
         auto_dialog.exec_()
-
-    def _open(self):
-        new_dialog = OpenDialog(self.model)
-        new_dialog.exec_()
 
     def _ld_lbl(self):
         file_name = QFileDialog.getOpenFileName(self,
