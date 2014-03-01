@@ -145,7 +145,7 @@ class LayerView(QWidget):
 
         glayout = QGridLayout()
         glayout.addLayout(xyzt_layout, 0, 0, 1, 6)
-        glayout.addLayout(vl_hlayout,1,0,1,6)
+        glayout.addLayout(vl_hlayout, 1, 0, 1, 6)
        
         self._cursor_info_panel = QGroupBox('Cursor')
         self._cursor_info_panel.setLayout(glayout)
@@ -278,7 +278,7 @@ class LayerView(QWidget):
             if self._model.data(index, Qt.UserRole + 8):
                 self._volume_index_spinbox.setEnabled(True)
                 self._volume_index_spinbox.setRange(0, 
-                        self._model.data(index, Qt.UserRole + 10)-1)
+                        self._model.data(index, Qt.UserRole + 10) - 1)
                 time_point = self._model.data(index, Qt.UserRole + 9)
                 if not time_point == self._volume_index_spinbox.value():
                     self._volume_index_spinbox.setValue(time_point)
@@ -311,7 +311,7 @@ class LayerView(QWidget):
         index = self._list_view.currentIndex()
         value = self._view_max.text()
         if value == '':
-            self._view_max.setText(str(self._model.data(index, Qt.UserRole+1)))
+            self._view_max.setText(str(self._model.data(index, Qt.UserRole + 1)))
         else:
             self._model.setData(index, value, role=Qt.UserRole + 1)
 

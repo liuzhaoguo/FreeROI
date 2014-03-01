@@ -18,7 +18,7 @@ class BasicWidget(QDialog):
 
     """
 
-    def __init__(self, model,main_win, parent=None):
+    def __init__(self, model, main_win, parent=None):
         super(BasicWidget, self).__init__(parent)
         self._icon_dir = get_icon_dir()
 
