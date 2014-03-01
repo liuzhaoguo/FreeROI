@@ -1,0 +1,6 @@
+scipy
+numpy
+nibabel
+scikits-image
+PyQt4
+
