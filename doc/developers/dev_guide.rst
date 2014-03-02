@@ -98,6 +98,12 @@ Some other things you might want to do
      # delete branch in github
      git push origin :my-unwanted-branch
 
+#. Check out a remote branch
+   ::
+     # fetch all the remote branches for you
+     git fetch
+     # check out the branch you are interested in, giving you a local copy
+     git checkout -b test origin/test
 
 Commits
 -------
