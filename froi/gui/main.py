@@ -571,8 +571,8 @@ class BpMainWindow(QMainWindow):
                 self._actions['binaryerosion'].setEnabled(True)
                 self._actions['greydilation'].setEnabled(True)
                 self._actions['greyerosion'].setEnabled(True)
-                self._actions['roiorvoxelcurve'].setEnabled(True);
-                self._actions['volumeintensity'].setEnabled(True);
+                self._actions['roiorvoxelcurve'].setEnabled(True)
+                self._actions['volumeintensity'].setEnabled(True)
                 self._actions['undo'].setEnabled(False)
                 self._actions['redo'].setEnabled(False)
                 # connect signals with slots
