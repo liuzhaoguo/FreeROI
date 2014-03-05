@@ -31,7 +31,7 @@ Working with FreeROI source code
   
    * Add upstream repository:
      ::
-       git remote upstream https://github.com/BNUCNL/FreeROI.git
+       git remote add upstream https://github.com/BNUCNL/FreeROI.git
   
    * Now, you have remote repositories named:
 
