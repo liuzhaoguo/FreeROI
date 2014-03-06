@@ -452,9 +452,9 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['original_view'])
         self._toolbar.addAction(self._actions['cross_hover_view'])
         # Add draw tools
-        # self._toolbar.addSeparator()
-        # self._toolbar.addAction(self._actions['hand'])
-        # self._toolbar.addAction(self._actions['cursor'])
+        self._toolbar.addSeparator()
+        self._toolbar.addAction(self._actions['hand'])
+        self._toolbar.addAction(self._actions['cursor'])
         # self._toolbar.addAction(self._actions['brush'])
         # self._toolbar.addAction(self._actions['roibrush'])
         # Add undo redo
