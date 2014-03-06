@@ -103,8 +103,6 @@ class LayerView(QWidget):
         list_view_layout.addLayout(para_layout) 
         list_view_layout.addLayout(grid_layout)
 
-        # label config center
-        labcon_panel = self.label_config_center
         # initialize cursor coord&value widgets
         xyzt_layout = QHBoxLayout()
         # FIXME should match data shape
@@ -157,7 +155,6 @@ class LayerView(QWidget):
         self.ROItools_widget = ToolsTabWidget(self._model, self)
         self.stats_widget = StatsWidget(self._model, self)
 
-        self._unity_tabwidget.addTab(labcon_panel, "Label")
         self._unity_tabwidget.addTab(self.segmentation_widget, "Segment")
         self._unity_tabwidget.addTab(self.basic_widget, "Basic")
         self._unity_tabwidget.addTab(self.ROItools_widget, "ROItools")
