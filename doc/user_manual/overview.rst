@@ -2,7 +2,7 @@ Introduction
 ============
 
 FreeROI is a versatile image processing software developed for neuroimaging data.
-It's goal is to provide a user-friendly user-interface for neuroimaging researchers to visualize and analyze their data.
+Its goal is to provide a user-friendly user-interface for neuroimaging researchers to visualize and analyze their data.
 
 Features
 ---------
