@@ -11,11 +11,12 @@ class ROIDialog(QDialog, DrawSettings):
     ROI toolset.
     """
     last_target_name = "New Volume"
-    def __init__(self, model, parent=None):
+    def __init__(self, model, label_config_center, parent=None):
         super(ROIDialog, self).__init__(parent)
         self._model = model
         self.selected_rois = []
         self._last_target_update_enable = True
+        self._label_config_center = label_config_center
 
         self._init_gui()
         self._create_actions()
@@ -23,6 +24,18 @@ class ROIDialog(QDialog, DrawSettings):
     def _init_gui(self):
         self.setWindowModality(Qt.NonModal)
         self.setWindowTitle("ROI Toolset")
+
+        self.voxel_btn = QPushButton("Voxel")
+        self.ROI_btn = QPushButton("ROI")
+        self.ROI_tool_btn = QPushButton("ROI Tool")
+        hlayout = QHBoxLayout()
+        hlayout.addWidget(self.voxel_btn)
+        hlayout.addWidget(self.ROI_btn)
+        hlayout.addWidget(self.ROI_tool_btn)
+
+        self.vlayout = QVBoxLayout()
+        self.vlayout.addLayout(hlayout)
+        self.vlayout.addWidget(self._label_config_center)
 
         roi_label = QLabel("Selected ROIs")
         self.roi_edit = QLineEdit()
@@ -59,9 +72,19 @@ class ROIDialog(QDialog, DrawSettings):
         vbox_layout = QVBoxLayout()
         vbox_layout.addLayout(grid_layout)
         vbox_layout.addLayout(hbox_layout)
-        self.setLayout(vbox_layout)
+        self.ROI_tool_widget = QWidget()
+        self.ROI_tool_widget.setVisible(False)
+        self.ROI_tool_widget.setLayout(vbox_layout)
+
+        self._label_config_center.size_label.setVisible(True);
+        self._label_config_center.size_edit.setVisible(True);
+        self.vlayout.addWidget(self.ROI_tool_widget)
+        self.setLayout(self.vlayout)
 
     def _create_actions(self):
+        self.voxel_btn.clicked.connect(self._voxel_clicked)
+        self.ROI_btn.clicked.connect(self._ROI_clicked)
+        self.ROI_tool_btn.clicked.connect(self._ROI_tool_clicked)
         self._model.rowsInserted.connect(self._fill_target_box)
         self._model.rowsMoved.connect(self._fill_target_box)
         self._model.rowsRemoved.connect(self._fill_target_box)
@@ -69,6 +92,21 @@ class ROIDialog(QDialog, DrawSettings):
         self.action_box.currentIndexChanged[QString].connect(self._update_target_box)
         self.run_button.pressed.connect(self._run)
         self.done_button.pressed.connect(self._done)
+
+    def _voxel_clicked(self):
+        self._label_config_center.size_label.setVisible(True)
+        self._label_config_center.size_edit.setVisible(True)
+        self.ROI_tool_widget.setVisible(False)
+
+    def _ROI_clicked(self):
+        self._label_config_center.size_label.setVisible(False)
+        self._label_config_center.size_edit.setVisible(False)
+        self.ROI_tool_widget.setVisible(False)
+
+    def _ROI_tool_clicked(self):
+        self._label_config_center.size_label.setVisible(False)
+        self._label_config_center.size_edit.setVisible(False)
+        self.ROI_tool_widget.setVisible(True)
 
     def _fill_target_box(self, a=None, b=None, c=None, d=None, e=None):
         self._last_target_update_enable = False

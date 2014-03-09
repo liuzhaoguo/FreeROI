@@ -73,8 +73,8 @@ class StatsWidget(QDialog):
         watershed clicked
         '''
         if self.roiorvoxel_button.isEnabled():
-            new_dialog = ROIOrVoxelCurveDialog(self._model, self)
-            new_dialog.exec_()
+            self.new_dialog = ROIOrVoxelCurveDialog(self._model, self)
+            self.new_dialog.exec_()
 
 
 

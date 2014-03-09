@@ -788,7 +788,7 @@ class BpMainWindow(QMainWindow):
             self._actions['roibrush'].setChecked(False)
 
             self._actions['roidialog'].setChecked(True)
-            self.roidialog = ROIDialog(self.model)
+            self.roidialog = ROIDialog(self.model, self._label_config_center)
             self.list_view._list_view.selectionModel().currentChanged.connect(
                 self.roidialog.clear_rois)
             self.painter_status.set_draw_settings(self.roidialog)

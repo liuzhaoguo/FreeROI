@@ -72,13 +72,13 @@ class LabelConfigCenter(QGroupBox, DrawSettings):
         self.label_list_view = QListView()
         self._update_labels()
 
-        size_label = QLabel('Brush Size:')
+        self.size_label = QLabel('Brush Size:')
         self.size_edit = QSpinBox()
         self.size_edit.setRange(1, 10)
         self.size_edit.setValue(4)
        
         hboxlayout = QHBoxLayout()
-        hboxlayout.addWidget(size_label)
+        hboxlayout.addWidget(self.size_label)
         hboxlayout.addWidget(self.size_edit)
 
         labcon_layout = QGridLayout()
