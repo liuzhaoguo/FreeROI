@@ -12,7 +12,6 @@ pip install -U setuptools
 pip install cython
 
 echo "Install required packages..."
-#pip install -U setuptools
 pip install -r requirements.txt
 
 echo "Install FreeROI..."
