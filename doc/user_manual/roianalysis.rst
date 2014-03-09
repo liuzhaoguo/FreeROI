@@ -6,7 +6,7 @@ ROI Generation
 ROI by handpicking subregion
 -----------------------------
 
-ROI By Handdrawing
+ROI by handdrawing
 -------------------
 
 Regular shape generation

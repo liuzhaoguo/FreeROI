@@ -23,4 +23,3 @@ FreeROI is currently under active developing and maintaning by a group of experi
 * more ROI statistical analysis functions
 * more automatic ROI generating functions based on machine learning strategies
 * support for surface neuroimaging data format
-
