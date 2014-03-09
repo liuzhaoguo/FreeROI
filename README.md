@@ -21,4 +21,5 @@ Currently supports the following systems:
 
 License
 -------
-FreeROI is under GPL XX License.
+FreeROI is under Revised BSD License.
+See the [LICENSE file](https://github.com/BNUCNL/FreeROI/blob/master/LICENSE) for the full license text.
