@@ -17,7 +17,7 @@ by a few clicks, liberating users from complex command lines.
 1. Smoothing
    A Gaussian filter could be used for image smoothing. The parameter *sigma*
    - standard deviation for Gaussian kernel - should be specified in voxel
-    units first.
+   units first.
 
    A relationship between the *full width at half maximum (FWHM)* and *sigma*
    could be derived as **FWHM = 2.3548 * sigma**.
