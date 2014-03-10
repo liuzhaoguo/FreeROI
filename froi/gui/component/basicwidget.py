@@ -10,7 +10,7 @@ from intersectdialog import IntersectDialog
 from localmaxdialog import LocalMaxDialog
 from opendialog import OpenDialog
 from froi.gui.base.utils import *
-
+from no_gui_tools import inverse_image
 
 class BasicWidget(QDialog):
     """
@@ -49,10 +49,17 @@ class BasicWidget(QDialog):
         self.opening_button.setEnabled(True)
         self.opening_button.setToolTip("Opening")
 
+        self.inverse_button = QPushButton()
+        self.inverse_button.setFocusPolicy(Qt.NoFocus)
+        self.inverse_button.setIcon(QIcon(os.path.join(self._icon_dir, 'inverse.icon')))
+        self.inverse_button.setEnabled(True)
+        self.inverse_button.setToolTip("Inverse")
+
         gridlayout = QGridLayout(self)
         gridlayout.addWidget(self.localmax_button, 1, 0)
         gridlayout.addWidget(self.intersect_button, 1, 1)
         gridlayout.addWidget(self.opening_button, 2, 0)
+        gridlayout.addWidget(self.inverse_button, 2, 1)
 
 
     def _create_actions(self):
@@ -62,6 +69,7 @@ class BasicWidget(QDialog):
         self.localmax_button.clicked.connect(self._localmax_clicked)
         self.intersect_button.clicked.connect(self._intersect_clicked)
         self.opening_button.clicked.connect(self._opening_clicked)
+        self.inverse_button.clicked.connect(self._inverse_clicked)
 
     def _localmax_clicked(self):
         """
@@ -81,6 +89,8 @@ class BasicWidget(QDialog):
         new_dialog = OpenDialog(self._model)
         new_dialog.exec_()
 
+    def _inverse_clicked(self):
+        inverse_image(self._model)
 
 
 
