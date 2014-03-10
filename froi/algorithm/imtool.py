@@ -1,8 +1,11 @@
+# emacs: -*- mode: python; py-indent-offset: 4; indent-tabs-mode: nil -*-
+# vi: set ft=python sts=4 ts=4 sw=4 et:
+
 import numpy as np
 from scipy import ndimage as nd
-from skimage import feature as skft
-import skimage.morphology as skmorph
 from scipy.ndimage import morphology
+from skimage import feature as skft
+from skimage import morphology as skmorph
 
 def mesh_3d_grid(x, y, z):
     x = np.asarray(x)
@@ -96,9 +99,15 @@ def binaryzation(data,threshold):
 
 def multi_label_edge_detection(data):
     f = nd.generate_binary_structure(len(data.shape), 1)
-    bound = (nd.grey_erosion(data,footprint=f) != nd.grey_dilation(data,footprint=f)) - \
-            (nd.binary_dilation(data.astype(np.bool)) - data.astype(np.bool))     # the unwanted thick bounds
+    # the unwanted thick bounds
+    bound = (nd.grey_erosion(data,footprint=f) != \
+             nd.grey_dilation(data,footprint=f)) - \
+            (nd.binary_dilation(data.astype(np.bool)) - data.astype(np.bool))
     data=bound.astype(data.dtype)
-    
     return data
 
+def inverse_transformation(data):
+    """
+    Return a inverted image.
+    """
+    return -data
