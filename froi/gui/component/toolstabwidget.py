@@ -2,7 +2,7 @@
 # vi: set ft=python sts=4 ts=4 sw=4 et:
 
 import os
-
+from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from edgedetectiondialog import Edge_detectionDialog
@@ -33,37 +33,37 @@ class ToolsTabWidget(QDialog):
         Initialize GUI.
         """
         self.detection_button = QPushButton()
-        #self.detection_button.setFlat(True)
-        #self.detection_button.setFocusPolicy(Qt.NoFocus)
-        self.detection_button.setIcon(QIcon(os.path.join(self._icon_dir, 'edge_detection.png')))
+        self.detection_button.setFocusPolicy(Qt.NoFocus)
+        self.detection_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                         'edge_detection.png')))
         self.detection_button.setEnabled(True)
         self.detection_button.setToolTip("edge detection")
 
         self.localmax_button = QPushButton()
-        #self.localmax_button.setFlat(True)
-        #self.localmax_button.setFocusPolicy(Qt.NoFocus)
-        self.localmax_button.setIcon(QIcon(os.path.join(self._icon_dir, 'localmax.png')))
+        self.localmax_button.setFocusPolicy(Qt.NoFocus)
+        self.localmax_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                        'localmax.png')))
         self.localmax_button.setEnabled(True)
         self.localmax_button.setToolTip("Local Max")
 
         self.roifilter_button = QPushButton()
-        #self.roifilter_button.setFlat(True)
-        #self.roifilter_button.setFocusPolicy(Qt.NoFocus)
-        self.roifilter_button.setIcon(QIcon(os.path.join(self._icon_dir, 'filtering.png')))
+        self.roifilter_button.setFocusPolicy(Qt.NoFocus)
+        self.roifilter_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                         'filtering.png')))
         self.roifilter_button.setEnabled(True)
         self.roifilter_button.setToolTip("ROI Filtering")
 
         self.roimerge_button = QPushButton()
-        #self.roimerge_button.setFlat(True)
-        #self.roimerge_button.setFocusPolicy(Qt.NoFocus)
-        self.roimerge_button.setIcon(QIcon(os.path.join(self._icon_dir, 'merging.png')))
+        self.roimerge_button.setFocusPolicy(Qt.NoFocus)
+        self.roimerge_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                        'merging.png')))
         self.roimerge_button.setEnabled(True)
         self.roimerge_button.setToolTip("ROI Merging")
 
         self.roi2interface_button = QPushButton()
-        #self.roi2interface_button.setFlat(True)
-        #self.roi2interface_button.setFocusPolicy(Qt.NoFocus)
-        self.roi2interface_button.setIcon(QIcon(os.path.join(self._icon_dir, 'r2i.png')))
+        self.roi2interface_button.setFocusPolicy(Qt.NoFocus)
+        self.roi2interface_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                             'r2i.png')))
         self.roi2interface_button.setEnabled(True)
         self.roi2interface_button.setToolTip("ROI2Interface")
 
