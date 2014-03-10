@@ -52,10 +52,11 @@ def nearest_labeling(src, tar):
 
 def cluster_labeling(src, conn=1):
     """
-    Label different clusters in a image.
+    Label different clusters in an image.
+
     """
     temp = src.copy()
-    temp = temp[temp>=0]
-    structure = ndimage.generate_binary_structure(3,conn)
-    labeled_array, num_features = label(temp, structure)
+    temp = temp[temp >= 0]
+    structure = ndimage.generate_binary_structure(3, conn)
+    labeled_array, num_features = ndimage.label(temp, structure)
     return labeled_array
