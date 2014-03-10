@@ -20,15 +20,23 @@ by a few clicks, liberating users from complex command lines.
    units first.
 
    A relationship between the *full width at half maximum (FWHM)* and *sigma*
-   could be derived as **FWHM = 2.3548 * sigma**.
+   could be derived as FWHM = 2.3548 * sigma.
 
 #. Inversion
+   In fMRI activation image, the negative activation is usually also concerned 
+   by reserchers, yet no thresholding process for negative value is implemented
+   in FreeROI. To facilitate users extract regions with negative value, the 
+   image could be inverted by multiplying with -1 first.
 
 #. Intersection
+   An image could be masked by another binary image using intersection tool.
 
 #. Local Maxima Detection
+   This tool is used for extract local maxima from an image. The local maxima
+   could be used for defining ROIs with regular shape.
 
 #. Binarization
+   An image could be binarized with this tool.
 
 #. Image Dilation
 
@@ -80,7 +88,4 @@ ROI Related Tools
 
 #. Statistics
 
-
-Morphology Tools
------------------
 
