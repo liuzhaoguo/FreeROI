@@ -112,15 +112,23 @@ def inverse_transformation(data):
     """
     return -data
 
-def cluster_labeling(src, threshold, conn=1):
+def cluster_labeling(data, threshold, conn=1):
     """
     Label different clusters in an image.
 
     """
-    temp = src.copy()
+    temp = data.copy()
     temp[temp < threshold] = 0
     temp[temp >= threshold] = 1
     structure = nd.generate_binary_structure(3, conn)
     labeled_array, num_features = nd.label(temp, structure)
     return labeled_array
+
+def gaussian_smoothing(data, sigma):
+    """
+    Gaussian smoothing.
+
+    """
+    data = nd.gaussian_filter(data, sigma)
+    return data
 

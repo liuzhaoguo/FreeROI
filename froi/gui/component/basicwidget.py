@@ -11,6 +11,7 @@ from localmaxdialog import LocalMaxDialog
 from opendialog import OpenDialog
 from froi.gui.base.utils import *
 from no_gui_tools import inverse_image
+from smoothingdialog import SmoothingDialog
 
 class BasicWidget(QDialog):
     """
@@ -59,11 +60,19 @@ class BasicWidget(QDialog):
         self.inverse_button.setEnabled(True)
         self.inverse_button.setToolTip("Inverse")
 
+        self.smooth_button = QPushButton()
+        self.smooth_button.setFocusPolicy(Qt.NoFocus)
+        self.smooth_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                      'smoothing.png')))
+        self.smooth_button.setEnabled(True)
+        self.smooth_button.setToolTip("Smooth")
+
         gridlayout = QGridLayout(self)
         gridlayout.addWidget(self.localmax_button, 1, 0)
         gridlayout.addWidget(self.intersect_button, 1, 1)
         gridlayout.addWidget(self.opening_button, 2, 0)
         gridlayout.addWidget(self.inverse_button, 2, 1)
+        gridlayout.addWidget(self.smooth_button, 3, 0)
 
     def _create_actions(self):
         """
@@ -73,6 +82,7 @@ class BasicWidget(QDialog):
         self.intersect_button.clicked.connect(self._intersect_clicked)
         self.opening_button.clicked.connect(self._opening_clicked)
         self.inverse_button.clicked.connect(self._inverse_clicked)
+        self.smooth_button.clicked.connect(self._smooth_clicked)
 
     def _localmax_clicked(self):
         """
@@ -94,4 +104,8 @@ class BasicWidget(QDialog):
 
     def _inverse_clicked(self):
         inverse_image(self._model)
+
+    def _smooth_clicked(self):
+        new_dialog = SmoothingDialog(self._model)
+        new_dialog.exec_()
 
