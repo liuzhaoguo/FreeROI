@@ -2,6 +2,7 @@
 # vi: set ft=python sts=4 ts=4 sw=4 et:
 
 from PyQt4.QtCore import *
+
 from froi.algorithm import imtool
 
 def inverse_image(model):

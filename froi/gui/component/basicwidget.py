@@ -33,25 +33,29 @@ class BasicWidget(QDialog):
         """
         self.localmax_button = QPushButton()
         self.localmax_button.setFocusPolicy(Qt.NoFocus)
-        self.localmax_button.setIcon(QIcon(os.path.join(self._icon_dir, 'localmax.png')))
+        self.localmax_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                        'localmax.png')))
         self.localmax_button.setEnabled(True)
         self.localmax_button.setToolTip("Local Max")
 
         self.intersect_button = QPushButton()
         self.intersect_button.setFocusPolicy(Qt.NoFocus)
-        self.intersect_button.setIcon(QIcon(os.path.join(self._icon_dir, 'intersect.png')))
+        self.intersect_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                         'intersect.png')))
         self.intersect_button.setEnabled(True)
         self.intersect_button.setToolTip("Intersection")
 
         self.opening_button = QPushButton()
         self.opening_button.setFocusPolicy(Qt.NoFocus)
-        self.opening_button.setIcon(QIcon(os.path.join(self._icon_dir, 'opening.png')))
+        self.opening_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                       'opening.png')))
         self.opening_button.setEnabled(True)
         self.opening_button.setToolTip("Opening")
 
         self.inverse_button = QPushButton()
         self.inverse_button.setFocusPolicy(Qt.NoFocus)
-        self.inverse_button.setIcon(QIcon(os.path.join(self._icon_dir, 'inverse.icon')))
+        self.inverse_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                       'inverse.icon')))
         self.inverse_button.setEnabled(True)
         self.inverse_button.setToolTip("Inverse")
 
@@ -60,7 +64,6 @@ class BasicWidget(QDialog):
         gridlayout.addWidget(self.intersect_button, 1, 1)
         gridlayout.addWidget(self.opening_button, 2, 0)
         gridlayout.addWidget(self.inverse_button, 2, 1)
-
 
     def _create_actions(self):
         """
@@ -91,12 +94,4 @@ class BasicWidget(QDialog):
 
     def _inverse_clicked(self):
         inverse_image(self._model)
-
-
-
-
-
-
-
-
 
