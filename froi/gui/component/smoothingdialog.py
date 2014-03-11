@@ -48,9 +48,11 @@ class SmoothingDialog(QDialog):
         hbox_layout.addWidget(self.run_button)
         hbox_layout.addWidget(self.cancel_button)
 
+        notes_label = QLabel("Notes: FWHM = 2.3548 * sigma\nSigma is specified in voxels.")
         vbox_layout = QVBoxLayout()
         vbox_layout.addLayout(grid_layout)
         vbox_layout.addLayout(hbox_layout)
+        vbox_layout.addWidget(notes_label)
 
         self.setLayout(vbox_layout)
 
