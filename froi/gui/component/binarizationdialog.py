@@ -7,13 +7,13 @@ from PyQt4.QtGui import *
 
 from froi.algorithm import imtool
 
-class BinaryzationDialog(QDialog):
+class BinarizationDialog(QDialog):
     """
     A dialog for action of binaryzation.
 
     """
     def __init__(self, model, parent=None):
-        super(BinaryzationDialog, self).__init__(parent)
+        super(BinarizationDialog, self).__init__(parent)
         self._model = model
 
         self._init_gui()
@@ -25,14 +25,14 @@ class BinaryzationDialog(QDialog):
 
         """
         # set dialog title
-        self.setWindowTitle("Binaryzation")
+        self.setWindowTitle("Binarization")
 
         # initialize widgets
         source_label = QLabel("Source")
         self.source_combo = QComboBox()
         threshold_label = QLabel("Threshold")
         self.threshold_edit = QLineEdit()
-        self.threshold_edit.setText(str(self._model.get_current_value(self._model.get_cross_pos())))
+        self.threshold_edit.setText(str(int(self._model._data[self._model.currentIndex().row()].get_view_min())))
         vol_list = self._model.getItemList()
         self.source_combo.addItems(vol_list)
         row = self._model.currentIndex().row()
