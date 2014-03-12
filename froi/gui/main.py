@@ -90,7 +90,7 @@ class BpMainWindow(QMainWindow):
         self.label_config_suffix = 'lbl'
 
         # set icon configuration
-        self._icon_dir=get_icon_dir()
+        self._icon_dir = get_icon_dir()
 
         # set window title
         self.setWindowTitle('FreeROI')
@@ -100,7 +100,7 @@ class BpMainWindow(QMainWindow):
         self.setWindowIcon(QIcon(os.path.join(self._icon_dir,'icon.png')))
 
         self._init_configuration()
-        self._init_label_config_center()
+        #self._init_label_config_center()
 
         # create actions
         self._create_actions()
@@ -115,6 +115,10 @@ class BpMainWindow(QMainWindow):
         self.move(qr.topLeft())
 
     def _init_configuration(self):
+        """
+        Load configuration for GUI.
+
+        """
         config_file = os.path.expanduser('~/.pybp.conf')
         if os.path.exists(config_file):
             config = ConfigParser.RawConfigParser()
@@ -136,6 +140,10 @@ class BpMainWindow(QMainWindow):
             self.default_grid_scale_factor = 2.0
 
     def _save_configuration(self):
+        """
+        Save GUI configuration to a file.
+
+        """
         config_file = os.path.expanduser('~/.pybp.conf')
 
         config = ConfigParser.RawConfigParser()
@@ -374,7 +382,7 @@ class BpMainWindow(QMainWindow):
         self._actions['edit'].setCheckable(True)
         self._actions['edit'].setChecked(False)
         # TODO lookup this line
-        self._update_brush()
+        #self._update_brush()
 
         # Undo
         self._actions['undo'] = QAction(QIcon(os.path.join(
@@ -527,6 +535,7 @@ class BpMainWindow(QMainWindow):
                 # initialize views
                 self.list_view = LayerView(self._label_config_center)
                 self.list_view.setModel(self.model)
+                self._init_roi_dialog()
                 self.image_view = GridView(self.model, self.painter_status)
                 # initialize display layout
                 central_widget = QWidget()
@@ -742,7 +751,8 @@ class BpMainWindow(QMainWindow):
             self._actions['cursor'].setChecked(True)
             if isinstance(self.image_view, OrthView):
                 self._actions['hand'].setChecked(False)
-            if hasattr(self, 'roidialog'):
+            #if hasattr(self, 'roidialog'):
+            if self.roidialog.isVisible():
                 self._roidialog_disable()
 
             self.painter_status.set_draw_settings(ViewSettings())
@@ -792,15 +802,16 @@ class BpMainWindow(QMainWindow):
             self._actions['roibrush'].setChecked(True)
 
     def _roidialog_enable(self):
-        if not hasattr(self, 'roidialog'):
+        #if not hasattr(self, 'roidialog'):
+        if self._actions['edit'].isChecked():
             self._actions['cursor'].setChecked(False)
             if isinstance(self.image_view, OrthView):
                 self._actions['hand'].setChecked(False)
             self._actions['edit'].setChecked(True)
 
-            self.roidialog = ROIDialog(self.model, self._label_config_center)
-            self.list_view._list_view.selectionModel().currentChanged.connect(
-                self.roidialog.clear_rois)
+            #self.roidialog = ROIDialog(self.model, self._label_config_center)
+            #self.list_view._list_view.selectionModel().currentChanged.connect(
+            #    self.roidialog.clear_rois)
             self.image_view.set_label_mouse_tracking(False)
             self.painter_status.set_draw_settings(self._label_config_center)
             #self.painter_status.set_draw_settings(self.roidialog)
@@ -812,8 +823,9 @@ class BpMainWindow(QMainWindow):
 
     def _roidialog_disable(self):
         #if hasattr(self, 'roidialog'):
-        self.roidialog.done(0)
+        #self.roidialog.done(0)
         #del self.roidialog
+        self.roidialog.hide()
         self._actions['edit'].setChecked(False)
 
     def _hand_enable(self):
@@ -875,7 +887,20 @@ class BpMainWindow(QMainWindow):
     #    xyzvl['label'] = self.model.get_current_value_label(int(value))
     #    self.list_view.update_xyzvl(xyzvl)
 
+    def _init_roi_dialog(self):
+        """
+        Initialize ROI Dialog
+
+        """
+        self.roidialog = ROIDialog(self.model, self._label_config_center)
+        self.list_view._list_view.selectionModel().currentChanged.connect(
+                self.roidialog.clear_rois)
+
     def _init_label_config_center(self):
+        """
+        Initialize LabelConfigCenter
+
+        """
         lbl_path = os.path.join(self.label_config_dir,
                                 '*.' + self.label_config_suffix)
         label_configs = glob.glob(lbl_path)
@@ -884,6 +909,7 @@ class BpMainWindow(QMainWindow):
         # Label Config Changed
         self._label_config_center.label_config_changed_signal().connect(self._update_brush)
 
+    # TODO lookup its usage
     def _init_label_config(self):
         label_path = os.path.join(self.label_path, self.config_file)
         if os.path.isfile(label_path):
@@ -1015,6 +1041,7 @@ class BpMainWindow(QMainWindow):
                     self.default_grid_scale_factor:
                 self._spinbox.setValue(100 * self.default_grid_scale_factor)
 
+    # TODO to be moved to the roidialog, and set the clickabilty of the button
     def _update_brush(self):
         if self._label_config_center.is_drawing_valid():
             pass

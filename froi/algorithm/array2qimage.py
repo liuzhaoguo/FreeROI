@@ -370,6 +370,7 @@ def _normalize255(array, normalize, scale_length=255.0):
     scale =  scale_length / (nmax - nmin)
     if scale != 1.0:
         array = array * scale
+    array[_np.logical_and(array > 0, array < 1)] = 1
 
     return _np.round(array)
 

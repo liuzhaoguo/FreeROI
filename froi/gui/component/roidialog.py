@@ -13,6 +13,10 @@ class ROIDialog(QDialog, DrawSettings):
     last_target_name = "New Volume"
     def __init__(self, model, label_config_center, parent=None):
         super(ROIDialog, self).__init__(parent)
+
+        self.setWindowModality(Qt.NonModal)
+        self.setWindowFlags(Qt.Tool | Qt.CustomizeWindowHint | Qt.WindowTitleHint)
+
         self._model = model
         self.selected_rois = []
         self._last_target_update_enable = True
