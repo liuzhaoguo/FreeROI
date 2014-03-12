@@ -178,8 +178,7 @@ class BpMainWindow(QMainWindow):
 
         # Open template action
         self._actions['add_template'] = QAction(QIcon(os.path.join(
-                                                    self._icon_dir,
-                                                    'open.png')),
+                                                self._icon_dir, 'open.png')),
                                             self.tr("&Open standard volume"),
                                             self)
         self._actions['add_template'].setShortcut(self.tr("Ctrl+O"))
@@ -188,8 +187,7 @@ class BpMainWindow(QMainWindow):
 
         # Add a new image action
         self._actions['add_image'] = QAction(QIcon(os.path.join(
-                                                self._icon_dir,
-                                                'add.png')),
+                                                self._icon_dir, 'add.png')),
                                             self.tr("&Add volume"),
                                             self)
         self._actions['add_image'].setShortcut(self.tr("Ctrl+A"))
@@ -198,24 +196,25 @@ class BpMainWindow(QMainWindow):
 
         # Remove an image
         self._actions['remove_image'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'remove.png')),
-                                                self.tr("&Remove volume"),
-                                                self)
+                                                self._icon_dir, 'remove.png')),
+                                            self.tr("&Remove volume"),
+                                            self)
         self._actions['remove_image'].setShortcut(self.tr("Ctrl+R"))
         self._actions['remove_image'].triggered.connect(self._remove_image)
         self._actions['remove_image'].setEnabled(False)
 
         # New image
         self._actions['new_image'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'create.png')),
-                                             self.tr("&New volume"), self)
+                                                self._icon_dir, 'create.png')),
+                                             self.tr("&New volume"),
+                                             self)
         self._actions['new_image'].setShortcut(self.tr("Ctrl+N"))
         self._actions['new_image'].triggered.connect(self.__new_image)
         self._actions['new_image'].setEnabled(False)
 
         # Save image
         self._actions['save_image'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'save.png')),
+                                                self._icon_dir, 'save.png')),
                                               self.tr("&Save volume as..."),
                                               self)
         self._actions['save_image'].setShortcut(self.tr("Ctrl+S"))
@@ -235,56 +234,61 @@ class BpMainWindow(QMainWindow):
 
         # Close display
         self._actions['close'] = QAction(self.tr("Close"), self)
-        #self._actions['close'].setShortcut(self.tr("Ctrl+W"))
+        self._actions['close'].setShortcut(self.tr("Ctrl+W"))
         self._actions['close'].triggered.connect(self._close_display)
         self._actions['close'].setEnabled(False)
 
         # Quit action
         self._actions['quit'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'quit.png')),
-                                        self.tr("&Quit"), self)
+                                            self._icon_dir, 'quit.png')),
+                                        self.tr("&Quit"),
+                                        self)
         self._actions['quit'].setShortcut(self.tr("Ctrl+Q"))
         self._actions['quit'].triggered.connect(self.close)
 
         # Grid view action
         self._actions['grid_view'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'gridview.png')),
-                                             self.tr("Lightbox"), self)
+                                            self._icon_dir, 'gridview.png')),
+                                             self.tr("Lightbox"),
+                                             self)
         self._actions['grid_view'].triggered.connect(self._grid_view)
         self._actions['grid_view'].setEnabled(False)
 
         # Orth view action
         self._actions['orth_view'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'orthview.png')),
-                                             self.tr("Orthographic"), self)
+                                            self._icon_dir, 'orthview.png')),
+                                             self.tr("Orthographic"),
+                                             self)
         self._actions['orth_view'].triggered.connect(self._orth_view)
         self._actions['orth_view'].setEnabled(False)
 
         # return original size
         self._actions['original_view'] = QAction(QIcon(os.path.join(
-            self._icon_dir,
-            'original_size.png')),
-                                                 self.tr("Reset view"), self)
+                                        self._icon_dir, 'original_size.png')),
+                                                 self.tr("Reset view"),
+                                                 self)
         self._actions['original_view'].triggered.connect(self._reset_view)
         self._actions['original_view'].setEnabled(False)
 
         # whether display the cross hover
         self._actions['cross_hover_view'] = QAction(QIcon(os.path.join(
-            self._icon_dir,
-            'cross_hover_enable.png')),
-                                                    self.tr("Disable cross hover"), self)
-        self._actions['cross_hover_view'].triggered.connect(self._display_cross_hover)
+                                    self._icon_dir, 'cross_hover_enable.png')),
+                                                self.tr("Disable cross hover"),
+                                                self)
+        self._actions['cross_hover_view'].triggered.connect(
+                                            self._display_cross_hover)
         self._actions['cross_hover_view'].setEnabled(False)
 
-        # TODO can be removed
-        #-- generated by zgf
+        # TODO move binarization to widgettab
         # Binaryzation view action
         self._actions['binarization'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'binarization.png')),
-                                                self.tr("Binarization"), self)
-        self._actions['binarization'].triggered.connect(self._binaryzation)
+                                        self._icon_dir, 'binarization.png')),
+                                                self.tr("Binarization"),
+                                                self)
+        self._actions['binarization'].triggered.connect(self._binarization)
         self._actions['binarization'].setEnabled(False)
 
+        # TODO HLJ: remove the icon for these erosion and dilation actions
         # Binary_erosion view action
         self._actions['binaryerosion'] = QAction(QIcon(os.path.join(
             self._icon_dir, 'binary_erosion.png')),
@@ -315,19 +319,21 @@ class BpMainWindow(QMainWindow):
 
         # voxel time point curve view action
         self._actions['roiorvoxelcurve'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'voxel_time_point_curve.png')),
-                                                       self.tr("Roiorvoxelcurve"), self)
-        self._actions['roiorvoxelcurve'].triggered.connect(self._roiorvoxelcurve)
+                                self._icon_dir, 'voxel_time_point_curve.png')),
+                                                   self.tr("Roiorvoxelcurve"),
+                                                   self)
+        self._actions['roiorvoxelcurve'].triggered.connect(
+                                            self._roiorvoxelcurve)
         self._actions['roiorvoxelcurve'].setEnabled(False)
 
         # three demension intensity view action
         self._actions['volumeintensity'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'volumeintensity.png')),
-                                                   self.tr("Volume Intensity"), self)
-        self._actions['volumeintensity'].triggered.connect(self._volumeintensity)
+                                        self._icon_dir, 'volumeintensity.png')),
+                                                   self.tr("Volume Intensity"),
+                                                   self)
+        self._actions['volumeintensity'].triggered.connect(
+                                                self._volumeintensity)
         self._actions['volumeintensity'].setEnabled(False)
-        #-- generated by zgf
-
 
         # About software
         self._actions['about_pybp'] = QAction(self.tr("About FreeROI"), self)
@@ -335,14 +341,16 @@ class BpMainWindow(QMainWindow):
 
         # About Qt
         self._actions['about_qt'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'qt.png')),
-                                            self.tr("About Qt"), self)
+                                                self._icon_dir, 'qt.png')),
+                                            self.tr("About Qt"),
+                                            self)
         self._actions['about_qt'].triggered.connect(qApp.aboutQt)
 
         # Hand
-        self._actions['hand'] = QAction(QIcon(os.path.join(self._icon_dir,
-                                                           'hand.png')),
-                                        self.tr("Hand"), self)
+        self._actions['hand'] = QAction(QIcon(os.path.join(
+                                            self._icon_dir, 'hand.png')),
+                                        self.tr("Hand"),
+                                        self)
         self._actions['hand'].triggered.connect(self._hand_enable)
         self._actions['hand'].setCheckable(True)
         self._actions['hand'].setChecked(False)
@@ -350,49 +358,39 @@ class BpMainWindow(QMainWindow):
 
         # Cursor
         self._actions['cursor'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'cursor.png')),
-                                          self.tr("Cursor"), self)
+                                            self._icon_dir, 'cursor.png')),
+                                          self.tr("Cursor"),
+                                          self)
         self._actions['cursor'].triggered.connect(self._cursor_enable)
         self._actions['cursor'].setCheckable(True)
         self._actions['cursor'].setChecked(True)
         self._actions['cursor'].setEnabled(True)
 
-        # Brush
-        self._actions['brush'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'brush.png')),
-                                         self.tr("Voxel Edit"), self)
-        self._actions['brush'].triggered.connect(self._brush_enable)
-        self._actions['brush'].setCheckable(True)
-        self._actions['brush'].setChecked(False)
-
-        # ROI Brush
-        self._actions['roibrush'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'roibrush.png')),
-                                            self.tr("ROI Edictor"), self)
-        self._actions['roibrush'].triggered.connect(self._roibrush_enable)
-        self._actions['roibrush'].setCheckable(True)
-        self._actions['roibrush'].setChecked(False)
-
+        # Edit
+        self._actions['edit'] = QAction(QIcon(os.path.join(
+                                            self._icon_dir, 'edit.png')),
+                                         self.tr("Edit"), self)
+        self._actions['edit'].triggered.connect(self._roidialog_enable)
+        self._actions['edit'].setCheckable(True)
+        self._actions['edit'].setChecked(False)
+        # TODO lookup this line
         self._update_brush()
-
-        self._actions['roidialog'] = QAction(QIcon(os.path.join(
-            self._icon_dir,'roitool.png')),
-                                             self.tr("ROI Toolset"), self)
-        self._actions['roidialog'].setCheckable(True)
-        self._actions['roidialog'].triggered.connect(self._roidialog_enable)
 
         # Undo
         self._actions['undo'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'undo.png')),
-                                        self.tr("Undo"), self)
+                                            self._icon_dir, 'undo.png')),
+                                        self.tr("Undo"),
+                                        self)
         self._actions['undo'].triggered.connect(self._undo)
 
         # Redo
         self._actions['redo'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'redo.png')),
-                                        self.tr("Redo"), self)
+                                            self._icon_dir, 'redo.png')),
+                                        self.tr("Redo"),
+                                        self)
         self._actions['redo'].triggered.connect(self._redo)
 
+        # Following actions would be moved to widgettab
         # sphere and cube roi
         self._actions['regular_roi'] = QAction(QIcon(os.path.join(
             self._icon_dir, 'sphere_and_cube.png')),
@@ -415,8 +413,6 @@ class BpMainWindow(QMainWindow):
         self._actions['auto_label'].triggered.connect(self._auto_label)
         self._actions['auto_label'].setEnabled(False)
 
-
-
     def _add_toolbar(self):
         """
         Add toolbar.
@@ -432,7 +428,6 @@ class BpMainWindow(QMainWindow):
         self._spinbox.valueChanged.connect(self._set_scale_factor)
 
         # Add a toolbar
-        #self._toolbar = QToolBar()
         self._toolbar = self.addToolBar("Tools")
         #self._toolbar.setIconSize(QSize(38,38))
         # Add file actions
@@ -446,12 +441,11 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['orth_view'])
         self._toolbar.addAction(self._actions['original_view'])
         self._toolbar.addAction(self._actions['cross_hover_view'])
-        # Add draw tools
+        # Add cursor status
         self._toolbar.addSeparator()
         self._toolbar.addAction(self._actions['hand'])
         self._toolbar.addAction(self._actions['cursor'])
-        # self._toolbar.addAction(self._actions['brush'])
-        # self._toolbar.addAction(self._actions['roibrush'])
+        self._toolbar.addAction(self._actions['edit'])
         # Add undo redo
         self._toolbar.addSeparator()
         self._toolbar.addAction(self._actions['undo'])
@@ -460,12 +454,9 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addSeparator()
         self._toolbar.addAction(self._actions['regular_roi'])
         self._toolbar.addAction(self._actions['r2i'])
-        self._toolbar.addAction(self._actions['roidialog'])
 
         self._toolbar.addSeparator()
         self._toolbar.addWidget(self._spinbox)
-
-        #self.addToolBar(self._toolbar)
 
     def _set_scale_factor(self, value):
         """
@@ -684,7 +675,7 @@ class BpMainWindow(QMainWindow):
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
         self._actions['original_view'].setEnabled(False)
-        self._actions['binaryzation'].setEnabled(False)
+        self._actions['binarization'].setEnabled(False)
         self._actions['binarydilation'].setEnabled(False)
         self._actions['binaryerosion'].setEnabled(False)
         self._actions['greydilation'].setEnabled(False)
@@ -748,17 +739,13 @@ class BpMainWindow(QMainWindow):
 
         """
         if self._actions['cursor'].isChecked():
-            self._actions['brush'].setChecked(False)
-            self._actions['roibrush'].setChecked(False)
             self._actions['cursor'].setChecked(True)
             if isinstance(self.image_view, OrthView):
                 self._actions['hand'].setChecked(False)
-
-            self.painter_status.set_draw_settings(ViewSettings())
-
             if hasattr(self, 'roidialog'):
                 self._roidialog_disable()
 
+            self.painter_status.set_draw_settings(ViewSettings())
             self.image_view.set_label_mouse_tracking(True)
         else:
             self._actions['cursor'].setChecked(True)
@@ -807,22 +794,27 @@ class BpMainWindow(QMainWindow):
     def _roidialog_enable(self):
         if not hasattr(self, 'roidialog'):
             self._actions['cursor'].setChecked(False)
-            self._actions['brush'].setChecked(False)
-            self._actions['roibrush'].setChecked(False)
+            if isinstance(self.image_view, OrthView):
+                self._actions['hand'].setChecked(False)
+            self._actions['edit'].setChecked(True)
 
-            self._actions['roidialog'].setChecked(True)
             self.roidialog = ROIDialog(self.model, self._label_config_center)
             self.list_view._list_view.selectionModel().currentChanged.connect(
                 self.roidialog.clear_rois)
-            self.painter_status.set_draw_settings(self.roidialog)
-            self.roidialog.finished.connect(self._roidialog_disable)
+            self.image_view.set_label_mouse_tracking(False)
+            self.painter_status.set_draw_settings(self._label_config_center)
+            #self.painter_status.set_draw_settings(self.roidialog)
+            # HLJ: no need to close immediately
+            #self.roidialog.finished.connect(self._roidialog_disable)
             self.roidialog.show()
-        self._actions['roidialog'].setChecked(True)
+        else:
+            self._actions['edit'].setChecked(True)
 
     def _roidialog_disable(self):
-        if hasattr(self, 'roidialog'):
-            del self.roidialog
-        self._actions['roidialog'].setChecked(False)
+        #if hasattr(self, 'roidialog'):
+        self.roidialog.done(0)
+        #del self.roidialog
+        self._actions['edit'].setChecked(False)
 
     def _hand_enable(self):
         """
@@ -831,25 +823,14 @@ class BpMainWindow(QMainWindow):
         """
         if self._actions['hand'].isChecked():
             self._actions['cursor'].setChecked(False)
-            self._actions['brush'].setChecked(False)
-            #self._actions['eraser'].setChecked(False)
             self._actions['hand'].setChecked(True)
+ 
+            if hasattr(self, 'roidialog'):
+                #self.roidialog.done(0)
+                #del self.roidialog
+                self._roidialog_disable()
 
             self.painter_status.set_draw_settings(MoveSettings())
-
-            if hasattr(self, 'label_dialog'):
-                self.label_dialog.done(0)
-                del self.label_dialog
-            if hasattr(self, 'eraser_dialog'):
-                self.eraser_dialog.done(0)
-                del self.eraser_dialog
-            if hasattr(self, 'roilabel_dialog'):
-                self.roilabel_dialog.done(0)
-                del self.roilabel_dialog
-            if hasattr(self, 'roieraser_dialog'):
-                self.roieraser_dialog.done(0)
-                del self.roieraser_dialog
-
             self.image_view.set_label_mouse_tracking(True)
         else:
             self._actions['hand'].setChecked(True)
@@ -863,39 +844,8 @@ class BpMainWindow(QMainWindow):
         regular_roi_dialog = RegularROIDialog(self.model, self)
         regular_roi_dialog.exec_()
 
-
     #def _repaint_slices(self):
     #    self.model.update_current_rgba()
-
-    #def _roieraser_enable(self):
-    #    """
-    #    ROI Eraser enabled.
-
-    #    """
-    #    if self._actions['roieraser'].isChecked():
-    #        self._actions['cursor'].setChecked(False)
-    #        self._actions['brush'].setChecked(False)
-    #        self._actions['eraser'].setChecked(False)
-    #        self._actions['roibrush'].setChecked(False)
-    #        self._actions['roieraser'].setChecked(True)
-
-    #        if hasattr(self, 'label_dialog'):
-    #            self.label_dialog.done(0)
-    #            del self.label_dialog
-    #        if hasattr(self, 'eraser_dialog'):
-    #            self.eraser_dialog.done(0)
-    #            del self.eraser_dialog
-    #        if hasattr(self, 'roilabel_dialog'):
-    #            self.roilabel_dialog.done(0)
-    #            del self.roilabel_dialog
-
-    #        self.roieraser_dialog = ROIEraserDialog(self)
-    #        self.roieraser_dialog.show()
-    #        self.painter_status.set_draw_settings(self.roieraser_dialog)
-    #        self.image_view.set_label_mouse_tracking(False)
-    #    else:
-    #        self._actions['roieraser'].setChecked(True)
-
 
     def _update_undo(self):
         if self.model.current_undo_available():
@@ -1067,15 +1017,17 @@ class BpMainWindow(QMainWindow):
 
     def _update_brush(self):
         if self._label_config_center.is_drawing_valid():
-            self._actions['brush'].setEnabled(True)
-            self._actions['roibrush'].setEnabled(True)
+            pass
+            #self._actions['brush'].setEnabled(True)
+            #self._actions['roibrush'].setEnabled(True)
         else:
-            self._actions['brush'].setEnabled(False)
-            self._actions['roibrush'].setEnabled(False)
+            pass
+            #self._actions['brush'].setEnabled(False)
+            #self._actions['roibrush'].setEnabled(False)
 
-    def _binaryzation(self):
-        binaryzation_dialog = BinarizationDialog(self.model)
-        binaryzation_dialog.exec_()
+    def _binarization(self):
+        binarization_dialog = BinarizationDialog(self.model)
+        binarization_dialog.exec_()
 
     def _binaryerosion(self):
         binaryerosion_dialog = BinaryerosionDialog(self.model)

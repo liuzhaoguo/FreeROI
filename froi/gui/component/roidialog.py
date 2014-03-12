@@ -100,12 +100,14 @@ class ROIDialog(QDialog, DrawSettings):
     def _voxel_clicked(self):
         self._label_config_center.size_label.setVisible(True)
         self._label_config_center.size_edit.setVisible(True)
+        self._label_config_center.set_is_roi_edit(False)
         self.ROI_tool_widget.setVisible(False)
 
     def _ROI_clicked(self):
         self._label_config_center.size_label.setVisible(False)
         self._label_config_center.size_edit.setVisible(False)
         self.ROI_tool_widget.setVisible(False)
+        self._label_config_center.set_is_roi_edit(True)
         self.ROI_apply.setVisible(True)
 
     def _update_single_ROI(self):

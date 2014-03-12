@@ -97,13 +97,17 @@ class LabelConfigCenter(QGroupBox, DrawSettings):
             self.label_list_view.setModel(self.null_model)
         else:
             self.label_list_view.setModel(self.models[idx-1])
-            self.label_list_view.setCurrentIndex(self.models[idx-1].createIndex(0,0))
-            self.label_list_view.selectionModel().currentChanged.connect(self.single_roi_view_update)
+            self.label_list_view.setCurrentIndex(
+                            self.models[idx-1].createIndex(0,0))
+            self.label_list_view.selectionModel().currentChanged.connect(
+                            self.single_roi_view_update)
 
     def _create_actions(self):
         self.config_combobox.currentIndexChanged.connect(self._update_labels)
-        self.config_combobox.currentIndexChanged.connect(self.single_roi_view_update)
-        self.label_list_view.selectionModel().currentChanged.connect(self.single_roi_view_update)
+        self.config_combobox.currentIndexChanged.connect(
+                                    self.single_roi_view_update)
+        self.label_list_view.selectionModel().currentChanged.connect(
+                                    self.single_roi_view_update)
 
     def label_config_changed_signal(self):
         return self.config_combobox.currentIndexChanged
