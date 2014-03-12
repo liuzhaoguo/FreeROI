@@ -23,19 +23,22 @@ class ROIDialog(QDialog, DrawSettings):
 
     def _init_gui(self):
         self.setWindowModality(Qt.NonModal)
-        self.setWindowTitle("ROI Toolset")
+        self.setWindowTitle("Edit")
 
         self.voxel_btn = QPushButton("Voxel")
         self.ROI_btn = QPushButton("ROI")
-        self.ROI_tool_btn = QPushButton("ROI Tool")
+        self.ROI_batch_btn = QPushButton("ROI Batch")
         hlayout = QHBoxLayout()
         hlayout.addWidget(self.voxel_btn)
         hlayout.addWidget(self.ROI_btn)
-        hlayout.addWidget(self.ROI_tool_btn)
+        hlayout.addWidget(self.ROI_batch_btn)
 
         self.vlayout = QVBoxLayout()
         self.vlayout.addLayout(hlayout)
         self.vlayout.addWidget(self._label_config_center)
+        self.ROI_apply = QPushButton("Apply")
+        self.ROI_apply.setVisible(False)
+        self.vlayout.addWidget(self.ROI_apply)
 
         roi_label = QLabel("Selected ROIs")
         self.roi_edit = QLineEdit()
@@ -84,12 +87,13 @@ class ROIDialog(QDialog, DrawSettings):
     def _create_actions(self):
         self.voxel_btn.clicked.connect(self._voxel_clicked)
         self.ROI_btn.clicked.connect(self._ROI_clicked)
-        self.ROI_tool_btn.clicked.connect(self._ROI_tool_clicked)
+        self.ROI_batch_btn.clicked.connect(self._ROI_batch_clicked)
         self._model.rowsInserted.connect(self._fill_target_box)
         self._model.rowsMoved.connect(self._fill_target_box)
         self._model.rowsRemoved.connect(self._fill_target_box)
         self.target_box.currentIndexChanged.connect(self._update_last_target_name)
         self.action_box.currentIndexChanged[QString].connect(self._update_target_box)
+        self.ROI_apply.clicked.connect(self._update_single_ROI)
         self.run_button.pressed.connect(self._run)
         self.done_button.pressed.connect(self._done)
 
@@ -102,8 +106,25 @@ class ROIDialog(QDialog, DrawSettings):
         self._label_config_center.size_label.setVisible(False)
         self._label_config_center.size_edit.setVisible(False)
         self.ROI_tool_widget.setVisible(False)
+        self.ROI_apply.setVisible(True)
 
-    def _ROI_tool_clicked(self):
+    def _update_single_ROI(self):
+        target_row = self.target_box.currentIndex()
+        if target_row != 0:
+            target_row -= 1
+        if not self._model.get_label_config_center().is_drawing_valid():
+            QMessageBox.critical(self, "Invalid ROI Drawing Value",
+                                 "Please specify an valid drawing value")
+        elif len(self.selected_rois) == 0:
+            QMessageBox.critical(self, "Invalid ROI value",
+                                 "Please specify an valid ROI value")
+        else:
+            roi = self.selected_rois[len(self.selected_rois)-1]
+            value = self._model.get_label_config_center().get_drawing_value()
+            self._model.modify_voxels(None, value, roi, target_row, False)
+
+    def _ROI_batch_clicked(self):
+        self.selected_rois = []
         self._label_config_center.size_label.setVisible(False)
         self._label_config_center.size_edit.setVisible(False)
         self.ROI_tool_widget.setVisible(True)
