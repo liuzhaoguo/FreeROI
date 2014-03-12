@@ -36,12 +36,25 @@ by a few clicks, liberating users from complex command lines.
    could be used for defining ROIs with regular shape.
 
 #. Binarization
-   An image could be binarized with this tool.
+   An image could be binarized with this tool. A threshold should be given, 
+   the voxel, which value is not less than threshold, would be assigned as 1,
+   otherwise, assigned as 0.
 
-#. Image Dilation
+#. Erosion
+   Erosion is one of two fundamental operations (the other being dilation) in 
+   morohological processing from which all other morphological operations are
+   based. The operation could be used to reduce the extent of foreground in the
+   image.
 
-#. Image Erosion
+#. Dilation
+   The effect of dilation is opposite to that of erosion. It would enlarge the
+   extent of foreground of the image.
 
+#. Opening
+   As the combination of *erosion* and *dilation*, the opening operation is
+   usually used as a basic workhorse of morphological noise removal. Opening
+   removes small objects from the foreground of an image, placing them in the
+   background.
 
 Image Segmentation
 ------------------
@@ -85,6 +98,10 @@ ROI Related Tools
 #. Edge Detection
 
 #. Filter
+
+#. Auto Labeling
+
+#. ROI to Surface
 
 #. Statistics
 
