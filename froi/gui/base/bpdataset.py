@@ -193,7 +193,8 @@ class VolumeDataset(object):
             self._rgba_list = map(f, layer_list)
         else:
             if self.is_4d():
-                self._rgba_list[index] = f(self._data[..., index, self._time_point])
+                self._rgba_list[index] = f(self._data[..., index,
+                                                      self._time_point])
             else:
                 self._rgba_list[index] = f(self._data[..., index])
 
@@ -227,7 +228,8 @@ class VolumeDataset(object):
         f = self._rendering_factory()
         idx = self._cross_pos[0]
         if self.is_4d():
-            self._sagital_rgba = f(np.rot90(self._data[:, idx, :, self._time_point]))
+            self._sagital_rgba = f(np.rot90(self._data[:, idx, :,
+                                                       self._time_point]))
         else:
             self._sagital_rgba = f(np.rot90(self._data[:, idx, :]))
 
@@ -243,7 +245,8 @@ class VolumeDataset(object):
         f = self._rendering_factory()
         idx = self._cross_pos[1]
         if self.is_4d():
-            self._coronal_rgba = f(np.rot90(self._data[idx, :, :, self._time_point]))
+            self._coronal_rgba = f(np.rot90(self._data[idx, :, :,
+                                                       self._time_point]))
         else:
             self._coronal_rgba = f(np.rot90(self._data[idx, :, :]))
 
@@ -471,12 +474,12 @@ class VolumeDataset(object):
         """
         # FIXME one time point or whole data
         temp = self._data.copy()
-        temp[temp < self._view_min] = 0
+        temp[temp <= self._view_min] = 0
         return temp
 
     def get_lthr_raw_data(self):
         temp = self._data.copy()
-        temp[temp < self._view_min] = 0
+        temp[temp <= self._view_min] = 0
         return np.rot90(temp, 3)
 
     def get_raw_data(self):

@@ -5,7 +5,6 @@
 """
 
 import numpy as np
-
 from PyQt4.QtCore import *
 
 from ..base.bpdataset import VolumeDataset
@@ -620,3 +619,4 @@ class VolumeListModel(QAbstractListModel):
 
     def get_label_config_center(self):
         return self._label_config_center
+

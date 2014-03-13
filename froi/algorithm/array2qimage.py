@@ -257,7 +257,7 @@ def gray(array, alpha):
     new_array[..., 0] = array
     new_array[..., 1] = array
     new_array[..., 2] = array
-    new_array[..., 3] = alpha * array.clip(0,1)
+    new_array[..., 3] = alpha * array.clip(0, 1)
     
     return new_array
 
@@ -370,6 +370,7 @@ def _normalize255(array, normalize, scale_length=255.0):
     scale =  scale_length / (nmax - nmin)
     if scale != 1.0:
         array = array * scale
+    array[_np.logical_and(array > 0, array < 1)] = 1
 
     return _np.round(array)
 
@@ -440,6 +441,7 @@ def alpha_view(qimage):
                         " size (use RGB32, ARGB32, or ARGB32_Premultiplied)"
     return bytes[..., _bgra[3]]
 
+# TODO: remove the idx2rgb if it's useless, also with RAINBOW
 def idx2rgb(value, colormap, normalize):
     """
     Convert a index to a RGB value based on the colormap.
@@ -508,28 +510,28 @@ def array2qrgba(array, alpha, colormap, normalize=False, roi=None):
             else:
                 new_array = array.clip(0, array.max())
                 new_array[array < 0] = 0
-            #values = RAINBOW.keys()
             h, w = new_array.shape
             R, G, B = 41, 61, 83
             fst_norm = 100000.0
-            new_array_raw = _normalize255(new_array, normalize, scale_length=fst_norm)
-            #print 'hahahhaha', new_array_raw.max(), new_array_raw.min()
-            new_array_R = _normalize255(new_array_raw % R, (0, R), scale_length=254.0)
-            new_array_G = _normalize255(new_array_raw % G, (0, G), scale_length=254.0)
-            new_array_B = _normalize255(new_array_raw % B, (0, B), scale_length=254.0)
+            new_array_raw = _normalize255(new_array,
+                                          normalize,
+                                          scale_length=fst_norm)
+            new_array_R = _normalize255(new_array_raw % R,
+                                        (0, R),
+                                        scale_length=254.0)
+            new_array_G = _normalize255(new_array_raw % G,
+                                        (0, G),
+                                        scale_length=254.0)
+            new_array_B = _normalize255(new_array_raw % B,
+                                        (0, B),
+                                        scale_length=254.0)
             new_array2 = _np.zeros((h, w, 4), dtype=_np.uint8)
-            #for item in values:
-            #    new_array2[new_array==item] = [RAINBOW[item][0],
-            #                                   RAINBOW[item][1],
-            #                                   RAINBOW[item][2], 
-            #                                   0]
             add_ = new_array.clip(0, 1)
             new_array2[..., 0] = new_array_R + add_ 
             new_array2[..., 1] = new_array_G + add_
             new_array2[..., 2] = new_array_B + add_
             new_array2[..., 3] = alpha * _np.sum(new_array2, 2).clip(0, 1)
             #_np.set_printoptions(threshold=1000000)
-            #print new_array2
             new_array = new_array2
     else:
         if _np.isscalar(normalize):

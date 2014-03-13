@@ -92,10 +92,11 @@ class BinarizationDialog(QDialog):
 
         source_row = self.source_combo.currentIndex()
         source_data = self._model.data(self._model.index(source_row),
-                                       Qt.UserRole + 5)
-        if (threshold > source_data.max()) or (threshold < source_data.min()):
-            self.threshold_edit.setFocus()
-            return
+                                       Qt.UserRole + 6)
+        # HLJ: I think there is no need to check the threshold range.
+        #if (threshold > source_data.max()) or (threshold < source_data.min()):
+        #    self.threshold_edit.setFocus()
+        #    return
         new_vol = imtool.binaryzation(source_data, threshold)
         self._model.addItem(new_vol,
                             None,
