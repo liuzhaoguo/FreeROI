@@ -11,6 +11,9 @@ class ROIDialog(QDialog, DrawSettings):
     ROI toolset.
     """
     last_target_name = "New Volume"
+    voxel_edit_enabled = pyqtSignal()
+    roi_edit_enabled = pyqtSignal()
+    roi_batch_enabled = pyqtSignal()
     def __init__(self, model, label_config_center, parent=None):
         super(ROIDialog, self).__init__(parent)
 
@@ -40,9 +43,9 @@ class ROIDialog(QDialog, DrawSettings):
         self.vlayout = QVBoxLayout()
         self.vlayout.addLayout(hlayout)
         self.vlayout.addWidget(self._label_config_center)
-        self.ROI_apply = QPushButton("Apply")
-        self.ROI_apply.setVisible(False)
-        self.vlayout.addWidget(self.ROI_apply)
+        #self.ROI_apply = QPushButton("Apply")
+        #self.ROI_apply.setVisible(False)
+        #self.vlayout.addWidget(self.ROI_apply)
 
         roi_label = QLabel("Selected ROIs")
         self.roi_edit = QLineEdit()
@@ -95,9 +98,11 @@ class ROIDialog(QDialog, DrawSettings):
         self._model.rowsInserted.connect(self._fill_target_box)
         self._model.rowsMoved.connect(self._fill_target_box)
         self._model.rowsRemoved.connect(self._fill_target_box)
-        self.target_box.currentIndexChanged.connect(self._update_last_target_name)
-        self.action_box.currentIndexChanged[QString].connect(self._update_target_box)
-        self.ROI_apply.clicked.connect(self._update_single_ROI)
+        self.target_box.currentIndexChanged.connect(
+                                self._update_last_target_name)
+        self.action_box.currentIndexChanged[QString].connect(
+                                self._update_target_box)
+        #self.ROI_apply.clicked.connect(self._update_single_ROI)
         self.run_button.pressed.connect(self._run)
         self.done_button.pressed.connect(self._done)
 
@@ -106,28 +111,30 @@ class ROIDialog(QDialog, DrawSettings):
         self._label_config_center.size_edit.setVisible(True)
         self._label_config_center.set_is_roi_edit(False)
         self.ROI_tool_widget.setVisible(False)
+        self.voxel_edit_enabled.emit()
 
     def _ROI_clicked(self):
         self._label_config_center.size_label.setVisible(False)
         self._label_config_center.size_edit.setVisible(False)
         self.ROI_tool_widget.setVisible(False)
         self._label_config_center.set_is_roi_edit(True)
-        self.ROI_apply.setVisible(True)
+        self.roi_edit_enabled.emit()
+        #self.ROI_apply.setVisible(True)
 
-    def _update_single_ROI(self):
-        target_row = self.target_box.currentIndex()
-        if target_row != 0:
-            target_row -= 1
-        if not self._model.get_label_config_center().is_drawing_valid():
-            QMessageBox.critical(self, "Invalid ROI Drawing Value",
-                                 "Please specify an valid drawing value")
-        elif len(self.selected_rois) == 0:
-            QMessageBox.critical(self, "Invalid ROI value",
-                                 "Please specify an valid ROI value")
-        else:
-            roi = self.selected_rois[len(self.selected_rois)-1]
-            value = self._model.get_label_config_center().get_drawing_value()
-            self._model.modify_voxels(None, value, roi, target_row, False)
+    #def _update_single_ROI(self):
+    #    target_row = self.target_box.currentIndex()
+    #    if target_row != 0:
+    #        target_row -= 1
+    #    if not self._model.get_label_config_center().is_drawing_valid():
+    #        QMessageBox.critical(self, "Invalid ROI Drawing Value",
+    #                             "Please specify an valid drawing value")
+    #    elif len(self.selected_rois) == 0:
+    #        QMessageBox.critical(self, "Invalid ROI value",
+    #                             "Please specify an valid ROI value")
+    #    else:
+    #        roi = self.selected_rois[len(self.selected_rois)-1]
+    #        value = self._model.get_label_config_center().get_drawing_value()
+    #        self._model.modify_voxels(None, value, roi, target_row, False)
 
     def _ROI_batch_clicked(self):
         self.selected_rois = []

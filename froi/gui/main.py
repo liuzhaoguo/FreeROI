@@ -802,29 +802,20 @@ class BpMainWindow(QMainWindow):
             self._actions['roibrush'].setChecked(True)
 
     def _roidialog_enable(self):
-        #if not hasattr(self, 'roidialog'):
         if self._actions['edit'].isChecked():
             self._actions['cursor'].setChecked(False)
             if isinstance(self.image_view, OrthView):
                 self._actions['hand'].setChecked(False)
             self._actions['edit'].setChecked(True)
 
-            #self.roidialog = ROIDialog(self.model, self._label_config_center)
-            #self.list_view._list_view.selectionModel().currentChanged.connect(
-            #    self.roidialog.clear_rois)
             self.image_view.set_label_mouse_tracking(False)
-            self.painter_status.set_draw_settings(self._label_config_center)
+            #self.painter_status.set_draw_settings(self._label_config_center)
             #self.painter_status.set_draw_settings(self.roidialog)
-            # HLJ: no need to close immediately
-            #self.roidialog.finished.connect(self._roidialog_disable)
             self.roidialog.show()
         else:
             self._actions['edit'].setChecked(True)
 
     def _roidialog_disable(self):
-        #if hasattr(self, 'roidialog'):
-        #self.roidialog.done(0)
-        #del self.roidialog
         self.roidialog.hide()
         self._actions['edit'].setChecked(False)
 
