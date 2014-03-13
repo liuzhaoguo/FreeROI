@@ -161,6 +161,7 @@ class ImageLabel(QLabel):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid(): 
+            self.setCursor(Qt.CrossCursor)
             if not self.painter_status.is_roi_tool():
                 size = self.painter_status.get_drawing_size()
                 X = e.x()
@@ -173,6 +174,8 @@ class ImageLabel(QLabel):
                 self.drawing = True
                 self.repaint()
                 self.drawing = False
+        else:
+            self.setCursor(Qt.ArrowCursor)
 
     def mouseReleaseEvent(self, e):
         if self.painter_status.is_drawing_valid() and (not
@@ -518,7 +521,7 @@ class SagittalImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            self.setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.CrossCursor)
             size = self.painter_status.get_drawing_size()
             X = e.x()
             Y = e.y()
@@ -723,7 +726,7 @@ class AxialImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            self.setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.CrossCursor)
             size = self.painter_status.get_drawing_size()
             X = e.x()
             Y = e.y()
@@ -927,7 +930,7 @@ class CoronalImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            self.setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.CrossCursor)
             size = self.painter_status.get_drawing_size()
             X = e.x()
             Y = e.y()
