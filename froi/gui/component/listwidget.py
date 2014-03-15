@@ -12,7 +12,6 @@ from PyQt4.QtGui import *
 
 from ..base.labelconfig import LabelConfig
 from toolstabwidget import ToolsTabWidget
-from statswidget import StatsWidget
 from basicwidget import BasicWidget
 from froi.gui.base.utils import *
 
@@ -25,7 +24,14 @@ class LayerView(QWidget):
     """
     current_changed = pyqtSignal()
 
-    builtin_colormap = ['gray', 'red2yellow', 'blue2cyanblue', 'red', 'green', 'blue', 'rainbow', 'single ROI']
+    builtin_colormap = ['gray',
+                        'red2yellow',
+                        'blue2cyanblue',
+                        'red',
+                        'green',
+                        'blue',
+                        'rainbow',
+                        'single ROI']
 
     def __init__(self, label_config_center, parent=None):
         """
@@ -147,15 +153,13 @@ class LayerView(QWidget):
         self._cursor_info_panel = QGroupBox('Cursor')
         self._cursor_info_panel.setLayout(glayout)
 
-        self._unity_info_panel = QGroupBox('Tools ')
+        self._unity_info_panel = QGroupBox('Common Tools')
         self._unity_tabwidget = QTabWidget()
         self.basic_widget = BasicWidget(self._model, self)
         self.ROItools_widget = ToolsTabWidget(self._model, self)
-        self.stats_widget = StatsWidget(self._model, self)
 
         self._unity_tabwidget.addTab(self.basic_widget, "Basic")
-        self._unity_tabwidget.addTab(self.ROItools_widget, "ROItools")
-        #self._unity_tabwidget.addTab(self.stats_widget, "Stats")
+        self._unity_tabwidget.addTab(self.ROItools_widget, "ROI")
 
         hlayout = QHBoxLayout(self._unity_info_panel)
         hlayout.addWidget(self._unity_tabwidget)
@@ -413,6 +417,4 @@ class LayerView(QWidget):
                      int(self._coord_y.value()),
                      int(self._coord_z.value())]
         self._model.set_cross_pos(new_coord)
-
-
 

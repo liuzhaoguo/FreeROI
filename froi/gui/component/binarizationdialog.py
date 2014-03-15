@@ -70,7 +70,7 @@ class BinarizationDialog(QDialog):
 
     def _create_output(self):
         source_name = self.source_combo.currentText()
-        output_name = '_'.join([str(source_name), 'binaryzation'])
+        output_name = '_'.join(['bin', str(source_name)])
         self.out_edit.setText(output_name)
 
     def _binaryzation(self):
@@ -93,13 +93,10 @@ class BinarizationDialog(QDialog):
         source_row = self.source_combo.currentIndex()
         source_data = self._model.data(self._model.index(source_row),
                                        Qt.UserRole + 6)
-        # HLJ: I think there is no need to check the threshold range.
-        #if (threshold > source_data.max()) or (threshold < source_data.min()):
-        #    self.threshold_edit.setFocus()
-        #    return
         new_vol = imtool.binaryzation(source_data, threshold)
         self._model.addItem(new_vol,
                             None,
                             vol_name,
                             self._model._data[0].get_header())
         self.done(0)
+

@@ -18,7 +18,9 @@ class ROIDialog(QDialog, DrawSettings):
         super(ROIDialog, self).__init__(parent)
 
         self.setWindowModality(Qt.NonModal)
-        self.setWindowFlags(Qt.Tool | Qt.CustomizeWindowHint | Qt.WindowTitleHint)
+        self.setWindowFlags(Qt.Tool | \
+                            Qt.CustomizeWindowHint | \
+                            Qt.WindowTitleHint)
 
         self._model = model
         self.selected_rois = []
@@ -77,9 +79,7 @@ class ROIDialog(QDialog, DrawSettings):
 
         hbox_layout = QHBoxLayout()
         self.run_button = QPushButton("Run")
-        self.done_button = QPushButton("Done")
         hbox_layout.addWidget(self.run_button)
-        #hbox_layout.addWidget(self.done_button)
 
         vbox_layout = QVBoxLayout()
         vbox_layout.addLayout(grid_layout)
@@ -104,14 +104,11 @@ class ROIDialog(QDialog, DrawSettings):
                                 self._update_last_target_name)
         self.action_box.currentIndexChanged[QString].connect(
                                 self._update_target_box)
-        #self.ROI_apply.clicked.connect(self._update_single_ROI)
         self.run_button.pressed.connect(self._run)
-        self.done_button.pressed.connect(self._done)
 
     def _voxel_clicked(self):
         self._label_config_center.size_label.setVisible(True)
         self._label_config_center.size_edit.setVisible(True)
-        self._label_config_center.set_is_roi_edit(False)
         self.ROI_tool_widget.setVisible(False)
         self.voxel_edit_enabled.emit()
         self.voxel_btn.setEnabled(False)
@@ -122,7 +119,6 @@ class ROIDialog(QDialog, DrawSettings):
         self._label_config_center.size_label.setVisible(False)
         self._label_config_center.size_edit.setVisible(False)
         self.ROI_tool_widget.setVisible(False)
-        self._label_config_center.set_is_roi_edit(True)
         self.roi_edit_enabled.emit()
         self.voxel_btn.setEnabled(True)
         self.ROI_btn.setEnabled(False)
@@ -222,3 +218,4 @@ class ROIDialog(QDialog, DrawSettings):
     def clear_rois(self):
         self.selected_rois = []
         self.roi_edit.clear()
+

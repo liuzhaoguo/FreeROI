@@ -23,17 +23,20 @@ from component.orthwidget import OrthView
 from component.datamodel import VolumeListModel
 from component.imagelabel import ImageLabel
 from component.drawsettings import PainterStatus, ViewSettings, MoveSettings
-from component.labeldialog import LabelDialog
-from component.eraserdialog import EraserDialog
+from component.binarizationdialog import BinarizationDialog
+from component.intersectdialog import IntersectDialog
+from component.localmaxdialog import LocalMaxDialog
+from component.no_gui_tools import inverse_image
+from component.smoothingdialog import SmoothingDialog
+from component.growdialog import GrowDialog
+from component.watersheddialog import WatershedDialog
+from component.clusterdialog import ClusterDialog
 from component.regularroidialog import RegularROIDialog
 from component.roi2gwmidialog import Roi2gwmiDialog
 from component.autolabeldialog import AutoLabelDialog
 from component.opendialog import OpenDialog
 from component.labelconfigcenter import LabelConfigCenter
-from component.roilabeldialog import ROILabelDialog
-from component.roieraserdialog import ROIEraserDialog
 from component.roidialog import ROIDialog
-from component.binarizationdialog import BinarizationDialog
 from component.binaryerosiondialog import BinaryerosionDialog
 from component.binarydilationdialog import BinarydilationDialog
 from component.greydilationdialog import GreydilationDialog
@@ -100,7 +103,6 @@ class BpMainWindow(QMainWindow):
         self.setWindowIcon(QIcon(os.path.join(self._icon_dir,'icon.png')))
 
         self._init_configuration()
-        #self._init_label_config_center()
 
         # create actions
         self._create_actions()
@@ -109,6 +111,10 @@ class BpMainWindow(QMainWindow):
         self._create_menus()
 
     def center(self):
+        """
+        Display main window in the center of screen
+
+        """
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
@@ -234,7 +240,6 @@ class BpMainWindow(QMainWindow):
         self._actions['ld_lbl'].triggered.connect(self._ld_lbl)
         self._actions['ld_lbl'].setEnabled(False)
 
-        # FIXME maybe useless
         # Load Global Label Config
         self._actions['ld_glbl'] = QAction('Load Global Label', self)
         self._actions['ld_glbl'].triggered.connect(self._ld_glbl)
@@ -287,7 +292,11 @@ class BpMainWindow(QMainWindow):
                                             self._display_cross_hover)
         self._actions['cross_hover_view'].setEnabled(False)
 
-        # TODO move binarization to widgettab
+        # Opening
+        self._actions['opening'] = QAction(self.tr("Opening"), self)
+        self._actions['opening'].triggered.connect(self._opening)
+        self._actions['opening'].setEnabled(False)
+
         # Binaryzation view action
         self._actions['binarization'] = QAction(QIcon(os.path.join(
                                         self._icon_dir, 'binarization.png')),
@@ -296,48 +305,38 @@ class BpMainWindow(QMainWindow):
         self._actions['binarization'].triggered.connect(self._binarization)
         self._actions['binarization'].setEnabled(False)
 
-        # TODO HLJ: remove the icon for these erosion and dilation actions
         # Binary_erosion view action
-        self._actions['binaryerosion'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'binary_erosion.png')),
-                                                 self.tr("Binaryerosion"), self)
+        self._actions['binaryerosion'] = QAction(self.tr("Binary Erosion"),
+                                                 self)
         self._actions['binaryerosion'].triggered.connect(self._binaryerosion)
         self._actions['binaryerosion'].setEnabled(False)
 
         # Binary_dilation view action
-        self._actions['binarydilation'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'binary_dilation.png')),
-                                                  self.tr("Binarydilation"), self)
+        self._actions['binarydilation'] = QAction(self.tr("Binary Dilation"),
+                                                  self)
         self._actions['binarydilation'].triggered.connect(self._binarydilation)
         self._actions['binarydilation'].setEnabled(False)
 
         # grey_erosion view action
-        self._actions['greyerosion'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'grey_erosion.png')),
-                                               self.tr("Greyerosion"), self)
+        self._actions['greyerosion'] = QAction(self.tr("Grey Erosion"),
+                                               self)
         self._actions['greyerosion'].triggered.connect(self._greyerosion)
         self._actions['greyerosion'].setEnabled(False)
 
         # grey_dilation view action
-        self._actions['greydilation'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'grey_dilation.png')),
-                                                self.tr("Greydilation"), self)
+        self._actions['greydilation'] = QAction(self.tr("Grey Dilation"),
+                                                self)
         self._actions['greydilation'].triggered.connect(self._greydilation)
         self._actions['greydilation'].setEnabled(False)
 
         # voxel time point curve view action
-        self._actions['roiorvoxelcurve'] = QAction(QIcon(os.path.join(
-                                self._icon_dir, 'voxel_curve.png')),
-                                                   self.tr("Roiorvoxelcurve"),
-                                                   self)
+        self._actions['roiorvoxelcurve'] = QAction(self.tr("Time Course"), self)
         self._actions['roiorvoxelcurve'].triggered.connect(
                                             self._roiorvoxelcurve)
         self._actions['roiorvoxelcurve'].setEnabled(False)
 
         # three demension intensity view action
-        self._actions['volumeintensity'] = QAction(QIcon(os.path.join(
-                                        self._icon_dir, 'volume_intensity.png')),
-                                                   self.tr("Volume Intensity"),
+        self._actions['volumeintensity'] = QAction(self.tr("Volume Intensity"),
                                                    self)
         self._actions['volumeintensity'].triggered.connect(
                                                 self._volumeintensity)
@@ -382,25 +381,6 @@ class BpMainWindow(QMainWindow):
         self._actions['edit'].setCheckable(True)
         self._actions['edit'].setChecked(False)
 
-        # Brush
-        self._actions['brush'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'brush.png')),
-                                         self.tr("Voxel Edit"), self)
-        self._actions['brush'].triggered.connect(self._voxel_edit_enable)
-        self._actions['brush'].setCheckable(True)
-        self._actions['brush'].setChecked(False)
-
-        # ROI Brush
-        self._actions['roibrush'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'roibrush.png')),
-                                            self.tr("ROI Edictor"), self)
-        self._actions['roibrush'].triggered.connect(self._roi_edit_enable)
-        self._actions['roibrush'].setCheckable(True)
-        self._actions['roibrush'].setChecked(False)
-
-        # TODO lookup this line
-        #self._update_brush()
-
         # Undo
         self._actions['undo'] = QAction(QIcon(os.path.join(
                                             self._icon_dir, 'undo.png')),
@@ -438,12 +418,6 @@ class BpMainWindow(QMainWindow):
         self._actions['auto_label'].triggered.connect(self._auto_label)
         self._actions['auto_label'].setEnabled(False)
 
-        # Opening
-        self._actions['opening'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'opening.png')),
-                                              self.tr("Opening"), self)
-        self._actions['opening'].triggered.connect(self._opening)
-        self._actions['opening'].setEnabled(False)
 
     def _add_toolbar(self):
         """
@@ -482,10 +456,6 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addSeparator()
         self._toolbar.addAction(self._actions['undo'])
         self._toolbar.addAction(self._actions['redo'])
-        # Add automatic tools
-        #self._toolbar.addSeparator()
-        #self._toolbar.addAction(self._actions['regular_roi'])
-        #self._toolbar.addAction(self._actions['r2i'])
 
         self._toolbar.addSeparator()
         self._toolbar.addWidget(self._spinbox)
@@ -703,8 +673,6 @@ class BpMainWindow(QMainWindow):
         self._actions['ld_glbl'].setEnabled(False)
         self._actions['ld_lbl'].setEnabled(False)
         self._actions['close'].setEnabled(False)
-        #self._actions['regular_roi'].setEnabled(False)
-        #self._actions['r2i'].setEnabled(False)
         self._actions['opening'].setEnabled(False)
         self._actions['auto_label'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
@@ -753,17 +721,23 @@ class BpMainWindow(QMainWindow):
         self.view_menu.addAction(self._actions['cross_hover_view'])
 
         self.tool_menu = self.menuBar().addMenu(self.tr("Tools"))
-        #self.tool_menu.addAction(self._actions['regular_roi'])
-        #self.tool_menu.addAction(self._actions['r2i'])
-        self.tool_menu.addAction(self._actions['opening'])
-        self.tool_menu.addAction(self._actions['auto_label'])
-        self.tool_menu.addAction(self._actions['binarization'])
-        # self.tool_menu.addAction(self._actions['binarydilation'])
-        # self.tool_menu.addAction(self._actions['binaryerosion'])
-        self.tool_menu.addAction(self._actions['greydilation'])
-        self.tool_menu.addAction(self._actions['greyerosion'])
-        self.tool_menu.addAction(self._actions['roiorvoxelcurve'])
-        self.tool_menu.addAction(self._actions['volumeintensity'])
+        basic_tools = self.tool_menu.addMenu(self.tr("Basic Tools"))
+        basic_tools.addAction(self._actions['binarization'])
+        segment_tools = self.tool_menu.addMenu(self.tr("Segmentation"))
+        roi_tools = self.tool_menu.addMenu(self.tr("ROI Tools"))
+        roi_tools.addAction(self._actions['regular_roi'])
+        roi_tools.addAction(self._actions['r2i'])
+        roi_tools.addAction(self._actions['auto_label'])
+        morphological_tools = self.tool_menu.addMenu(
+                                    self.tr("Morphological Processing"))
+        morphological_tools.addAction(self._actions['opening'])
+        morphological_tools.addAction(self._actions['binarydilation'])
+        morphological_tools.addAction(self._actions['binaryerosion'])
+        morphological_tools.addAction(self._actions['greydilation'])
+        morphological_tools.addAction(self._actions['greyerosion'])
+        stats_tools = self.tool_menu.addMenu(self.tr("Image Stats"))
+        stats_tools.addAction(self._actions['roiorvoxelcurve'])
+        stats_tools.addAction(self._actions['volumeintensity'])
 
         self.help_menu = self.menuBar().addMenu(self.tr("Help"))
         self.help_menu.addAction(self._actions['about_pybp'])
@@ -835,8 +809,6 @@ class BpMainWindow(QMainWindow):
             self._actions['hand'].setChecked(True)
  
             if hasattr(self, 'roidialog'):
-                #self.roidialog.done(0)
-                #del self.roidialog
                 self._roidialog_disable()
 
             self.painter_status.set_draw_settings(MoveSettings())
@@ -853,9 +825,6 @@ class BpMainWindow(QMainWindow):
         regular_roi_dialog = RegularROIDialog(self.model, self)
         regular_roi_dialog.exec_()
 
-    #def _repaint_slices(self):
-    #    self.model.update_current_rgba()
-
     def _update_undo(self):
         if self.model.current_undo_available():
             self._actions['undo'].setEnabled(True)
@@ -867,22 +836,6 @@ class BpMainWindow(QMainWindow):
             self._actions['redo'].setEnabled(True)
         else:
             self._actions['redo'].setEnabled(False)
-
-    #def _current_layer_xyzvl_changed(self):
-    #    """
-    #      modified by dxb, need rethink the code. 
-    #    """
-    #    self.image_view.xyz_updated.connect(self._update_xyzvl)
-    #    self.image_view.xyz_updated.emit([self.model.get_current_pos()[1],
-    #                                      self.model.get_current_pos()[0],
-    #                                      self.model.get_current_pos()[2]])
-
-    #def _update_xyzvl(self, xyz):
-    #    xyzvl = dict(zip(['y', 'x', 'z'], map(str, xyz)))
-    #    value = self.model.get_current_value(xyz)
-    #    xyzvl['value'] = str(value)
-    #    xyzvl['label'] = self.model.get_current_value_label(int(value))
-    #    self.list_view.update_xyzvl(xyzvl)
 
     def _init_roi_dialog(self):
         """
@@ -906,8 +859,6 @@ class BpMainWindow(QMainWindow):
         label_configs = glob.glob(lbl_path)
         self.label_configs = map(LabelConfig, label_configs)
         self._label_config_center = LabelConfigCenter(self.label_configs)
-        # Label Config Changed
-        self._label_config_center.label_config_changed_signal().connect(self._update_brush)
 
     # TODO lookup its usage
     def _init_label_config(self):
@@ -1045,17 +996,6 @@ class BpMainWindow(QMainWindow):
                     self.default_grid_scale_factor:
                 self._spinbox.setValue(100 * self.default_grid_scale_factor)
 
-    # TODO to be moved to the roidialog, and set the clickabilty of the button
-    def _update_brush(self):
-        if self._label_config_center.is_drawing_valid():
-            pass
-            #self._actions['brush'].setEnabled(True)
-            #self._actions['roibrush'].setEnabled(True)
-        else:
-            pass
-            #self._actions['brush'].setEnabled(False)
-            #self._actions['roibrush'].setEnabled(False)
-
     def _binarization(self):
         binarization_dialog = BinarizationDialog(self.model)
         binarization_dialog.exec_()
@@ -1072,9 +1012,14 @@ class BpMainWindow(QMainWindow):
         greyerosiondialog = GreyerosionDialog(self.model)
         greyerosiondialog.exec_()
 
+    def _greydilation(self):
+        greydilation_dialog = GreydilationDialog(self.model)
+        greydilation_dialog.exec_()
+
     def _roiorvoxelcurve(self):
         self.ROI_or_voxel_dialog = ROIOrVoxelCurveDialog(self.model)
-        self.list_view.current_changed.connect(self.ROI_or_voxel_dialog.listview_current_index_changed)
+        self.list_view.current_changed.connect(
+                    self.ROI_or_voxel_dialog.listview_current_index_changed)
         self.ROI_or_voxel_dialog.exec_()
 
     def _volumeintensity(self):
@@ -1084,7 +1029,4 @@ class BpMainWindow(QMainWindow):
         self.volume_intensity.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.volume_intensity.show()
 
-    def _greydilation(self):
-        greydilation_dialog = GreydilationDialog(self.model)
-        greydilation_dialog.exec_()
 
