@@ -39,13 +39,15 @@ class ROIDialog(QDialog, DrawSettings):
         hlayout.addWidget(self.voxel_btn)
         hlayout.addWidget(self.ROI_btn)
         hlayout.addWidget(self.ROI_batch_btn)
+        self.voxel_btn.setEnabled(False)
+
+        self.ROI_btn.setFocusPolicy(Qt.NoFocus)
+        self.voxel_btn.setFocusPolicy(Qt.NoFocus)
+        self.ROI_batch_btn.setFocusPolicy(Qt.NoFocus)
 
         self.vlayout = QVBoxLayout()
         self.vlayout.addLayout(hlayout)
         self.vlayout.addWidget(self._label_config_center)
-        #self.ROI_apply = QPushButton("Apply")
-        #self.ROI_apply.setVisible(False)
-        #self.vlayout.addWidget(self.ROI_apply)
 
         roi_label = QLabel("Selected ROIs")
         self.roi_edit = QLineEdit()
@@ -112,6 +114,9 @@ class ROIDialog(QDialog, DrawSettings):
         self._label_config_center.set_is_roi_edit(False)
         self.ROI_tool_widget.setVisible(False)
         self.voxel_edit_enabled.emit()
+        self.voxel_btn.setEnabled(False)
+        self.ROI_btn.setEnabled(True)
+        self.ROI_batch_btn.setEnabled(True)
 
     def _ROI_clicked(self):
         self._label_config_center.size_label.setVisible(False)
@@ -119,28 +124,20 @@ class ROIDialog(QDialog, DrawSettings):
         self.ROI_tool_widget.setVisible(False)
         self._label_config_center.set_is_roi_edit(True)
         self.roi_edit_enabled.emit()
-        #self.ROI_apply.setVisible(True)
-
-    #def _update_single_ROI(self):
-    #    target_row = self.target_box.currentIndex()
-    #    if target_row != 0:
-    #        target_row -= 1
-    #    if not self._model.get_label_config_center().is_drawing_valid():
-    #        QMessageBox.critical(self, "Invalid ROI Drawing Value",
-    #                             "Please specify an valid drawing value")
-    #    elif len(self.selected_rois) == 0:
-    #        QMessageBox.critical(self, "Invalid ROI value",
-    #                             "Please specify an valid ROI value")
-    #    else:
-    #        roi = self.selected_rois[len(self.selected_rois)-1]
-    #        value = self._model.get_label_config_center().get_drawing_value()
-    #        self._model.modify_voxels(None, value, roi, target_row, False)
+        self.voxel_btn.setEnabled(True)
+        self.ROI_btn.setEnabled(False)
+        self.ROI_batch_btn.setEnabled(True)
 
     def _ROI_batch_clicked(self):
         self.selected_rois = []
+        self.roi_edit.setText("")
         self._label_config_center.size_label.setVisible(False)
         self._label_config_center.size_edit.setVisible(False)
         self.ROI_tool_widget.setVisible(True)
+        self.roi_batch_enabled.emit()
+        self.voxel_btn.setEnabled(True)
+        self.ROI_btn.setEnabled(True)
+        self.ROI_batch_btn.setEnabled(False)
 
     def _fill_target_box(self, a=None, b=None, c=None, d=None, e=None):
         self._last_target_update_enable = False
