@@ -76,6 +76,11 @@ class OrthView(QWidget):
         self._axilabel.setMouseTracking(t)
         self._corlabel.setMouseTracking(t)
 
+    def set_cursor(self, cursor_shape):
+        self._saglabel.setCursor(cursor_shape)
+        self._axilabel.setCursor(cursor_shape)
+        self._corlabel.setCursor(cursor_shape)
+
     def resize_item(self):
         """
         Resize label -- remove label from layout first, and re-fill it

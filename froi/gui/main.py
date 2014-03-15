@@ -752,11 +752,11 @@ class BpMainWindow(QMainWindow):
             self._actions['cursor'].setChecked(True)
             if isinstance(self.image_view, OrthView):
                 self._actions['hand'].setChecked(False)
-            #if hasattr(self, 'roidialog'):
             if self.roidialog.isVisible():
                 self._roidialog_disable()
 
             self.painter_status.set_draw_settings(ViewSettings())
+            self.image_view.set_cursor(Qt.ArrowCursor)
             self.image_view.set_label_mouse_tracking(True)
         else:
             self._actions['cursor'].setChecked(True)
@@ -768,6 +768,7 @@ class BpMainWindow(QMainWindow):
         """
         self._label_config_center.set_is_roi_edit(False)
         self.painter_status.set_draw_settings(self._label_config_center)
+        self.image_view.set_cursor(Qt.CrossCursor)
         self.image_view.set_label_mouse_tracking(False)
 
     def _roi_edit_enable(self):
@@ -777,6 +778,7 @@ class BpMainWindow(QMainWindow):
         """
         self._label_config_center.set_is_roi_edit(True)
         self.painter_status.set_draw_settings(self._label_config_center)
+        self.image_view.set_cursor(Qt.CrossCursor)
         self.image_view.set_label_mouse_tracking(False)
 
     def _roidialog_enable(self):
@@ -812,6 +814,7 @@ class BpMainWindow(QMainWindow):
                 self._roidialog_disable()
 
             self.painter_status.set_draw_settings(MoveSettings())
+            self.image_view.set_cursor(Qt.OpenHandCursor)
             self.image_view.set_label_mouse_tracking(True)
         else:
             self._actions['hand'].setChecked(True)
