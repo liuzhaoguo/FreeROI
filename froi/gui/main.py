@@ -327,7 +327,7 @@ class BpMainWindow(QMainWindow):
 
         # voxel time point curve view action
         self._actions['roiorvoxelcurve'] = QAction(QIcon(os.path.join(
-                                self._icon_dir, 'voxel_time_point_curve.png')),
+                                self._icon_dir, 'voxel_curve.png')),
                                                    self.tr("Roiorvoxelcurve"),
                                                    self)
         self._actions['roiorvoxelcurve'].triggered.connect(
@@ -336,7 +336,7 @@ class BpMainWindow(QMainWindow):
 
         # three demension intensity view action
         self._actions['volumeintensity'] = QAction(QIcon(os.path.join(
-                                        self._icon_dir, 'volumeintensity.png')),
+                                        self._icon_dir, 'volume_intensity.png')),
                                                    self.tr("Volume Intensity"),
                                                    self)
         self._actions['volumeintensity'].triggered.connect(
@@ -421,6 +421,13 @@ class BpMainWindow(QMainWindow):
         self._actions['auto_label'].triggered.connect(self._auto_label)
         self._actions['auto_label'].setEnabled(False)
 
+        # Opening
+        self._actions['opening'] = QAction(QIcon(os.path.join(
+            self._icon_dir, 'opening.png')),
+                                              self.tr("Opening"), self)
+        self._actions['opening'].triggered.connect(self._opening)
+        self._actions['opening'].setEnabled(False)
+
     def _add_toolbar(self):
         """
         Add toolbar.
@@ -459,9 +466,9 @@ class BpMainWindow(QMainWindow):
         self._toolbar.addAction(self._actions['undo'])
         self._toolbar.addAction(self._actions['redo'])
         # Add automatic tools
-        self._toolbar.addSeparator()
-        self._toolbar.addAction(self._actions['regular_roi'])
-        self._toolbar.addAction(self._actions['r2i'])
+        #self._toolbar.addSeparator()
+        #self._toolbar.addAction(self._actions['regular_roi'])
+        #self._toolbar.addAction(self._actions['r2i'])
 
         self._toolbar.addSeparator()
         self._toolbar.addWidget(self._spinbox)
@@ -556,8 +563,9 @@ class BpMainWindow(QMainWindow):
                 self._actions['orth_view'].setEnabled(True)
                 self._actions['cross_hover_view'].setEnabled(True)
                 self._actions['original_view'].setEnabled(True)
-                self._actions['regular_roi'].setEnabled(True)
-                self._actions['r2i'].setEnabled(True)
+                #self._actions['regular_roi'].setEnabled(True)
+                #self._actions['r2i'].setEnabled(True)
+                self._actions['opening'].setEnabled(True)
                 self._actions['binarization'].setEnabled(True)
                 self._actions['binarydilation'].setEnabled(True)
                 self._actions['binaryerosion'].setEnabled(True)
@@ -597,13 +605,13 @@ class BpMainWindow(QMainWindow):
     def _update_remove_image(self):
         if self.model.rowCount() == 1:
             self._actions['remove_image'].setEnabled(False)
-            self._actions['regular_roi'].setEnabled(False)
-            self._actions['r2i'].setEnabled(False)
+            #self._actions['regular_roi'].setEnabled(False)
+            #self._actions['r2i'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
         else:
             self._actions['remove_image'].setEnabled(True)
-            self._actions['regular_roi'].setEnabled(True)
-            self._actions['r2i'].setEnabled(True)
+            #self._actions['regular_roi'].setEnabled(True)
+            #self._actions['r2i'].setEnabled(True)
             self._actions['auto_label'].setEnabled(True)
 
     def _new_image(self, data=None, name=None, colormap=None):
@@ -618,13 +626,13 @@ class BpMainWindow(QMainWindow):
 
         # change button status
         self._actions['remove_image'].setEnabled(True)
-        self._actions['regular_roi'].setEnabled(True)
-        self._actions['r2i'].setEnabled(True)
+        #self._actions['regular_roi'].setEnabled(True)
+        #self._actions['r2i'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
 
     def new_image_action(self):
         self._actions['remove_image'].setEnabled(True)
-        self._actions['r2i'].setEnabled(True)
+        #self._actions['r2i'].setEnabled(True)
         self._actions['auto_label'].setEnabled(True)
 
     def _remove_image(self):
@@ -636,8 +644,8 @@ class BpMainWindow(QMainWindow):
         self.model.delItem(row)
         if self.model.rowCount() == 1:
             self._actions['remove_image'].setEnabled(False)
-            self._actions['regular_roi'].setEnabled(False)
-            self._actions['r2i'].setEnabled(False)
+            #self._actions['regular_roi'].setEnabled(False)
+            #self._actions['r2i'].setEnabled(False)
             self._actions['auto_label'].setEnabled(False)
 
     def _save_image(self):
@@ -678,8 +686,9 @@ class BpMainWindow(QMainWindow):
         self._actions['ld_glbl'].setEnabled(False)
         self._actions['ld_lbl'].setEnabled(False)
         self._actions['close'].setEnabled(False)
-        self._actions['regular_roi'].setEnabled(False)
-        self._actions['r2i'].setEnabled(False)
+        #self._actions['regular_roi'].setEnabled(False)
+        #self._actions['r2i'].setEnabled(False)
+        self._actions['opening'].setEnabled(False)
         self._actions['auto_label'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
@@ -727,8 +736,9 @@ class BpMainWindow(QMainWindow):
         self.view_menu.addAction(self._actions['cross_hover_view'])
 
         self.tool_menu = self.menuBar().addMenu(self.tr("Tools"))
-        self.tool_menu.addAction(self._actions['regular_roi'])
-        self.tool_menu.addAction(self._actions['r2i'])
+        #self.tool_menu.addAction(self._actions['regular_roi'])
+        #self.tool_menu.addAction(self._actions['r2i'])
+        self.tool_menu.addAction(self._actions['opening'])
         self.tool_menu.addAction(self._actions['auto_label'])
         self.tool_menu.addAction(self._actions['binarization'])
         # self.tool_menu.addAction(self._actions['binarydilation'])
@@ -939,6 +949,10 @@ class BpMainWindow(QMainWindow):
 
     def _r2i(self):
         new_dialog = Roi2gwmiDialog(self.model)
+        new_dialog.exec_()
+
+    def _opening(self):
+        new_dialog = OpenDialog(self.model)
         new_dialog.exec_()
 
     def _auto_label(self):

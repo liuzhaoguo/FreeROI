@@ -6,10 +6,10 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from edgedetectiondialog import Edge_detectionDialog
-from localmaxdialog import LocalMaxDialog
 from roifilterdialog import ROIFilterDialog
 from roimergedialog import ROIMergeDialog
 from roi2gwmidialog import Roi2gwmiDialog
+from regularroidialog import RegularROIDialog
 from froi.gui.base.utils import *
 
 class ToolsTabWidget(QDialog):
@@ -39,13 +39,6 @@ class ToolsTabWidget(QDialog):
         self.detection_button.setEnabled(True)
         self.detection_button.setToolTip("edge detection")
 
-        self.localmax_button = QPushButton()
-        self.localmax_button.setFocusPolicy(Qt.NoFocus)
-        self.localmax_button.setIcon(QIcon(os.path.join(self._icon_dir,
-                                                        'localmax.png')))
-        self.localmax_button.setEnabled(True)
-        self.localmax_button.setToolTip("Local Max")
-
         self.roifilter_button = QPushButton()
         self.roifilter_button.setFocusPolicy(Qt.NoFocus)
         self.roifilter_button.setIcon(QIcon(os.path.join(self._icon_dir,
@@ -67,12 +60,19 @@ class ToolsTabWidget(QDialog):
         self.roi2interface_button.setEnabled(True)
         self.roi2interface_button.setToolTip("ROI2Interface")
 
+        self.regularroi_button = QPushButton()
+        self.regularroi_button.setFocusPolicy(Qt.NoFocus)
+        self.regularroi_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                         'sphere_and_cube.png')))
+        self.regularroi_button.setEnabled(True)
+        self.regularroi_button.setToolTip("Regular ROI")
+
         gridlayout = QGridLayout(self)
-        gridlayout.addWidget(self.localmax_button, 0, 0)
-        gridlayout.addWidget(self.detection_button, 0, 2)
+        gridlayout.addWidget(self.detection_button, 0, 0)
         gridlayout.addWidget(self.roifilter_button, 0, 1)
-        gridlayout.addWidget(self.roimerge_button, 1, 0)
-        gridlayout.addWidget(self.roi2interface_button, 1, 1)
+        gridlayout.addWidget(self.roimerge_button, 0, 2)
+        gridlayout.addWidget(self.roi2interface_button, 1, 0)
+        gridlayout.addWidget(self.regularroi_button, 1, 1)
 
 
     def _create_actions(self):
@@ -80,10 +80,10 @@ class ToolsTabWidget(QDialog):
         Create actions about the toobar
         """
         self.detection_button.clicked.connect(self._edge_detection_clicked)
-        self.localmax_button.clicked.connect(self._local_max_clicked)
         self.roifilter_button.clicked.connect(self._roifilter_clicked)
         self.roimerge_button.clicked.connect(self._roimerge_clicked)
         self.roi2interface_button.clicked.connect(self._r2i_clicked)
+        self.regularroi_button.clicked.connect(self._regular_roi_clicked)
 
 
     def _edge_detection_clicked(self):
@@ -94,13 +94,6 @@ class ToolsTabWidget(QDialog):
             new_dialog = Edge_detectionDialog(self._model, self)
             new_dialog.exec_()
 
-    def _local_max_clicked(self):
-        '''
-        local max clicked
-        '''
-        if self.localmax_button.isEnabled():
-            new_dialog = LocalMaxDialog(self._model, self)
-            new_dialog.exec_()
 
     def _roifilter_clicked(self):
         '''
@@ -124,4 +117,12 @@ class ToolsTabWidget(QDialog):
         '''
         if self.roi2interface_button.isEnabled():
             new_dialog = Roi2gwmiDialog(self._model, self)
+            new_dialog.exec_()
+
+    def _regular_roi_clicked(self):
+        '''
+        regular roi clicked
+        '''
+        if self.regularroi_button.isEnabled():
+            new_dialog = RegularROIDialog(self._model, self)
             new_dialog.exec_()
