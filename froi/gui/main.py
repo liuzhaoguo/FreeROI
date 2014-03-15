@@ -381,6 +381,23 @@ class BpMainWindow(QMainWindow):
         self._actions['edit'].triggered.connect(self._roidialog_enable)
         self._actions['edit'].setCheckable(True)
         self._actions['edit'].setChecked(False)
+
+        # Brush
+        self._actions['brush'] = QAction(QIcon(os.path.join(
+            self._icon_dir, 'brush.png')),
+                                         self.tr("Voxel Edit"), self)
+        self._actions['brush'].triggered.connect(self._voxel_edit_enable)
+        self._actions['brush'].setCheckable(True)
+        self._actions['brush'].setChecked(False)
+
+        # ROI Brush
+        self._actions['roibrush'] = QAction(QIcon(os.path.join(
+            self._icon_dir, 'roibrush.png')),
+                                            self.tr("ROI Edictor"), self)
+        self._actions['roibrush'].triggered.connect(self._roi_edit_enable)
+        self._actions['roibrush'].setCheckable(True)
+        self._actions['roibrush'].setChecked(False)
+
         # TODO lookup this line
         #self._update_brush()
 
@@ -760,46 +777,23 @@ class BpMainWindow(QMainWindow):
         else:
             self._actions['cursor'].setChecked(True)
 
-    def _brush_enable(self):
+    def _voxel_edit_enable(self):
         """
         Brush enabled.
 
         """
-        if self._actions['brush'].isChecked():
-            self._actions['cursor'].setChecked(False)
-            self._actions['roibrush'].setChecked(False)
-            self._actions['brush'].setChecked(True)
-            if isinstance(self.image_view, OrthView):
-                self._actions['hand'].setChecked(False)
+        self._label_config_center.set_is_roi_edit(False)
+        self.painter_status.set_draw_settings(self._label_config_center)
+        self.image_view.set_label_mouse_tracking(False)
 
-            if hasattr(self, 'roidialog'):
-                self._roidialog_disable()
-
-            self._label_config_center.set_is_roi_edit(False)
-            self.painter_status.set_draw_settings(self._label_config_center)
-            self.image_view.set_label_mouse_tracking(False)
-
-        else:
-            self._actions['brush'].setChecked(True)
-
-    def _roibrush_enable(self):
+    def _roi_edit_enable(self):
         """
         ROI brush enabled.
 
         """
-        if self._actions['roibrush'].isChecked():
-            self._actions['cursor'].setChecked(False)
-            self._actions['brush'].setChecked(False)
-            self._actions['roibrush'].setChecked(True)
-
-            if hasattr(self, 'roidialog'):
-                self._roidialog_disable()
-
-            self._label_config_center.set_is_roi_edit(True)
-            self.painter_status.set_draw_settings(self._label_config_center)
-            self.image_view.set_label_mouse_tracking(False)
-        else:
-            self._actions['roibrush'].setChecked(True)
+        self._label_config_center.set_is_roi_edit(True)
+        self.painter_status.set_draw_settings(self._label_config_center)
+        self.image_view.set_label_mouse_tracking(False)
 
     def _roidialog_enable(self):
         if self._actions['edit'].isChecked():
@@ -807,13 +801,15 @@ class BpMainWindow(QMainWindow):
             if isinstance(self.image_view, OrthView):
                 self._actions['hand'].setChecked(False)
             self._actions['edit'].setChecked(True)
-
-            self.image_view.set_label_mouse_tracking(False)
-            #self.painter_status.set_draw_settings(self._label_config_center)
-            #self.painter_status.set_draw_settings(self.roidialog)
+            self.roidialog._voxel_clicked()
             self.roidialog.show()
         else:
             self._actions['edit'].setChecked(True)
+
+    def _roi_batch_enable(self):
+        self.image_view.set_label_mouse_tracking(False)
+        self._label_config_center.set_is_roi_edit(False)
+        self.painter_status.set_draw_settings(self.roidialog)
 
     def _roidialog_disable(self):
         self.roidialog.hide()
@@ -884,6 +880,9 @@ class BpMainWindow(QMainWindow):
 
         """
         self.roidialog = ROIDialog(self.model, self._label_config_center)
+        self.roidialog.voxel_edit_enabled.connect(self._voxel_edit_enable)
+        self.roidialog.roi_edit_enabled.connect(self._roi_edit_enable)
+        self.roidialog.roi_batch_enabled.connect(self._roi_batch_enable)
         self.list_view._list_view.selectionModel().currentChanged.connect(
                 self.roidialog.clear_rois)
 
