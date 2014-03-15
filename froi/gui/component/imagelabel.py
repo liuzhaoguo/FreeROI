@@ -104,15 +104,17 @@ class ImageLabel(QLabel):
         if self.model.display_cross() and self.is_current_slice():
             scale = self.model.get_scale_factor('grid')
             current_pos = self.model.get_cross_pos()
-            horizon_src = (current_pos[0] * scale, 0)
-            horizon_targ = (current_pos[0] * scale, self.pm.size().height())
+            horizon_src = ((current_pos[0] + 0.5) * scale, 0)
+            horizon_targ = ((current_pos[0] + 0.5) * scale,
+                            self.pm.size().height())
             self.voxels_painter.setPen(QColor(0, 255, 0, 255))
             self.voxels_painter.drawLine(horizon_src[0],
                                          horizon_src[1],
                                          horizon_targ[0],
                                          horizon_targ[1])
-            vertical_src = (0, current_pos[1] * scale)
-            vertical_targ = (self.pm.size().width(), current_pos[1] * scale)
+            vertical_src = (0, (current_pos[1] + 0.5) * scale)
+            vertical_targ = (self.pm.size().width(),
+                             (current_pos[1] + 0.5) * scale)
             self.voxels_painter.drawLine(vertical_src[0],
                                          vertical_src[1],
                                          vertical_targ[0],
@@ -161,6 +163,7 @@ class ImageLabel(QLabel):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid(): 
+            self.setCursor(Qt.CrossCursor)
             if not self.painter_status.is_roi_tool():
                 size = self.painter_status.get_drawing_size()
                 X = e.x()
@@ -173,6 +176,8 @@ class ImageLabel(QLabel):
                 self.drawing = True
                 self.repaint()
                 self.drawing = False
+        else:
+            self.setCursor(Qt.ArrowCursor)
 
     def mouseReleaseEvent(self, e):
         if self.painter_status.is_drawing_valid() and (not
@@ -410,18 +415,21 @@ class SagittalImageLabel(ImageLabel3d):
         if self.model.display_cross():
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.model.get_cross_pos()
-            horizon_src = (0, (self.model.getZ() - 1 - current_pos[2]) * \
+            horizon_src = (0, (self.model.getZ() - 0.5 - current_pos[2]) * \
                                scale + self.pic_src_point[1])
             horizon_targ = (self.size().width(),
-                            (self.model.getZ() - 1 - current_pos[2]) * \
+                            (self.model.getZ() - 0.5 - current_pos[2]) * \
                              scale + self.pic_src_point[1])
             self.voxels_painter.setPen(QColor(0, 255, 0, 255))
             self.voxels_painter.drawLine(horizon_src[0],
                                          horizon_src[1],
                                          horizon_targ[0],
                                          horizon_targ[1])
-            vertical_src = (current_pos[1] * scale + self.pic_src_point[0], 0)
-            vertical_targ = (current_pos[1] * scale + self.pic_src_point[0],
+            vertical_src = ((current_pos[1] + 0.5) * scale + \
+                            self.pic_src_point[0],
+                            0)
+            vertical_targ = ((current_pos[1] + 0.5) * scale + \
+                             self.pic_src_point[0],
                              self.size().height())
             self.voxels_painter.drawLine(vertical_src[0],
                                          vertical_src[1],
@@ -518,7 +526,7 @@ class SagittalImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            self.setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.CrossCursor)
             size = self.painter_status.get_drawing_size()
             X = e.x()
             Y = e.y()
@@ -618,16 +626,20 @@ class AxialImageLabel(ImageLabel3d):
         if self.model.display_cross():
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.model.get_cross_pos()
-            horizon_src = (0, current_pos[1] * scale + self.pic_src_point[1])
-            horizon_targ = (self.size().width(),
-                            current_pos[1] * scale + self.pic_src_point[1])
+            horizon_src = (0, (current_pos[1] + 0.5) * scale + \
+                              self.pic_src_point[1])
+            horizon_targ = (self.size().width(), (current_pos[1] + 0.5) * \
+                                                 scale + self.pic_src_point[1])
             self.voxels_painter.setPen(QColor(0, 255, 0, 255))
             self.voxels_painter.drawLine(horizon_src[0],
                                          horizon_src[1],
                                          horizon_targ[0],
                                          horizon_targ[1])
-            vertical_src = (current_pos[0] * scale + self.pic_src_point[0], 0)
-            vertical_targ = (current_pos[0] * scale + self.pic_src_point[0],
+            vertical_src = ((current_pos[0] + 0.5) * scale + \
+                            self.pic_src_point[0],
+                            0)
+            vertical_targ = ((current_pos[0] + 0.5) * scale + \
+                             self.pic_src_point[0],
                              self.size().height())
             self.voxels_painter.drawLine(vertical_src[0],
                                          vertical_src[1],
@@ -723,7 +735,7 @@ class AxialImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            self.setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.CrossCursor)
             size = self.painter_status.get_drawing_size()
             X = e.x()
             Y = e.y()
@@ -820,18 +832,21 @@ class CoronalImageLabel(ImageLabel3d):
         if self.model.display_cross():
             scale = self.model.get_scale_factor('orth') * self._expanding_factor
             current_pos = self.model.get_cross_pos()
-            horizon_src = (0, (self.model.getZ() - 1 - current_pos[2]) * \
+            horizon_src = (0, (self.model.getZ() - 0.5 - current_pos[2]) * \
                               scale + self.pic_src_point[1])
             horizon_targ = (self.size().width(),
-                            (self.model.getZ() - 1 - current_pos[2]) * \
+                            (self.model.getZ() - 0.5 - current_pos[2]) * \
                              scale + self.pic_src_point[1])
             self.voxels_painter.setPen(QColor(0, 255, 0, 255))
             self.voxels_painter.drawLine(horizon_src[0],
                                          horizon_src[1],
                                          horizon_targ[0],
                                          horizon_targ[1])
-            vertical_src = (current_pos[0] * scale + self.pic_src_point[0], 0)
-            vertical_targ = (current_pos[0] * scale + self.pic_src_point[0],
+            vertical_src = ((current_pos[0] + 0.5) * scale + \
+                            self.pic_src_point[0],
+                            0)
+            vertical_targ = ((current_pos[0] + 0.5) * scale + \
+                             self.pic_src_point[0],
                              self.size().height())
             self.voxels_painter.drawLine(vertical_src[0],
                                          vertical_src[1],
@@ -927,7 +942,7 @@ class CoronalImageLabel(ImageLabel3d):
         if not self._mouse_in(e.x(), e.y()):
             return
         if self.painter_status.is_drawing_valid():
-            self.setCursor(Qt.ArrowCursor)
+            self.setCursor(Qt.CrossCursor)
             size = self.painter_status.get_drawing_size()
             X = e.x()
             Y = e.y()
