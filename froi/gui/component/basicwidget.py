@@ -6,15 +6,15 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from growdialog_liu import GrowDialog
+from froi.gui.base.utils import *
+from growdialog import GrowDialog
 from watersheddialog import WatershedDialog
 from clusterdialog import ClusterDialog
 from intersectdialog import IntersectDialog
 from localmaxdialog import LocalMaxDialog
-from opendialog import OpenDialog
-from froi.gui.base.utils import *
 from no_gui_tools import inverse_image
 from smoothingdialog import SmoothingDialog
+from binarizationdialog import BinarizationDialog
 
 class BasicWidget(QDialog):
     """
@@ -37,11 +37,10 @@ class BasicWidget(QDialog):
         """
         self.grow_button = QPushButton()
         self.grow_button.setFocusPolicy(Qt.NoFocus)
-        #self.grow_button.resize(100,100)
         self.grow_button.setIcon(QIcon(os.path.join(self._icon_dir,
                                                     'grow.png')))
         self.grow_button.setEnabled(True)
-        self.grow_button.setToolTip("region growing")
+        self.grow_button.setToolTip("Region Growing")
 
         self.watershed_button = QPushButton()
         self.watershed_button.setFocusPolicy(Qt.NoFocus)
@@ -71,13 +70,6 @@ class BasicWidget(QDialog):
         self.intersect_button.setEnabled(True)
         self.intersect_button.setToolTip("Intersection")
 
-        self.opening_button = QPushButton()
-        self.opening_button.setFocusPolicy(Qt.NoFocus)
-        self.opening_button.setIcon(QIcon(os.path.join(self._icon_dir,
-                                                       'opening.png')))
-        self.opening_button.setEnabled(True)
-        self.opening_button.setToolTip("Opening")
-
         self.inverse_button = QPushButton()
         self.inverse_button.setFocusPolicy(Qt.NoFocus)
         self.inverse_button.setIcon(QIcon(os.path.join(self._icon_dir,
@@ -92,15 +84,22 @@ class BasicWidget(QDialog):
         self.smooth_button.setEnabled(True)
         self.smooth_button.setToolTip("Smooth")
 
+        self.bin_button = QPushButton()
+        self.bin_button.setFocusPolicy(Qt.NoFocus)
+        self.bin_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                   'binarization.png')))
+        self.bin_button.setEnabled(True)
+        self.bin_button.setToolTip("Binarization")
+
         gridlayout = QGridLayout(self)
         gridlayout.addWidget(self.grow_button, 1, 0)
         gridlayout.addWidget(self.watershed_button, 1, 1)
         gridlayout.addWidget(self.cluster_button, 1, 2)
         gridlayout.addWidget(self.localmax_button, 2, 0)
         gridlayout.addWidget(self.intersect_button, 2, 1)
-        #gridlayout.addWidget(self.opening_button, 2, 2)
         gridlayout.addWidget(self.inverse_button, 2, 2)
-        gridlayout.addWidget(self.smooth_button, 3, 0)
+        gridlayout.addWidget(self.bin_button, 3, 0)
+        gridlayout.addWidget(self.smooth_button, 3, 1)
 
     def _create_actions(self):
         """
@@ -111,8 +110,8 @@ class BasicWidget(QDialog):
         self.cluster_button.clicked.connect(self._cluster_clicked)
         self.localmax_button.clicked.connect(self._localmax_clicked)
         self.intersect_button.clicked.connect(self._intersect_clicked)
-        self.opening_button.clicked.connect(self._opening_clicked)
         self.inverse_button.clicked.connect(self._inverse_clicked)
+        self.bin_button.clicked.connect(self._binary_clicked)
         self.smooth_button.clicked.connect(self._smooth_clicked)
 
     def _grow_clicked(self):
@@ -155,10 +154,6 @@ class BasicWidget(QDialog):
         new_dialog = IntersectDialog(self._model)
         new_dialog.exec_()
 
-    def _opening_clicked(self):
-        new_dialog = OpenDialog(self._model)
-        new_dialog.exec_()
-
     def _inverse_clicked(self):
         inverse_image(self._model)
 
@@ -166,3 +161,6 @@ class BasicWidget(QDialog):
         new_dialog = SmoothingDialog(self._model)
         new_dialog.exec_()
 
+    def _binary_clicked(self):
+        new_dialog = BinarizationDialog(self._model)
+        new_dialog.exec_()

@@ -4,47 +4,73 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from froi.algorithm import math
-
+from froi.algorithm import regiongrow as rg
 
 class GrowDialog(QDialog):
     """
-    A dialog for region grow options.
-    
+    A dialog for action of intersection.
+
     """
-
-    def __init__(self, model, parent=None):
+    def __init__(self, model, main_win, parent=None):
         super(GrowDialog, self).__init__(parent)
-
         self._model = model
+        self._main_win = main_win
         self._init_gui()
         self._create_actions()
 
     def _init_gui(self):
-        self.setWindowTitle("Region Grow")
+        """
+        Initialize GUI.
 
-        seed_label = QLabel("Seed")
-        self.seed_combo = QComboBox()
+        """
+        # set dialog title
+        self.setWindowTitle("Region Growing")
+
+        # initialize widgets
         source_label = QLabel("Source")
         self.source_combo = QComboBox()
+
+
+        pointx_label = QLabel("Seed point x")
+        self.pointx_edit = QLineEdit()
+        self.pointx_edit.setText('45')
+        pointy_label = QLabel("Seed point y")
+        self.pointy_edit = QLineEdit()
+        self.pointy_edit.setText('60')
+        pointz_label = QLabel("Seed point z")
+        self.pointz_edit = QLineEdit()
+        self.pointz_edit.setText('45')
+
+
+        number_label = QLabel("Number of voxels")
+        self.number_edit = QLineEdit()
+        self.number_edit.setText('100')
+
         vol_list = self._model.getItemList()
-        self.seed_combo.addItems(QStringList(vol_list))
-        self.source_combo.addItems(QStringList(vol_list))
-        lbl_label = QLabel("Label?")
-        self.lbl_check = QCheckBox()
-        out_label = QLabel("Output")
+        self.source_combo.addItems(vol_list)
+        row = self._model.currentIndex().row()
+        self.source_combo.setCurrentIndex(row)
+        out_label = QLabel("Output volume name")
         self.out_edit = QLineEdit()
 
+        # layout config
         grid_layout = QGridLayout()
-        grid_layout.addWidget(seed_label, 0, 0)
-        grid_layout.addWidget(self.seed_combo, 0, 1)
-        grid_layout.addWidget(source_label, 1, 0)
-        grid_layout.addWidget(self.source_combo, 1, 1)
-        grid_layout.addWidget(out_label, 2, 0)
-        grid_layout.addWidget(self.out_edit, 2, 1)
-        grid_layout.addWidget(lbl_label, 3, 0)
-        grid_layout.addWidget(self.lbl_check, 3, 1)
+        grid_layout.addWidget(source_label, 0, 0)
+        grid_layout.addWidget(self.source_combo, 0, 1)
+        grid_layout.addWidget(pointx_label, 1, 0)
+        grid_layout.addWidget(self.pointx_edit, 1, 1)
+        grid_layout.addWidget(pointy_label, 2, 0)
+        grid_layout.addWidget(self.pointy_edit, 2, 1)
+        grid_layout.addWidget(pointz_label, 3, 0)
+        grid_layout.addWidget(self.pointz_edit, 3, 1)
 
+        grid_layout.addWidget(number_label, 4, 0)
+        grid_layout.addWidget(self.number_edit, 4, 1)
+
+        grid_layout.addWidget(out_label, 5, 0)
+        grid_layout.addWidget(self.out_edit, 5, 1)
+
+        # button config
         self.run_button = QPushButton("Run")
         self.cancel_button = QPushButton("Cancel")
 
@@ -57,31 +83,61 @@ class GrowDialog(QDialog):
         vbox_layout.addLayout(hbox_layout)
 
         self.setLayout(vbox_layout)
-        
+        self._create_output()
+
     def _create_actions(self):
-        self.run_button.clicked.connect(self._region_grow)
+        self.source_combo.currentIndexChanged.connect(self._create_output)
+        self.run_button.clicked.connect(self._grow)
         self.cancel_button.clicked.connect(self.done)
 
-    def _region_grow(self):
+    def _create_output(self):
+        source_name = self.source_combo.currentText()
+        output_name = '_'.join([str(source_name), 'grow'])
+        self.out_edit.setText(output_name)
+
+    def _grow(self):
         vol_name = str(self.out_edit.text())
+        pointx = self.pointx_edit.text()
+        pointy = self.pointy_edit.text()
+        pointz = self.pointz_edit.text()
+        number = self.number_edit.text()
+
         if not vol_name:
-            QMessageBox.critical(self, "No output volume name",
-                    "Please specify output volume's name")
+            self.out_edit.setFocus()
+            return
+        if not pointx:
+            self.pointx_edit.setFocus()
+            return
+        if not pointy:
+            self.pointy_edit.setFocus()
+            return
+        if not pointz:
+            self.pointz_edit.setFocus()
+            return
+        if not number:
+            self.number_edit.setFocus()
             return
 
-        seed_row = self.seed_combo.currentIndex()
+        try:
+            pointx=int(pointx)
+            pointy=108-int(pointy)
+            pointz=int(pointz)
+            number=int(number)
+        except ValueError:
+            self.number_edit.selectAll()
+            return
+
         source_row = self.source_combo.currentIndex()
-        seed_data = self._model.data(self._model.index(seed_row),
-                                     Qt.UserRole + 5)
         source_data = self._model.data(self._model.index(source_row),
                                        Qt.UserRole + 5)
-        new_vol = math.region_grow(seed_data, source_data,
-                                   self.lbl_check.isChecked())
-        colormap = self.lbl_check.isChecked() and 'label' or 'gray'
-        self._model.addItem((new_vol,
-                             self._model._data[source_row].label_config,
-                             vol_name,
-                             self._model._data[0].get_header(),
-                             None, None, 255, colormap))
+        new_vol =rg.region_growing(source_data, (pointx,pointy,pointz),number)
+        self._model.addItem(new_vol,
+                            None,
+                            vol_name,
+                            self._model._data[0].get_header(),
+                            None, None, 255, 'red')
+
+        #self._main_win.new_image_action()
         self.done(0)
+
 

@@ -92,12 +92,15 @@ class BinaryerosionDialog(QDialog):
 
         source_row = self.source_combo.currentIndex()
         source_data = self._model.data(self._model.index(source_row),
-                                       Qt.UserRole + 5)
+                                       Qt.UserRole + 6)
 
-        binary_vol = imtool.binaryzation(source_data, (source_data.max()+source_data.min())/2)
-        new_vol = morphology.binary_erosion(binary_vol, structure=self.structure_array)
+        binary_vol = imtool.binaryzation(source_data,
+                                    (source_data.max() + source_data.min()) / 2)
+        new_vol = morphology.binary_erosion(binary_vol,
+                                            structure=self.structure_array)
         self._model.addItem(new_vol,
                             None,
                             vol_name,
                             self._model._data[0].get_header())
         self.done(0)
+
