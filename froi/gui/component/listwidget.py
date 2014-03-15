@@ -12,7 +12,6 @@ from PyQt4.QtGui import *
 
 from ..base.labelconfig import LabelConfig
 from toolstabwidget import ToolsTabWidget
-from segmentationwidget import SegmentationWidget
 from statswidget import StatsWidget
 from basicwidget import BasicWidget
 from froi.gui.base.utils import *
@@ -150,15 +149,13 @@ class LayerView(QWidget):
 
         self._unity_info_panel = QGroupBox('Tools ')
         self._unity_tabwidget = QTabWidget()
-        self.segmentation_widget = SegmentationWidget(self._model, self)
         self.basic_widget = BasicWidget(self._model, self)
         self.ROItools_widget = ToolsTabWidget(self._model, self)
         self.stats_widget = StatsWidget(self._model, self)
 
-        self._unity_tabwidget.addTab(self.segmentation_widget, "Segment")
         self._unity_tabwidget.addTab(self.basic_widget, "Basic")
         self._unity_tabwidget.addTab(self.ROItools_widget, "ROItools")
-        self._unity_tabwidget.addTab(self.stats_widget, "Stats")
+        #self._unity_tabwidget.addTab(self.stats_widget, "Stats")
 
         hlayout = QHBoxLayout(self._unity_info_panel)
         hlayout.addWidget(self._unity_tabwidget)

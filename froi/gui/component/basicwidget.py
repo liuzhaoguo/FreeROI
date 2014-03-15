@@ -6,6 +6,9 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
+from growdialog_liu import GrowDialog
+from watersheddialog import WatershedDialog
+from clusterdialog import ClusterDialog
 from intersectdialog import IntersectDialog
 from localmaxdialog import LocalMaxDialog
 from opendialog import OpenDialog
@@ -32,6 +35,28 @@ class BasicWidget(QDialog):
         """
         Initialize GUI.
         """
+        self.grow_button = QPushButton()
+        self.grow_button.setFocusPolicy(Qt.NoFocus)
+        #self.grow_button.resize(100,100)
+        self.grow_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                    'grow.png')))
+        self.grow_button.setEnabled(True)
+        self.grow_button.setToolTip("region growing")
+
+        self.watershed_button = QPushButton()
+        self.watershed_button.setFocusPolicy(Qt.NoFocus)
+        self.watershed_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                         'watershed.png')))
+        self.watershed_button.setEnabled(True)
+        self.watershed_button.setToolTip("Watershed")
+
+        self.cluster_button = QPushButton()
+        self.cluster_button.setFocusPolicy(Qt.NoFocus)
+        self.cluster_button.setIcon(QIcon(os.path.join(self._icon_dir,
+                                                       'merging.png')))
+        self.cluster_button.setEnabled(True)
+        self.cluster_button.setToolTip("Cluster")
+
         self.localmax_button = QPushButton()
         self.localmax_button.setFocusPolicy(Qt.NoFocus)
         self.localmax_button.setIcon(QIcon(os.path.join(self._icon_dir,
@@ -68,21 +93,53 @@ class BasicWidget(QDialog):
         self.smooth_button.setToolTip("Smooth")
 
         gridlayout = QGridLayout(self)
-        gridlayout.addWidget(self.localmax_button, 1, 0)
-        gridlayout.addWidget(self.intersect_button, 1, 1)
-        gridlayout.addWidget(self.opening_button, 2, 0)
-        gridlayout.addWidget(self.inverse_button, 2, 1)
+        gridlayout.addWidget(self.grow_button, 1, 0)
+        gridlayout.addWidget(self.watershed_button, 1, 1)
+        gridlayout.addWidget(self.cluster_button, 1, 2)
+        gridlayout.addWidget(self.localmax_button, 2, 0)
+        gridlayout.addWidget(self.intersect_button, 2, 1)
+        #gridlayout.addWidget(self.opening_button, 2, 2)
+        gridlayout.addWidget(self.inverse_button, 2, 2)
         gridlayout.addWidget(self.smooth_button, 3, 0)
 
     def _create_actions(self):
         """
         Create actions about the toobar
         """
+        self.grow_button.clicked.connect(self._grow_clicked)
+        self.watershed_button.clicked.connect(self._watershed_clicked)
+        self.cluster_button.clicked.connect(self._cluster_clicked)
         self.localmax_button.clicked.connect(self._localmax_clicked)
         self.intersect_button.clicked.connect(self._intersect_clicked)
         self.opening_button.clicked.connect(self._opening_clicked)
         self.inverse_button.clicked.connect(self._inverse_clicked)
         self.smooth_button.clicked.connect(self._smooth_clicked)
+
+    def _grow_clicked(self):
+        """
+        region growing clicked
+
+        """
+        if self.grow_button.isEnabled():
+            new_dialog = GrowDialog(self._model, self._main_win)
+            new_dialog.exec_()
+
+    def _watershed_clicked(self):
+        """
+        watershed clicked
+
+        """
+        if self.watershed_button.isEnabled():
+            new_dialog = WatershedDialog(self._model, self)
+            new_dialog.exec_()
+
+    def _cluster_clicked(self):
+        """
+        Run cluster labeling.
+
+        """
+        new_dialog = ClusterDialog(self._model)
+        new_dialog.exec_()
 
     def _localmax_clicked(self):
         """
