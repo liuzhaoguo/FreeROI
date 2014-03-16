@@ -130,8 +130,8 @@ class LayerView(QWidget):
         xyzt_layout.addWidget(self._coord_y)
         xyzt_layout.addWidget(coord_z_label)
         xyzt_layout.addWidget(self._coord_z)
-        xyzt_layout.addWidget(time_point_label)
-        xyzt_layout.addWidget(self._volume_index_spinbox)
+        #xyzt_layout.addWidget(time_point_label)
+        #xyzt_layout.addWidget(self._volume_index_spinbox)
         
         coord_value_label = QLabel('value:')
         self._coord_value = QLineEdit()
@@ -140,10 +140,14 @@ class LayerView(QWidget):
         self._coord_label = QLineEdit()
         self._coord_label.setReadOnly(True)
         vl_hlayout = QHBoxLayout()
+        vl_hlayout.addWidget(time_point_label)
+        #vl_hlayout.addSpacing(5)
+        vl_hlayout.addWidget(self._volume_index_spinbox)
+        #vl_hlayout.addSpacing(5)
         vl_hlayout.addWidget(coord_value_label)
         vl_hlayout.addWidget(self._coord_value)
-        vl_hlayout.addWidget(coord_label_label)
-        vl_hlayout.addWidget(self._coord_label)
+        #vl_hlayout.addWidget(coord_label_label)
+        #vl_hlayout.addWidget(self._coord_label)
 
 
         glayout = QGridLayout()
