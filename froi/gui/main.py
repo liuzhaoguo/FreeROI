@@ -604,18 +604,9 @@ class BpMainWindow(QMainWindow):
                 self._actions['orth_view'].setEnabled(True)
                 self._actions['cross_hover_view'].setEnabled(True)
                 self._actions['original_view'].setEnabled(True)
-                #self._actions['regular_roi'].setEnabled(True)
-                #self._actions['r2i'].setEnabled(True)
-                self._actions['opening'].setEnabled(True)
-                self._actions['binarization'].setEnabled(True)
-                self._actions['binarydilation'].setEnabled(True)
-                self._actions['binaryerosion'].setEnabled(True)
-                self._actions['greydilation'].setEnabled(True)
-                self._actions['greyerosion'].setEnabled(True)
-                self._actions['roiorvoxelcurve'].setEnabled(True)
-                self._actions['volumeintensity'].setEnabled(True)
                 self._actions['undo'].setEnabled(False)
                 self._actions['redo'].setEnabled(False)
+                self._functional_module_set_enabled(True)
                 # connect signals with slots
                 self.list_view.current_changed.connect(self._update_undo)
                 self.list_view.current_changed.connect(self._update_redo)
@@ -727,18 +718,10 @@ class BpMainWindow(QMainWindow):
         self._actions['ld_glbl'].setEnabled(False)
         self._actions['ld_lbl'].setEnabled(False)
         self._actions['close'].setEnabled(False)
-        self._actions['opening'].setEnabled(False)
-        self._actions['auto_label'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
         self._actions['original_view'].setEnabled(False)
-        self._actions['binarization'].setEnabled(False)
-        self._actions['binarydilation'].setEnabled(False)
-        self._actions['binaryerosion'].setEnabled(False)
-        self._actions['greydilation'].setEnabled(False)
-        self._actions['greyerosion'].setEnabled(False)
-        self._actions['roiorvoxelcurve'].setEnabled(False)
-        self._actions['volumeintensity'].setEnabled(False)
+        self._functional_module_set_enabled(False)
 
     def _about_pybp(self):
         """
@@ -883,7 +866,6 @@ class BpMainWindow(QMainWindow):
     def _switch_cursor_status(self):
         self._actions['cursor'].setChecked(True)
         self._cursor_enable()
-
 
     def _regular_roi(self):
         regular_roi_dialog = RegularROIDialog(self.model, self)
@@ -1119,4 +1101,24 @@ class BpMainWindow(QMainWindow):
     def _cluster(self):
         new_dialog = ClusterDialog(self.model)
         new_dialog.exec_()
+
+    def _functional_module_set_enabled(self, status):
+        self._actions['binarization'].setEnabled(status)
+        self._actions['intersect'].setEnabled(status)
+        self._actions['localmax'].setEnabled(status)
+        self._actions['inverse'].setEnabled(status)
+        self._actions['smoothing'].setEnabled(status)
+        self._actions['region_grow'].setEnabled(status)
+        self._actions['watershed'].setEnabled(status)
+        self._actions['cluster'].setEnabled(status)
+        self._actions['opening'].setEnabled(status)
+        self._actions['binarydilation'].setEnabled(status)
+        self._actions['binaryerosion'].setEnabled(status)
+        self._actions['greydilation'].setEnabled(status)
+        self._actions['greyerosion'].setEnabled(status)
+        self._actions['roiorvoxelcurve'].setEnabled(status)
+        self._actions['volumeintensity'].setEnabled(status)
+        self._actions['regular_roi'].setEnabled(status)
+        self._actions['r2i'].setEnabled(status)
+        self._actions['auto_label'].setEnabled(status)
 
