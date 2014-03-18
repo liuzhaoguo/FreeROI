@@ -292,11 +292,6 @@ class BpMainWindow(QMainWindow):
                                             self._display_cross_hover)
         self._actions['cross_hover_view'].setEnabled(False)
 
-        # Opening
-        self._actions['opening'] = QAction(self.tr("Opening"), self)
-        self._actions['opening'].triggered.connect(self._opening)
-        self._actions['opening'].setEnabled(False)
-
         # Binaryzation view action
         self._actions['binarization'] = QAction(QIcon(os.path.join(
                                         self._icon_dir, 'binarization.png')),
@@ -304,6 +299,67 @@ class BpMainWindow(QMainWindow):
                                                 self)
         self._actions['binarization'].triggered.connect(self._binarization)
         self._actions['binarization'].setEnabled(False)
+
+        # Intersection action
+        self._actions['intersect'] = QAction(QIcon(os.path.join(
+                                        self._icon_dir, 'intersect.png')),
+                                             self.tr("Intersection"),
+                                             self)
+        self._actions['intersect'].triggered.connect(self._intersect)
+        self._actions['intersect'].setEnabled(False)
+
+        # Local Max action
+        self._actions['localmax'] = QAction(QIcon(os.path.join(
+                                        self._icon_dir, 'localmax.png')),
+                                             self.tr("Local Max"),
+                                             self)
+        self._actions['localmax'].triggered.connect(self._local_max)
+        self._actions['localmax'].setEnabled(False)
+
+        # Inversion action
+        self._actions['inverse'] = QAction(QIcon(os.path.join(
+                                        self._icon_dir, 'inverse.icon')),
+                                             self.tr("Inversion"),
+                                             self)
+        self._actions['inverse'].triggered.connect(self._inverse)
+        self._actions['inverse'].setEnabled(False)
+
+        # Smoothing action
+        self._actions['smoothing'] = QAction(QIcon(os.path.join(
+                                        self._icon_dir, 'smoothing.png')),
+                                             self.tr("Smoothing"),
+                                             self)
+        self._actions['smoothing'].triggered.connect(self._smooth)
+        self._actions['smoothing'].setEnabled(False)
+
+        # Region Growing action
+        self._actions['region_grow'] = QAction(QIcon(os.path.join(
+                                        self._icon_dir, 'grow.png')),
+                                             self.tr("Region Growing"),
+                                             self)
+        self._actions['region_grow'].triggered.connect(self._region_grow)
+        self._actions['region_grow'].setEnabled(False)
+
+        # Watershed action
+        self._actions['watershed'] = QAction(QIcon(os.path.join(
+                                        self._icon_dir, 'watershed.png')),
+                                             self.tr("Watershed"),
+                                             self)
+        self._actions['watershed'].triggered.connect(self._watershed)
+        self._actions['watershed'].setEnabled(False)
+
+        # Cluster action
+        self._actions['cluster'] = QAction(QIcon(os.path.join(
+                                        self._icon_dir, 'merging.png')),
+                                             self.tr("Cluster"),
+                                             self)
+        self._actions['cluster'].triggered.connect(self._cluster)
+        self._actions['cluster'].setEnabled(False)
+
+        # Opening
+        self._actions['opening'] = QAction(self.tr("Opening"), self)
+        self._actions['opening'].triggered.connect(self._opening)
+        self._actions['opening'].setEnabled(False)
 
         # Binary_erosion view action
         self._actions['binaryerosion'] = QAction(self.tr("Binary Erosion"),
@@ -395,7 +451,6 @@ class BpMainWindow(QMainWindow):
                                         self)
         self._actions['redo'].triggered.connect(self._redo)
 
-        # Following actions would be moved to widgettab
         # sphere and cube roi
         self._actions['regular_roi'] = QAction(QIcon(os.path.join(
             self._icon_dir, 'sphere_and_cube.png')),
@@ -417,7 +472,6 @@ class BpMainWindow(QMainWindow):
                                               self.tr("Auto Labeling"), self)
         self._actions['auto_label'].triggered.connect(self._auto_label)
         self._actions['auto_label'].setEnabled(False)
-
 
     def _add_toolbar(self):
         """
@@ -550,18 +604,9 @@ class BpMainWindow(QMainWindow):
                 self._actions['orth_view'].setEnabled(True)
                 self._actions['cross_hover_view'].setEnabled(True)
                 self._actions['original_view'].setEnabled(True)
-                #self._actions['regular_roi'].setEnabled(True)
-                #self._actions['r2i'].setEnabled(True)
-                self._actions['opening'].setEnabled(True)
-                self._actions['binarization'].setEnabled(True)
-                self._actions['binarydilation'].setEnabled(True)
-                self._actions['binaryerosion'].setEnabled(True)
-                self._actions['greydilation'].setEnabled(True)
-                self._actions['greyerosion'].setEnabled(True)
-                self._actions['roiorvoxelcurve'].setEnabled(True)
-                self._actions['volumeintensity'].setEnabled(True)
                 self._actions['undo'].setEnabled(False)
                 self._actions['redo'].setEnabled(False)
+                self._functional_module_set_enabled(True)
                 # connect signals with slots
                 self.list_view.current_changed.connect(self._update_undo)
                 self.list_view.current_changed.connect(self._update_redo)
@@ -673,18 +718,10 @@ class BpMainWindow(QMainWindow):
         self._actions['ld_glbl'].setEnabled(False)
         self._actions['ld_lbl'].setEnabled(False)
         self._actions['close'].setEnabled(False)
-        self._actions['opening'].setEnabled(False)
-        self._actions['auto_label'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
         self._actions['original_view'].setEnabled(False)
-        self._actions['binarization'].setEnabled(False)
-        self._actions['binarydilation'].setEnabled(False)
-        self._actions['binaryerosion'].setEnabled(False)
-        self._actions['greydilation'].setEnabled(False)
-        self._actions['greyerosion'].setEnabled(False)
-        self._actions['roiorvoxelcurve'].setEnabled(False)
-        self._actions['volumeintensity'].setEnabled(False)
+        self._functional_module_set_enabled(False)
 
     def _about_pybp(self):
         """
@@ -723,7 +760,14 @@ class BpMainWindow(QMainWindow):
         self.tool_menu = self.menuBar().addMenu(self.tr("Tools"))
         basic_tools = self.tool_menu.addMenu(self.tr("Basic Tools"))
         basic_tools.addAction(self._actions['binarization'])
+        basic_tools.addAction(self._actions['intersect'])
+        basic_tools.addAction(self._actions['localmax'])
+        basic_tools.addAction(self._actions['inverse'])
+        basic_tools.addAction(self._actions['smoothing'])
         segment_tools = self.tool_menu.addMenu(self.tr("Segmentation"))
+        segment_tools.addAction(self._actions['region_grow'])
+        segment_tools.addAction(self._actions['watershed'])
+        segment_tools.addAction(self._actions['cluster'])
         roi_tools = self.tool_menu.addMenu(self.tr("ROI Tools"))
         roi_tools.addAction(self._actions['regular_roi'])
         roi_tools.addAction(self._actions['r2i'])
@@ -752,11 +796,11 @@ class BpMainWindow(QMainWindow):
             self._actions['cursor'].setChecked(True)
             if isinstance(self.image_view, OrthView):
                 self._actions['hand'].setChecked(False)
-            #if hasattr(self, 'roidialog'):
             if self.roidialog.isVisible():
                 self._roidialog_disable()
 
             self.painter_status.set_draw_settings(ViewSettings())
+            self.image_view.set_cursor(Qt.ArrowCursor)
             self.image_view.set_label_mouse_tracking(True)
         else:
             self._actions['cursor'].setChecked(True)
@@ -768,6 +812,7 @@ class BpMainWindow(QMainWindow):
         """
         self._label_config_center.set_is_roi_edit(False)
         self.painter_status.set_draw_settings(self._label_config_center)
+        self.image_view.set_cursor(Qt.CrossCursor)
         self.image_view.set_label_mouse_tracking(False)
 
     def _roi_edit_enable(self):
@@ -777,6 +822,7 @@ class BpMainWindow(QMainWindow):
         """
         self._label_config_center.set_is_roi_edit(True)
         self.painter_status.set_draw_settings(self._label_config_center)
+        self.image_view.set_cursor(Qt.CrossCursor)
         self.image_view.set_label_mouse_tracking(False)
 
     def _roidialog_enable(self):
@@ -812,6 +858,7 @@ class BpMainWindow(QMainWindow):
                 self._roidialog_disable()
 
             self.painter_status.set_draw_settings(MoveSettings())
+            self.image_view.set_cursor(Qt.OpenHandCursor)
             self.image_view.set_label_mouse_tracking(True)
         else:
             self._actions['hand'].setChecked(True)
@@ -819,7 +866,6 @@ class BpMainWindow(QMainWindow):
     def _switch_cursor_status(self):
         self._actions['cursor'].setChecked(True)
         self._cursor_enable()
-
 
     def _regular_roi(self):
         regular_roi_dialog = RegularROIDialog(self.model, self)
@@ -1029,4 +1075,50 @@ class BpMainWindow(QMainWindow):
         self.volume_intensity.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.volume_intensity.show()
 
+    def _intersect(self):
+        intersect_dialog = IntersectDialog(self.model)
+        intersect_dialog.exec_()
+
+    def _local_max(self):
+        new_dialog = LocalMaxDialog(self.model, self)
+        new_dialog.exec_()
+
+    def _inverse(self):
+        inverse_image(self.model)
+
+    def _smooth(self):
+        new_dialog = SmoothingDialog(self.model)
+        new_dialog.exec_()
+
+    def _region_grow(self):
+        new_dialog = GrowDialog(self.model, self)
+        new_dialog.exec_()
+
+    def _watershed(self):
+        new_dialog = WatershedDialog(self.model, self)
+        new_dialog.exec_()
+
+    def _cluster(self):
+        new_dialog = ClusterDialog(self.model)
+        new_dialog.exec_()
+
+    def _functional_module_set_enabled(self, status):
+        self._actions['binarization'].setEnabled(status)
+        self._actions['intersect'].setEnabled(status)
+        self._actions['localmax'].setEnabled(status)
+        self._actions['inverse'].setEnabled(status)
+        self._actions['smoothing'].setEnabled(status)
+        self._actions['region_grow'].setEnabled(status)
+        self._actions['watershed'].setEnabled(status)
+        self._actions['cluster'].setEnabled(status)
+        self._actions['opening'].setEnabled(status)
+        self._actions['binarydilation'].setEnabled(status)
+        self._actions['binaryerosion'].setEnabled(status)
+        self._actions['greydilation'].setEnabled(status)
+        self._actions['greyerosion'].setEnabled(status)
+        self._actions['roiorvoxelcurve'].setEnabled(status)
+        self._actions['volumeintensity'].setEnabled(status)
+        self._actions['regular_roi'].setEnabled(status)
+        self._actions['r2i'].setEnabled(status)
+        self._actions['auto_label'].setEnabled(status)
 

@@ -162,8 +162,8 @@ class ImageLabel(QLabel):
     def mouseMoveEvent(self, e):
         if not self._mouse_in(e.x(), e.y()):
             return
-        if self.painter_status.is_drawing_valid(): 
-            self.setCursor(Qt.CrossCursor)
+        if self.painter_status.is_drawing_valid():
+            #self.setCursor(Qt.CrossCursor)
             if not self.painter_status.is_roi_tool():
                 size = self.painter_status.get_drawing_size()
                 X = e.x()
@@ -177,7 +177,8 @@ class ImageLabel(QLabel):
                 self.repaint()
                 self.drawing = False
         else:
-            self.setCursor(Qt.ArrowCursor)
+            pass
+            #self.setCursor(Qt.ArrowCursor)
 
     def mouseReleaseEvent(self, e):
         if self.painter_status.is_drawing_valid() and (not
@@ -921,7 +922,7 @@ class CoronalImageLabel(ImageLabel3d):
                 x = int(np.floor(x/scale))
                 y = 90 - int(np.floor(y/scale))
                 roi_val = self.model.get_current_roi_val(
-                            x, self.model.get_cross()[1], y)
+                            x, self.model.get_cross_pos()[1], y)
                 if roi_val != 0:
                     self.painter_status.get_draw_settings()._update_roi(roi_val)
             else:

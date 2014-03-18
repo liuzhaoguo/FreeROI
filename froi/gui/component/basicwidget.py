@@ -164,3 +164,4 @@ class BasicWidget(QDialog):
     def _binary_clicked(self):
         new_dialog = BinarizationDialog(self._model)
         new_dialog.exec_()
+

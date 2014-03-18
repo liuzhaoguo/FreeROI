@@ -78,6 +78,14 @@ class GridView(QScrollArea):
         """
         for label in self.image_labels:
             label.setMouseTracking(t)
+    
+    def set_cursor(self, cursor_shape):
+        """
+        Set cursor shape.
+
+        """
+        for label in self.image_labels:
+            label.setCursor(cursor_shape)
 
     def update_row_count(self, twidth=None):
         if twidth is None:

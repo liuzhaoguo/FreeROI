@@ -507,3 +507,4 @@ class VolumeDataset(object):
             return self._data[y, x, z, self._time_point]
         else:
             return self._data[y, x, z]
+

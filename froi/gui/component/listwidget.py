@@ -40,7 +40,7 @@ class LayerView(QWidget):
         """
         super(LayerView, self).__init__(parent)
         self.setSizePolicy(QSizePolicy.Maximum, QSizePolicy.Expanding)
-        self.setMaximumWidth(300)
+        self.setMaximumWidth(280)
         self._icon_dir = get_icon_dir()
         self.label_config_center = label_config_center
 
@@ -121,7 +121,7 @@ class LayerView(QWidget):
         self._coord_z = QSpinBox()
         self._coord_z.setRange(0, self._model.getZ()-1)
         # Set time point
-        time_point_label = QLabel('t:')
+        time_point_label = QLabel('t: ')
         self._volume_index_spinbox = QSpinBox()
         self._volume_index_spinbox.setValue(0)
         xyzt_layout.addWidget(coord_x_label)
@@ -130,20 +130,22 @@ class LayerView(QWidget):
         xyzt_layout.addWidget(self._coord_y)
         xyzt_layout.addWidget(coord_z_label)
         xyzt_layout.addWidget(self._coord_z)
-        xyzt_layout.addWidget(time_point_label)
-        xyzt_layout.addWidget(self._volume_index_spinbox)
+        #xyzt_layout.addWidget(time_point_label)
+        #xyzt_layout.addWidget(self._volume_index_spinbox)
         
-        coord_value_label = QLabel('value:')
+        coord_value_label = QLabel('value: ')
         self._coord_value = QLineEdit()
         self._coord_value.setReadOnly(True)
         coord_label_label = QLabel('label:')
         self._coord_label = QLineEdit()
         self._coord_label.setReadOnly(True)
         vl_hlayout = QHBoxLayout()
+        vl_hlayout.addWidget(time_point_label)
+        vl_hlayout.addWidget(self._volume_index_spinbox)
         vl_hlayout.addWidget(coord_value_label)
         vl_hlayout.addWidget(self._coord_value)
-        vl_hlayout.addWidget(coord_label_label)
-        vl_hlayout.addWidget(self._coord_label)
+        #vl_hlayout.addWidget(coord_label_label)
+        #vl_hlayout.addWidget(self._coord_label)
 
 
         glayout = QGridLayout()
