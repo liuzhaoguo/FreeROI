@@ -720,6 +720,7 @@ class BpMainWindow(QMainWindow):
         self._actions['close'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
+        self._actions['cross_hover_view'].setEnabled(False)
         self._actions['original_view'].setEnabled(False)
         self._functional_module_set_enabled(False)
 
