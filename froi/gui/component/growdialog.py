@@ -27,10 +27,8 @@ class GrowDialog(QDialog):
         self.setWindowTitle("Region Growing")
 
         # initialize widgets
-        source_label = QLabel("Source")
+        #source_label = QLabel("Source")
         self.source_combo = QComboBox()
-
-
         pointx_label = QLabel("Seed point x")
         self.pointx_edit = QLineEdit()
         self.pointx_edit.setText('45')
@@ -55,8 +53,8 @@ class GrowDialog(QDialog):
 
         # layout config
         grid_layout = QGridLayout()
-        grid_layout.addWidget(source_label, 0, 0)
-        grid_layout.addWidget(self.source_combo, 0, 1)
+        #grid_layout.addWidget(source_label, 0, 0)
+        #grid_layout.addWidget(self.source_combo, 0, 1)
         grid_layout.addWidget(pointx_label, 1, 0)
         grid_layout.addWidget(self.pointx_edit, 1, 1)
         grid_layout.addWidget(pointy_label, 2, 0)
