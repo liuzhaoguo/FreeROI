@@ -8,18 +8,26 @@ not only provides the user-friendly pipeline for defining ROI, but also many
 related tools for image processing, such as smoothing, binarization, and 
 image segmentation.
 
-Common Tools
-------------
+All tools could be classified into several categories based on their
+utility.
 
-In FreeROI, the images could be smoothed, binarized, or masked by another image
+Basic Tools
+-----------
+
+In FreeROI, the images could be binarized, smoothed, or masked by another image
 by a few clicks, liberating users from complex command lines.
 
-1. Smoothing
+1. Binarization
+   An image could be binarized with this tool. A threshold should be given, 
+   the voxel, which value is not less than threshold, would be assigned as 1,
+   otherwise, assigned as 0.
+
+#. Smoothing
    A Gaussian filter could be used for image smoothing. The parameter *sigma*
    - standard deviation for Gaussian kernel - should be specified in voxel
    units first.
 
-   A relationship between the *full width at half maximum (FWHM)* and *sigma*
+   The relationship between the *full width at half maximum (FWHM)* and *sigma*
    could be derived as FWHM = 2.3548 * sigma.
 
 #. Inversion
@@ -29,32 +37,14 @@ by a few clicks, liberating users from complex command lines.
    image could be inverted by multiplying with -1 first.
 
 #. Intersection
-   An image could be masked by another binary image using intersection tool.
+   An image could be masked by another image using intersection tool.
+
+   The `mask` image is selected as one of the loaded image, and binarized after
+   thresholding with the lower-bound value for display.
 
 #. Local Maxima Detection
    This tool is used for extract local maxima from an image. The local maxima
    could be used for defining ROIs with regular shape.
-
-#. Binarization
-   An image could be binarized with this tool. A threshold should be given, 
-   the voxel, which value is not less than threshold, would be assigned as 1,
-   otherwise, assigned as 0.
-
-#. Erosion
-   Erosion is one of two fundamental operations (the other being dilation) in 
-   morohological processing from which all other morphological operations are
-   based. The operation could be used to reduce the extent of foreground in the
-   image.
-
-#. Dilation
-   The effect of dilation is opposite to that of erosion. It would enlarge the
-   extent of foreground of the image.
-
-#. Opening
-   As the combination of *erosion* and *dilation*, the opening operation is
-   usually used as a basic workhorse of morphological noise removal. Opening
-   removes small objects from the foreground of an image, placing them in the
-   background.
 
 Image Segmentation
 ------------------
@@ -89,9 +79,21 @@ including *cluster detection*, *watershed*, and *region grow*.
 
 #. Region Grow
 
+Image Editing
+-------------
 
-ROI Related Tools
+1. Voxel Edit
+
+#. ROI Edit
+
+#. ROI Batch
+
+
+ROI Tools
 -----------------------
+
+This set of tools are designed for ROI defination, merging, edge detection,
+and several other utility.
 
 1. Merging
 
@@ -103,6 +105,28 @@ ROI Related Tools
 
 #. ROI to Surface
 
-#. Statistics
+Image Stats
+-----------
 
+1. Statistics
+
+
+Morphological Processing
+------------------------
+
+1. Erosion
+   Erosion is one of two fundamental operations (the other being dilation) in 
+   morohological processing from which all other morphological operations are
+   based. The operation could be used to reduce the extent of foreground in the
+   image.
+
+#. Dilation
+   The effect of dilation is opposite to that of erosion. It would enlarge the
+   extent of foreground of the image.
+
+#. Opening
+   As the combination of *erosion* and *dilation*, the opening operation is
+   usually used as a basic workhorse of morphological noise removal. Opening
+   removes small objects from the foreground of an image, placing them in the
+   background.
 
