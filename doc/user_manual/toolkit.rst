@@ -39,7 +39,7 @@ by a few clicks, liberating users from complex command lines.
 #. Intersection
    An image could be masked by another image using intersection tool.
 
-   The `mask` image is selected as one of the loaded image, and binarized after
+   The "mask" image is selected as one of the loaded image, and binarized after
    thresholding with the lower-bound value for display.
 
 #. Local Maxima Detection
@@ -52,7 +52,7 @@ Image Segmentation
 As the initial step for defining ROI semi-automatically, an image could be 
 divided into several subregions each with a specific label using image
 segmentation algorithm. In FreeROI, three segmentation methods could be used,
-including *cluster detection*, *watershed*, and *region grow*.
+including *cluster detection*, *watershed*, and *region growing*.
 
 1. Cluster Detection
 
@@ -77,7 +77,19 @@ including *cluster detection*, *watershed*, and *region grow*.
    maxima would be divided into several sub-regions which are separated with
    watershed lines.
 
-#. Region Grow
+#. Region Growing
+
+   *Region growing* is a simple voxel(pixel)-based image segmentation method.
+   This approach examines neighboring voxels of initial "seed point" and
+   determines whether the voxel neighbors should be added to the region. The
+   preocess is iterated on, in the same manner as general data clustering
+   algorithm.
+
+   The first step in region growing is to select a seed point. The initial
+   region begins as the exact location of this seed. The region is then grown
+   from the seed point to adjacent points depending on a similarity constraint.
+   Also a region size is required from the user. The growing process is
+   continued until the region size reach this upper-bound.
 
 Image Editing
 -------------
@@ -92,8 +104,8 @@ Image Editing
 ROI Tools
 -----------------------
 
-This set of tools are designed for ROI defination, merging, edge detection,
-and several other utility.
+This set of tools are designed for ROI generation with regular shape, merging,
+edge detection, and several other utility.
 
 1. Merging
 
@@ -113,6 +125,15 @@ Image Stats
 
 Morphological Processing
 ------------------------
+
+Morphological image processing is a collection of non-linear operations related
+to the shape or morphology of features in an image. According to
+`Wikipedia <http://en.wikipedia.org/wiki/Morphological_image_processing>`_ ,
+morphological operations rely only on the relative ordering of voxel/pixel
+values, not on their numerical values, and therefore are especially suited to
+the processing of binary images. Morphological operations can also be applied
+to greyscale images such that their light transfer functions are unknown and
+therefore their absolute voxel/pixel values are of no or minor interest.
 
 1. Erosion
    Erosion is one of two fundamental operations (the other being dilation) in 
