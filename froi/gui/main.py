@@ -33,7 +33,6 @@ from component.watersheddialog import WatershedDialog
 from component.clusterdialog import ClusterDialog
 from component.regularroidialog import RegularROIDialog
 from component.roi2gwmidialog import Roi2gwmiDialog
-from component.autolabeldialog import AutoLabelDialog
 from component.opendialog import OpenDialog
 from component.labelconfigcenter import LabelConfigCenter
 from component.roidialog import ROIDialog
@@ -42,7 +41,6 @@ from component.binarydilationdialog import BinarydilationDialog
 from component.greydilationdialog import GreydilationDialog
 from component.greyerosiondialog import GreyerosionDialog
 from component.roiorvoxelcurvedialog import ROIOrVoxelCurveDialog
-from component.volumedintensitydialog import VolumeIntensityDialog
 
 class BpMainWindow(QMainWindow):
     """Class BpMainWindow provides UI interface of FreeROI.
@@ -235,15 +233,15 @@ class BpMainWindow(QMainWindow):
         self._actions['save_image'].triggered.connect(self._save_image)
         self._actions['save_image'].setEnabled(False)
 
-        # Load Label Config
-        self._actions['ld_lbl'] = QAction('Load Label', self)
-        self._actions['ld_lbl'].triggered.connect(self._ld_lbl)
-        self._actions['ld_lbl'].setEnabled(False)
+        ## Load Label Config
+        #self._actions['ld_lbl'] = QAction('Load Label', self)
+        #self._actions['ld_lbl'].triggered.connect(self._ld_lbl)
+        #self._actions['ld_lbl'].setEnabled(False)
 
-        # Load Global Label Config
-        self._actions['ld_glbl'] = QAction('Load Global Label', self)
-        self._actions['ld_glbl'].triggered.connect(self._ld_glbl)
-        self._actions['ld_glbl'].setEnabled(False)
+        ## Load Global Label Config
+        #self._actions['ld_glbl'] = QAction('Load Global Label', self)
+        #self._actions['ld_glbl'].triggered.connect(self._ld_glbl)
+        #self._actions['ld_glbl'].setEnabled(False)
 
         # Close display
         self._actions['close'] = QAction(self.tr("Close"), self)
@@ -391,13 +389,6 @@ class BpMainWindow(QMainWindow):
                                             self._roiorvoxelcurve)
         self._actions['roiorvoxelcurve'].setEnabled(False)
 
-        # three demension intensity view action
-        self._actions['volumeintensity'] = QAction(self.tr("Volume Intensity"),
-                                                   self)
-        self._actions['volumeintensity'].triggered.connect(
-                                                self._volumeintensity)
-        self._actions['volumeintensity'].setEnabled(False)
-
         # About software
         self._actions['about_pybp'] = QAction(self.tr("About FreeROI"), self)
         self._actions['about_pybp'].triggered.connect(self._about_pybp)
@@ -465,13 +456,6 @@ class BpMainWindow(QMainWindow):
         
         self._actions['r2i'].triggered.connect(self._r2i)
         self._actions['r2i'].setEnabled(False)
-
-        # Auto Labeling
-        self._actions['auto_label'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'auto_labeling.png')),
-                                              self.tr("Auto Labeling"), self)
-        self._actions['auto_label'].triggered.connect(self._auto_label)
-        self._actions['auto_label'].setEnabled(False)
 
     def _add_toolbar(self):
         """
@@ -597,8 +581,8 @@ class BpMainWindow(QMainWindow):
                 #self.setUnifiedTitleAndToolBarOnMac(True)
                 # change button status
                 self._actions['save_image'].setEnabled(True)
-                self._actions['ld_lbl'].setEnabled(True)
-                self._actions['ld_glbl'].setEnabled(True)
+                #self._actions['ld_lbl'].setEnabled(True)
+                #self._actions['ld_glbl'].setEnabled(True)
                 self._actions['new_image'].setEnabled(True)
                 self._actions['close'].setEnabled(True)
                 self._actions['orth_view'].setEnabled(True)
@@ -624,7 +608,6 @@ class BpMainWindow(QMainWindow):
                 #                self._switch_cursor_status)
             elif self.model.rowCount() > 1:
                 self._actions['remove_image'].setEnabled(True)
-                self._actions['auto_label'].setEnabled(True)
                 # set current volume index
                 self.list_view.setCurrentIndex(self.model.index(0))
             self.is_save_configure = True
@@ -639,12 +622,10 @@ class BpMainWindow(QMainWindow):
             self._actions['remove_image'].setEnabled(False)
             #self._actions['regular_roi'].setEnabled(False)
             #self._actions['r2i'].setEnabled(False)
-            self._actions['auto_label'].setEnabled(False)
         else:
             self._actions['remove_image'].setEnabled(True)
             #self._actions['regular_roi'].setEnabled(True)
             #self._actions['r2i'].setEnabled(True)
-            self._actions['auto_label'].setEnabled(True)
 
     def _new_image(self, data=None, name=None, colormap=None):
         """
@@ -660,12 +641,10 @@ class BpMainWindow(QMainWindow):
         self._actions['remove_image'].setEnabled(True)
         #self._actions['regular_roi'].setEnabled(True)
         #self._actions['r2i'].setEnabled(True)
-        self._actions['auto_label'].setEnabled(True)
 
     def new_image_action(self):
         self._actions['remove_image'].setEnabled(True)
         #self._actions['r2i'].setEnabled(True)
-        self._actions['auto_label'].setEnabled(True)
 
     def _remove_image(self):
         """
@@ -678,7 +657,6 @@ class BpMainWindow(QMainWindow):
             self._actions['remove_image'].setEnabled(False)
             #self._actions['regular_roi'].setEnabled(False)
             #self._actions['r2i'].setEnabled(False)
-            self._actions['auto_label'].setEnabled(False)
 
     def _save_image(self):
         """
@@ -715,8 +693,8 @@ class BpMainWindow(QMainWindow):
         self._actions['remove_image'].setEnabled(False)
         self._actions['new_image'].setEnabled(False)
         self._actions['save_image'].setEnabled(False)
-        self._actions['ld_glbl'].setEnabled(False)
-        self._actions['ld_lbl'].setEnabled(False)
+        #self._actions['ld_glbl'].setEnabled(False)
+        #self._actions['ld_lbl'].setEnabled(False)
         self._actions['close'].setEnabled(False)
         self._actions['grid_view'].setEnabled(False)
         self._actions['orth_view'].setEnabled(False)
@@ -741,9 +719,9 @@ class BpMainWindow(QMainWindow):
         self.file_menu.addAction(self._actions['add_image'])
         self.file_menu.addAction(self._actions['add_template'])
         self.file_menu.addAction(self._actions['save_image'])
-        self.file_menu.addSeparator()
-        self.file_menu.addAction(self._actions['ld_lbl'])
-        self.file_menu.addAction(self._actions['ld_glbl'])
+        #self.file_menu.addSeparator()
+        #self.file_menu.addAction(self._actions['ld_lbl'])
+        #self.file_menu.addAction(self._actions['ld_glbl'])
         self.file_menu.addSeparator()
         self.file_menu.addAction(self._actions['close'])
         self.file_menu.addAction(self._actions['quit'])
@@ -772,7 +750,6 @@ class BpMainWindow(QMainWindow):
         roi_tools = self.tool_menu.addMenu(self.tr("ROI Tools"))
         roi_tools.addAction(self._actions['regular_roi'])
         roi_tools.addAction(self._actions['r2i'])
-        roi_tools.addAction(self._actions['auto_label'])
         morphological_tools = self.tool_menu.addMenu(
                                     self.tr("Morphological Processing"))
         morphological_tools.addAction(self._actions['opening'])
@@ -782,7 +759,6 @@ class BpMainWindow(QMainWindow):
         morphological_tools.addAction(self._actions['greyerosion'])
         stats_tools = self.tool_menu.addMenu(self.tr("Image Stats"))
         stats_tools.addAction(self._actions['roiorvoxelcurve'])
-        stats_tools.addAction(self._actions['volumeintensity'])
 
         self.help_menu = self.menuBar().addMenu(self.tr("Help"))
         self.help_menu.addAction(self._actions['about_pybp'])
@@ -952,10 +928,6 @@ class BpMainWindow(QMainWindow):
         new_dialog = OpenDialog(self.model)
         new_dialog.exec_()
 
-    def _auto_label(self):
-        auto_dialog = AutoLabelDialog(self.model)
-        auto_dialog.exec_()
-
     def _ld_lbl(self):
         file_name = QFileDialog.getOpenFileName(self,
                                                 'Load Label File',
@@ -1069,13 +1041,6 @@ class BpMainWindow(QMainWindow):
                     self.ROI_or_voxel_dialog.listview_current_index_changed)
         self.ROI_or_voxel_dialog.exec_()
 
-    def _volumeintensity(self):
-        self.volume_intensity = VolumeIntensityDialog(self.model)
-        self.list_view.current_changed.connect(self.volume_intensity._plot)
-        self.volume_intensity.setModal(False)
-        self.volume_intensity.setWindowFlags(Qt.WindowStaysOnTopHint)
-        self.volume_intensity.show()
-
     def _intersect(self):
         intersect_dialog = IntersectDialog(self.model)
         intersect_dialog.exec_()
@@ -1118,8 +1083,6 @@ class BpMainWindow(QMainWindow):
         self._actions['greydilation'].setEnabled(status)
         self._actions['greyerosion'].setEnabled(status)
         self._actions['roiorvoxelcurve'].setEnabled(status)
-        self._actions['volumeintensity'].setEnabled(status)
         self._actions['regular_roi'].setEnabled(status)
         self._actions['r2i'].setEnabled(status)
-        self._actions['auto_label'].setEnabled(status)
 

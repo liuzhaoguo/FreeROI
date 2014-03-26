@@ -6,7 +6,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 from edgedetectiondialog import Edge_detectionDialog
-from roifilterdialog import ROIFilterDialog
 from roimergedialog import ROIMergeDialog
 from roi2gwmidialog import Roi2gwmiDialog
 from regularroidialog import RegularROIDialog
@@ -39,13 +38,6 @@ class ToolsTabWidget(QDialog):
         self.detection_button.setEnabled(True)
         self.detection_button.setToolTip("edge detection")
 
-        self.roifilter_button = QPushButton()
-        self.roifilter_button.setFocusPolicy(Qt.NoFocus)
-        self.roifilter_button.setIcon(QIcon(os.path.join(self._icon_dir,
-                                                         'filtering.png')))
-        self.roifilter_button.setEnabled(True)
-        self.roifilter_button.setToolTip("ROI Filtering")
-
         self.roimerge_button = QPushButton()
         self.roimerge_button.setFocusPolicy(Qt.NoFocus)
         self.roimerge_button.setIcon(QIcon(os.path.join(self._icon_dir,
@@ -69,10 +61,9 @@ class ToolsTabWidget(QDialog):
 
         gridlayout = QGridLayout(self)
         gridlayout.addWidget(self.detection_button, 0, 0)
-        gridlayout.addWidget(self.roifilter_button, 0, 1)
-        gridlayout.addWidget(self.roimerge_button, 0, 2)
-        gridlayout.addWidget(self.roi2interface_button, 1, 0)
-        gridlayout.addWidget(self.regularroi_button, 1, 1)
+        gridlayout.addWidget(self.roimerge_button, 0, 1)
+        gridlayout.addWidget(self.roi2interface_button, 0, 2)
+        gridlayout.addWidget(self.regularroi_button, 1, 0)
 
 
     def _create_actions(self):
@@ -80,7 +71,6 @@ class ToolsTabWidget(QDialog):
         Create actions about the toobar
         """
         self.detection_button.clicked.connect(self._edge_detection_clicked)
-        self.roifilter_button.clicked.connect(self._roifilter_clicked)
         self.roimerge_button.clicked.connect(self._roimerge_clicked)
         self.roi2interface_button.clicked.connect(self._r2i_clicked)
         self.regularroi_button.clicked.connect(self._regular_roi_clicked)
@@ -92,15 +82,6 @@ class ToolsTabWidget(QDialog):
         '''
         if self.detection_button.isEnabled():
             new_dialog = Edge_detectionDialog(self._model, self)
-            new_dialog.exec_()
-
-
-    def _roifilter_clicked(self):
-        '''
-        roi filter clicked
-        '''
-        if self.roifilter_button.isEnabled():
-            new_dialog = ROIFilterDialog(self._model, self)
             new_dialog.exec_()
 
     def _roimerge_clicked(self):
