@@ -163,7 +163,7 @@ class BpMainWindow(QMainWindow):
         config.set('height', 'int', self.height())
         config.set('xpos', 'int', self.x())
         config.set('ypos', 'int', self.y())
-        if hasattr(self, 'model'):
+        if hasattr(self, 'model') and isinstance(self.model, VolumeListModel):
             config.set('orth_scale', 'int',
                        int(self.model.get_scale_factor('orth')*100))
             config.set('grid_scale', 'int',
