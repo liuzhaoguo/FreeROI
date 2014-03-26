@@ -53,20 +53,18 @@ class GrowDialog(QDialog):
 
         # layout config
         grid_layout = QGridLayout()
-        #grid_layout.addWidget(source_label, 0, 0)
-        #grid_layout.addWidget(self.source_combo, 0, 1)
-        grid_layout.addWidget(pointx_label, 1, 0)
-        grid_layout.addWidget(self.pointx_edit, 1, 1)
-        grid_layout.addWidget(pointy_label, 2, 0)
-        grid_layout.addWidget(self.pointy_edit, 2, 1)
-        grid_layout.addWidget(pointz_label, 3, 0)
-        grid_layout.addWidget(self.pointz_edit, 3, 1)
+        grid_layout.addWidget(pointx_label, 0, 0)
+        grid_layout.addWidget(self.pointx_edit, 0, 1)
+        grid_layout.addWidget(pointy_label, 1, 0)
+        grid_layout.addWidget(self.pointy_edit, 1, 1)
+        grid_layout.addWidget(pointz_label, 2, 0)
+        grid_layout.addWidget(self.pointz_edit, 2, 1)
 
-        grid_layout.addWidget(number_label, 4, 0)
-        grid_layout.addWidget(self.number_edit, 4, 1)
+        grid_layout.addWidget(number_label, 3, 0)
+        grid_layout.addWidget(self.number_edit, 3, 1)
 
-        grid_layout.addWidget(out_label, 5, 0)
-        grid_layout.addWidget(self.out_edit, 5, 1)
+        grid_layout.addWidget(out_label, 4, 0)
+        grid_layout.addWidget(self.out_edit, 4, 1)
 
         # button config
         self.run_button = QPushButton("Run")
