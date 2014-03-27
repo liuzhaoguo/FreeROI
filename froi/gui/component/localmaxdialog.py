@@ -23,12 +23,12 @@ class LocalMaxDialog(QDialog):
 
         """
         # set dialog title
-        self.setWindowTitle("Local Max")
+        self.setWindowTitle("Local Maximum")
 
         # initialize widgets
         source_label = QLabel("Source")
         self.source_combo = QComboBox()
-        dist_label = QLabel("Dist")
+        dist_label = QLabel("Least distance of local maximum")
         self.dist_edit = QLineEdit()
         self.dist_edit.setText('2')
         vol_list = self._model.getItemList()
@@ -99,5 +99,4 @@ class LocalMaxDialog(QDialog):
                             vol_name,
                             self._model._data[0].get_header())
         self.done(0)
-
 

@@ -33,6 +33,8 @@ from component.watersheddialog import WatershedDialog
 from component.clusterdialog import ClusterDialog
 from component.regularroidialog import RegularROIDialog
 from component.roi2gwmidialog import Roi2gwmiDialog
+from component.edgedetectiondialog import Edge_detectionDialog
+from component.roimergedialog import ROIMergeDialog
 from component.opendialog import OpenDialog
 from component.labelconfigcenter import LabelConfigCenter
 from component.roidialog import ROIDialog
@@ -40,7 +42,6 @@ from component.binaryerosiondialog import BinaryerosionDialog
 from component.binarydilationdialog import BinarydilationDialog
 from component.greydilationdialog import GreydilationDialog
 from component.greyerosiondialog import GreyerosionDialog
-from component.roiorvoxelcurvedialog import ROIOrVoxelCurveDialog
 
 class BpMainWindow(QMainWindow):
     """Class BpMainWindow provides UI interface of FreeROI.
@@ -383,12 +384,6 @@ class BpMainWindow(QMainWindow):
         self._actions['greydilation'].triggered.connect(self._greydilation)
         self._actions['greydilation'].setEnabled(False)
 
-        # voxel time point curve view action
-        self._actions['roiorvoxelcurve'] = QAction(self.tr("Time Course"), self)
-        self._actions['roiorvoxelcurve'].triggered.connect(
-                                            self._roiorvoxelcurve)
-        self._actions['roiorvoxelcurve'].setEnabled(False)
-
         # About software
         self._actions['about_pybp'] = QAction(self.tr("About FreeROI"), self)
         self._actions['about_pybp'].triggered.connect(self._about_pybp)
@@ -444,18 +439,33 @@ class BpMainWindow(QMainWindow):
 
         # sphere and cube roi
         self._actions['regular_roi'] = QAction(QIcon(os.path.join(
-            self._icon_dir, 'sphere_and_cube.png')),
+                                                self._icon_dir,
+                                                'sphere_and_cube.png')),
                                                self.tr("Regular ROI"), self)
         self._actions['regular_roi'].triggered.connect(self._regular_roi)
         self._actions['regular_roi'].setEnabled(False)
 
         # ROI to Interface
         self._actions['r2i'] = QAction(QIcon(os.path.join(
-        self._icon_dir, 'r2i.png')),
-                                        self.tr("ROI2Interface"), self)
-        
+                                        self._icon_dir, 'r2i.png')),
+                                       self.tr("ROI2Interface"), self)
         self._actions['r2i'].triggered.connect(self._r2i)
         self._actions['r2i'].setEnabled(False)
+
+        # Edge detection for ROI
+        self._actions['edge_dete'] = QAction(QIcon(os.path.join(
+                                                self._icon_dir,
+                                                'edge_detection.png')),
+                                             self.tr("Edge Detection"), self)
+        self._actions['edge_dete'].triggered.connect(self._edge_detection)
+        self._actions['edge_dete'].setEnabled(False)
+
+        # ROI Merging
+        self._actions['roi_merge'] = QAction(QIcon(os.path.join(
+                                                self._icon_dir, 'merging.png')),
+                                             self.tr("ROI Merging"), self)
+        self._actions['roi_merge'].triggered.connect(self._roi_merge)
+        self._actions['roi_merge'].setEnabled(False)
 
     def _add_toolbar(self):
         """
@@ -620,12 +630,8 @@ class BpMainWindow(QMainWindow):
     def _update_remove_image(self):
         if self.model.rowCount() == 1:
             self._actions['remove_image'].setEnabled(False)
-            #self._actions['regular_roi'].setEnabled(False)
-            #self._actions['r2i'].setEnabled(False)
         else:
             self._actions['remove_image'].setEnabled(True)
-            #self._actions['regular_roi'].setEnabled(True)
-            #self._actions['r2i'].setEnabled(True)
 
     def _new_image(self, data=None, name=None, colormap=None):
         """
@@ -639,12 +645,9 @@ class BpMainWindow(QMainWindow):
 
         # change button status
         self._actions['remove_image'].setEnabled(True)
-        #self._actions['regular_roi'].setEnabled(True)
-        #self._actions['r2i'].setEnabled(True)
 
     def new_image_action(self):
         self._actions['remove_image'].setEnabled(True)
-        #self._actions['r2i'].setEnabled(True)
 
     def _remove_image(self):
         """
@@ -655,8 +658,6 @@ class BpMainWindow(QMainWindow):
         self.model.delItem(row)
         if self.model.rowCount() == 1:
             self._actions['remove_image'].setEnabled(False)
-            #self._actions['regular_roi'].setEnabled(False)
-            #self._actions['r2i'].setEnabled(False)
 
     def _save_image(self):
         """
@@ -748,6 +749,8 @@ class BpMainWindow(QMainWindow):
         segment_tools.addAction(self._actions['watershed'])
         segment_tools.addAction(self._actions['cluster'])
         roi_tools = self.tool_menu.addMenu(self.tr("ROI Tools"))
+        roi_tools.addAction(self._actions['edge_dete'])
+        roi_tools.addAction(self._actions['roi_merge'])
         roi_tools.addAction(self._actions['regular_roi'])
         roi_tools.addAction(self._actions['r2i'])
         morphological_tools = self.tool_menu.addMenu(
@@ -757,8 +760,6 @@ class BpMainWindow(QMainWindow):
         morphological_tools.addAction(self._actions['binaryerosion'])
         morphological_tools.addAction(self._actions['greydilation'])
         morphological_tools.addAction(self._actions['greyerosion'])
-        stats_tools = self.tool_menu.addMenu(self.tr("Image Stats"))
-        stats_tools.addAction(self._actions['roiorvoxelcurve'])
 
         self.help_menu = self.menuBar().addMenu(self.tr("Help"))
         self.help_menu.addAction(self._actions['about_pybp'])
@@ -844,10 +845,6 @@ class BpMainWindow(QMainWindow):
         self._actions['cursor'].setChecked(True)
         self._cursor_enable()
 
-    def _regular_roi(self):
-        regular_roi_dialog = RegularROIDialog(self.model, self)
-        regular_roi_dialog.exec_()
-
     def _update_undo(self):
         if self.model.current_undo_available():
             self._actions['undo'].setEnabled(True)
@@ -883,18 +880,6 @@ class BpMainWindow(QMainWindow):
         self.label_configs = map(LabelConfig, label_configs)
         self._label_config_center = LabelConfigCenter(self.label_configs)
 
-    # TODO lookup its usage
-    def _init_label_config(self):
-        label_path = os.path.join(self.label_path, self.config_file)
-        if os.path.isfile(label_path):
-            cwd_config = label_path
-        else:
-            cwd = os.getcwd()
-            cwd_config = os.path.join(cwd, self.config_file)
-            if not os.path.isfile(cwd_config):
-                os.mknod(cwd_config)
-        self.label_config = LabelConfig(cwd_config)
-
     def _get_label_config(self, file_path):
         """
         Get label config file.
@@ -919,6 +904,18 @@ class BpMainWindow(QMainWindow):
 
     def _redo(self):
         self.model.redo_current_image()
+
+    def _regular_roi(self):
+        regular_roi_dialog = RegularROIDialog(self.model, self)
+        regular_roi_dialog.exec_()
+
+    def _edge_detection(self):
+        new_dialog = Edge_detectionDialog(self.model, self)
+        new_dialog.exec_()
+
+    def _roi_merge(self):
+        new_dialog = ROIMergeDialog(self.model, self)
+        new_dialog.exec_()
 
     def _r2i(self):
         new_dialog = Roi2gwmiDialog(self.model)
@@ -1035,12 +1032,6 @@ class BpMainWindow(QMainWindow):
         greydilation_dialog = GreydilationDialog(self.model)
         greydilation_dialog.exec_()
 
-    def _roiorvoxelcurve(self):
-        self.ROI_or_voxel_dialog = ROIOrVoxelCurveDialog(self.model)
-        self.list_view.current_changed.connect(
-                    self.ROI_or_voxel_dialog.listview_current_index_changed)
-        self.ROI_or_voxel_dialog.exec_()
-
     def _intersect(self):
         intersect_dialog = IntersectDialog(self.model)
         intersect_dialog.exec_()
@@ -1082,7 +1073,8 @@ class BpMainWindow(QMainWindow):
         self._actions['binaryerosion'].setEnabled(status)
         self._actions['greydilation'].setEnabled(status)
         self._actions['greyerosion'].setEnabled(status)
-        self._actions['roiorvoxelcurve'].setEnabled(status)
         self._actions['regular_roi'].setEnabled(status)
         self._actions['r2i'].setEnabled(status)
+        self._actions['edge_dete'].setEnabled(status)
+        self._actions['roi_merge'].setEnabled(status)
 

@@ -26,7 +26,6 @@ class ToolsTabWidget(QDialog):
         self._main_win = main_win
         self._model = model
 
-
     def _init_gui(self):
         """
         Initialize GUI.
@@ -65,7 +64,6 @@ class ToolsTabWidget(QDialog):
         gridlayout.addWidget(self.roi2interface_button, 0, 2)
         gridlayout.addWidget(self.regularroi_button, 1, 0)
 
-
     def _create_actions(self):
         """
         Create actions about the toobar
@@ -74,7 +72,6 @@ class ToolsTabWidget(QDialog):
         self.roimerge_button.clicked.connect(self._roimerge_clicked)
         self.roi2interface_button.clicked.connect(self._r2i_clicked)
         self.regularroi_button.clicked.connect(self._regular_roi_clicked)
-
 
     def _edge_detection_clicked(self):
         '''

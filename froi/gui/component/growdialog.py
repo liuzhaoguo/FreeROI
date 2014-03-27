@@ -136,4 +136,3 @@ class GrowDialog(QDialog):
         #self._main_win.new_image_action()
         self.done(0)
 
-
