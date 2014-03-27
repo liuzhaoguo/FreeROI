@@ -6,6 +6,7 @@ from scipy import ndimage as nd
 from scipy.ndimage import morphology
 from skimage import feature as skft
 from skimage import morphology as skmorph
+from scipy.spatial import distance
 
 def mesh_3d_grid(x, y, z):
     x = np.asarray(x)
@@ -129,4 +130,49 @@ def gaussian_smoothing(data, sigma):
     """
     data = nd.gaussian_filter(data, sigma)
     return data
+
+def intersect(source, mask):
+    """
+    An intersection action, return a new numpy array. New array will preserve
+    the source data value, and mask data will be binaried as a `mask`.
+
+    """
+    # binary mask data
+    mask[mask > 0] = 1
+    temp = source * mask
+    temp = np.rot90(temp, 3)
+    return temp
+
+def merge(a, b):
+    a_mask = a > 0
+    b_mask = b > 0
+    if len((a_mask & b_mask).nonzero()[0]) > 0:
+        raise ValueError, 'Conflicts!'
+    c = a + b
+    return c
+
+def nearest_labeling(src, tar):
+    """
+    For each temp voxel assigns the value of it's closest seed voxel
+
+    """
+    srcn = src.nonzero()
+    tarn = tar.nonzero()
+    srcn_coord = np.column_stack((srcn[0], srcn[1], srcn[2]))
+    tarn_coord = np.column_stack((tarn[0], tarn[1], tarn[2]))
+    dist = distance.cdist(srcn_coord, tarn_coord)
+    min_pos = np.argmin(dist, 0)
+    tar[tarn] = src[srcn][min_pos]
+    return tar
+
+def region_grow(seed, source, labeling=False):
+    temp = source.copy()
+    labels, n_labels = nd.label(seed)
+    mask = source > 0
+    labels[~mask] = 0
+    dilation = nd.binary_dilation(labels, iterations=0, mask=mask)
+    temp[~dilation] = 0
+    if labeling:
+        temp = nearest_labeling(seed, temp)
+    return temp
 

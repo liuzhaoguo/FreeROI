@@ -21,7 +21,7 @@ class RegularROIDialog(QDialog):
         self._create_actions()
 
     def _init_gui(self):
-        self.setWindowTitle("Generate Regular ROI")
+        self.setWindowTitle("Generate Regular ROI based on seeds image")
 
         radius_label = QLabel("Radius of ROI (voxel)")
         self.radius_edit = QLineEdit()
@@ -117,6 +117,5 @@ class RegularROIDialog(QDialog):
                             out,
                             self._model._data[0].get_header(),
                             None, None, 255, 'rainbow')
-        #self._main_win.new_image_action()
         self.done(0)
 

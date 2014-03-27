@@ -4,7 +4,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from froi.algorithm import math
+from froi.algorithm import imtool
 
 
 class AutoLabelDialog(QDialog):
@@ -75,7 +75,7 @@ class AutoLabelDialog(QDialog):
                                      Qt.UserRole + 5)
         tar_data = self._model.data(self._model.index(tar_row),
                                        Qt.UserRole + 5)
-        new_vol = math.nearest_labeling(src_data, tar_data)
+        new_vol = imtool.nearest_labeling(src_data, tar_data)
         self._model.addItem(new_vol,
                             self._model._data[src_row].label_config,
                             out_name,

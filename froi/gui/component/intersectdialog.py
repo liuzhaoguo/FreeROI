@@ -4,7 +4,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from froi.algorithm import math
+from froi.algorithm import imtool
 
 class IntersectDialog(QDialog):
     """
@@ -90,7 +90,7 @@ class IntersectDialog(QDialog):
                                        Qt.UserRole + 4)
         mask_data = self._model.data(self._model.index(mask_row),
                                      Qt.UserRole + 4)
-        new_vol = math.intersect(source_data, mask_data)
+        new_vol = imtool.intersect(source_data, mask_data)
         self._model.addItem(new_vol, 
                             None,
                             vol_name,
