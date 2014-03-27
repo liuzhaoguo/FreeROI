@@ -42,6 +42,7 @@ from component.binaryerosiondialog import BinaryerosionDialog
 from component.binarydilationdialog import BinarydilationDialog
 from component.greydilationdialog import GreydilationDialog
 from component.greyerosiondialog import GreyerosionDialog
+from component.meants import MeanTSDialog
 
 class BpMainWindow(QMainWindow):
     """Class BpMainWindow provides UI interface of FreeROI.
@@ -307,6 +308,14 @@ class BpMainWindow(QMainWindow):
         self._actions['intersect'].triggered.connect(self._intersect)
         self._actions['intersect'].setEnabled(False)
 
+        # Extract mean time course
+        self._actions['meants'] = QAction(QIcon(os.path.join(self._icon_dir,
+                                                            'voxel_curve.png')),
+                                          self.tr("Extract Mean Time Course"),
+                                          self)
+        self._actions['meants'].triggered.connect(self._meants)
+        self._actions['meants'].setEnabled(False)
+        
         # Local Max action
         self._actions['localmax'] = QAction(QIcon(os.path.join(
                                         self._icon_dir, 'localmax.png')),
@@ -744,6 +753,7 @@ class BpMainWindow(QMainWindow):
         basic_tools.addAction(self._actions['localmax'])
         basic_tools.addAction(self._actions['inverse'])
         basic_tools.addAction(self._actions['smoothing'])
+        basic_tools.addAction(self._actions['meants'])
         segment_tools = self.tool_menu.addMenu(self.tr("Segmentation"))
         segment_tools.addAction(self._actions['region_grow'])
         segment_tools.addAction(self._actions['watershed'])
@@ -1036,6 +1046,10 @@ class BpMainWindow(QMainWindow):
         intersect_dialog = IntersectDialog(self.model)
         intersect_dialog.exec_()
 
+    def _meants(self):
+        new_dialog = MeanTSDialog(self.model)
+        new_dialog.exec_()
+
     def _local_max(self):
         new_dialog = LocalMaxDialog(self.model, self)
         new_dialog.exec_()
@@ -1062,6 +1076,7 @@ class BpMainWindow(QMainWindow):
     def _functional_module_set_enabled(self, status):
         self._actions['binarization'].setEnabled(status)
         self._actions['intersect'].setEnabled(status)
+        self._actions['meants'].setEnabled(status)
         self._actions['localmax'].setEnabled(status)
         self._actions['inverse'].setEnabled(status)
         self._actions['smoothing'].setEnabled(status)

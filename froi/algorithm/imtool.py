@@ -176,3 +176,24 @@ def region_grow(seed, source, labeling=False):
         temp = nearest_labeling(seed, temp)
     return temp
 
+def extract_mean_ts(source, mask):
+    """
+    Extract mean time course in a mask from source image.
+
+    """
+    mask[mask > 0] = 1
+    mask[mask < 0] = 0
+    src_dim = len(source.shape)
+    if src_dim > 3:
+        source_len = source.shape[3]
+        data = np.zeros((source_len, 1))
+        for idx in range(source_len):
+            temp = source[..., idx]
+            temp = temp * mask
+            data[idx] = temp.sum() / mask.sum()
+    else:
+        source = source * mask
+        data = source.sum() / mask.sum()
+        data = np.array([data])
+    return data
+
