@@ -92,6 +92,7 @@ class ClusterDialog(QDialog):
         self._model.addItem(new_vol,
                             None,
                             vol_name,
-                            self._model._data[0].get_header())
+                            self._model._data[0].get_header(),
+                            None, None, 255, 'rainbow')
         self.done(0)
 
