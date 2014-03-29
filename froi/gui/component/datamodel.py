@@ -262,8 +262,12 @@ class VolumeListModel(QAbstractListModel):
         >>> model.addItem(filepath)
 
         """
+
         vol = VolumeDataset(source, self._label_config_center, name, header,
-                            view_min, view_max, alpha, colormap, self._cross_pos)
+                            view_min, view_max, alpha, colormap,
+                            [self._cross_pos[0],
+                             self._cross_pos[1],
+                             self._cross_pos[2]])
         if self.rowCount():
             if self._data[0].get_data_shape()[0:3] == vol.get_data_shape()[0:3]:
                 ok = self.insertRow(0, vol)
