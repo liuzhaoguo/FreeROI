@@ -46,6 +46,10 @@ by a few clicks, liberating users from complex command lines.
    This tool is used for extract local maxima from an image. The local maxima
    could be used for defining ROIs with regular shape.
 
+#. Extract mean time course
+   After a ROI is defined, this tool could be used to extract mean time course
+   of this ROI from an 3D/4D image. 
+
 Image Segmentation
 ------------------
 
@@ -96,6 +100,7 @@ Image Editing
 
 1. Voxel Edit
 
+
 #. ROI Edit
 
 #. ROI Batch
@@ -111,17 +116,7 @@ edge detection, and several other utility.
 
 #. Edge Detection
 
-#. Filter
-
-#. Auto Labeling
-
 #. ROI to Surface
-
-Image Stats
------------
-
-1. Statistics
-
 
 Morphological Processing
 ------------------------
