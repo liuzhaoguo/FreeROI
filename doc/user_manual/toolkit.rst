@@ -95,17 +95,6 @@ including *cluster detection*, *watershed*, and *region growing*.
    Also a region size is required from the user. The growing process is
    continued until the region size reach this upper-bound.
 
-Image Editing
--------------
-
-1. Voxel Edit
-
-
-#. ROI Edit
-
-#. ROI Batch
-
-
 ROI Tools
 -----------------------
 
@@ -114,9 +103,19 @@ edge detection, and several other utility.
 
 1. Merging
 
+   When you need to pool many ROIs stored in different images into one, this 
+   tool could help you.
+
 #. Edge Detection
 
+   This tool is used to extract the edge of the ROI. It's very useful when you
+   need to display the ROI as a enclosed boundary.
+
 #. ROI to Surface
+
+   It's an experimental tool which used to map a ROI to the nearest surface
+   of white/gray matter. When you want to tract a fiber based on DTI data,
+   this procedure could improve the quality of fiber tracting.
 
 Morphological Processing
 ------------------------
