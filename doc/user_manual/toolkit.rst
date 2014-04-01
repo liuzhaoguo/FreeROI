@@ -22,10 +22,25 @@ by a few clicks, liberating users from complex command lines.
    the voxel, which value is not less than threshold, would be assigned as 1,
    otherwise, assigned as 0.
 
+   To binarize an image, first select this image in the image list (left click
+   the image, this image would be highlighted). Then, open the binarization
+   tool from the tool bar or Basic Tools table on the lower-left of the window.
+   Specify the threshold value and output volume name, a binarized image would
+   be generated after running the tool.
+
+.. image:: imgs/binarization.png
+
 #. Smoothing
    A Gaussian filter could be used for image smoothing. The parameter *sigma*
    - standard deviation for Gaussian kernel - should be specified in voxel
    units first.
+
+   To smooth an image, first select this image in the image list (left click
+   the image). Then open the smoothing tool, and specify the sigma of the
+   Gaussian kernel as well as the output volume name, a smoothed image would
+   be generated.
+
+.. image:: imgs/smoothing.png
 
    The relationship between the *full width at half maximum (FWHM)* and *sigma*
    could be derived as FWHM = 2.3548 * sigma.
