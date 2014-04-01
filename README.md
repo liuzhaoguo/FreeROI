@@ -1,17 +1,16 @@
-FreeROI
-=======
+# FreeROI
 
 * Website: 
 * Guide:
 
-Dependency
-----------
+## Dependency
+
 - Python >= 2.7
 - pip >= 1.4.1
 - Qt 4.8
 
-Installation
-------------------
+## Installation
+
 Currently supports the following systems:
 
 * ubuntu/debian
@@ -23,8 +22,7 @@ Notes: For Windows users, an exectable version is available. Unzip the package,
 and store the directory in a place which path has no Chinese characters. Double
 click *freeroi.exe* to run the program.
 
-Prepare
-=======
+### Prepare
 
 Qt4 should be installed first.
 
@@ -45,8 +43,7 @@ Qt4 should be installed first.
 
   - First, 
 
-Install FreeROI
-===============
+### Install FreeROI
 
 After download the source code, you only to execte:
 
@@ -57,7 +54,7 @@ After download the source code, you only to execte:
 This script would install all related packages automatically.
 
 
-License
--------
+## License
+
 FreeROI is under Revised BSD License.
 See the [LICENSE file](https://github.com/BNUCNL/FreeROI/blob/master/LICENSE) for the full license text.
