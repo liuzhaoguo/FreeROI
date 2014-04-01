@@ -723,11 +723,28 @@ class BpMainWindow(QMainWindow):
         About software.
 
         """
-        QMessageBox.about(self,
-                          self.tr("About FreeROI"),
-                          self.tr("<p>the <b>FreeROI</b> could make ROI manually"
-                                  "and automatically.</p>"
-                                  "<p>Version: " + __version__ + "</p>"))
+        QMessageBox.about(self, self.tr("About FreeROI"),
+                          self.tr("<p><b>FreeROI</b> is a versatile image "
+                                  "processing software developed for "
+                                  "neuroimaging data.</p>"
+                                  "<p>Its goal is to provide a user-friendly "
+                                  "interface for neuroimaging researchers "
+                                  "to visualize and analyze their data, "
+                                  "especially in defining region of interest "
+                                  "(ROI) for ROI analysis.</p>"
+                                  "<p>Written by: Lijie Huang, Zetian Yang, "
+                                  "Guangfu Zhou, Zhaoguo Liu, Xiaobin Dang, "
+                                  "Xiangzhen Kong, Xu Wang, and Zonglei Zhen."
+                                  "</p>"
+                                  "<p><b>FreeROI</b> is under Revised BSD "
+                                  "License.</p>"
+                                  "<p>Version: " + __version__ + "</p>"
+                                  "<p>Copyright(c) 2012-2014 "
+                                  "Neuroinformatic Team in LiuLab "
+                                  "from Beijing Normal University</p>"
+                                  "<p></p>"
+                                  "<p>Please report bugs to:</p>"
+                                  "<p><b>nitk-users@googlegroups.com</b></p>"))
 
     def _create_menus(self):
         """Create menus."""

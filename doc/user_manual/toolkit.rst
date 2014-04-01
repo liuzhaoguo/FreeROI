@@ -54,22 +54,40 @@ by a few clicks, liberating users from complex command lines.
    in FreeROI. To facilitate users extract regions with negative value, the 
    image could be inverted by multiplying with -1 first.
 
+   After the source image is selected in the image list, click the *inverse*
+   button, an inversed image would be generated directly.
+
 #. Intersection
 
-   An image could be masked by another image using intersection tool.
+   An image could be masked by another image using intersection tool. In this
+   tool, the "mask" image is selected as one of the loaded image, and binarized
+   after thresholding with the lower-bound value for display. The output volume
+   name is specified by users.
 
-   The "mask" image is selected as one of the loaded image, and binarized after
-   thresholding with the lower-bound value for display.
+   .. image:: imgs/intersect.png
 
 #. Local Maxima Detection
 
    This tool is used for extract local maxima from an image. The local maxima
    could be used for defining ROIs with regular shape.
 
+   To extract the local maxima from an image, a least distance of local maximum
+   is needed. If the distance between two local maximum is less than this lower
+   bound, the smaller local maxima would be discarded.
+
+   .. image:: imgs/local_max.png
+
 #. Extract mean time course
 
-   After a ROI is defined, this tool could be used to extract mean time course
-   of this ROI from an 3D/4D image. 
+   After a ROI/mask is defined, this tool could be used to extract mean time 
+   course of this ROI from an 3D/4D image. 
+
+   First, the source image should be selected from the image list. Then, open
+   this tool from tool bar, and select a loaded image as the mask. The mean
+   time course of this mask extracted from the source image would be exported
+   to a csv file.
+
+   .. image:: imgs/extract_mts.png
 
 Image Segmentation
 ------------------
@@ -88,6 +106,10 @@ including *cluster detection*, *watershed*, and *region growing*.
    approach, each cluster could be extracted out and labeled with a 
    distinguishable marker.
 
+   .. image:: imgs/clusters.png
+
+   A threshold value should be specified in this tool.
+
 #. Watershed
 
    *Watershed* algorithm could divide an image following the topographical
@@ -96,11 +118,20 @@ including *cluster detection*, *watershed*, and *region growing*.
    regions around these minima by incorporating neighboring voxels in
    increasing order of voxel value, until basins attributed to different 
    markers meet on watershed lines. In addition, to segment an fMRI activation
-   image, for example, the image should be inverted (multiplied with -1) before
+   image, for example, the image could be inverted (multiplied with -1) before
    segmentation. The segmented image consists of several regions each with a 
    activation peak, also an activation cluster which has more than one local
    maxima would be divided into several sub-regions which are separated with
    watershed lines.
+
+   .. image:: imgs/watershed.png
+
+   Several parameters should be specified in this tool. First, the local minima
+   could be detected automatically, or specified an image by user. Second,
+   before segementation, the image could be smoothed to reduce noise effect.
+   Third, a threshold value is used to control the extent of the subregions.
+   Fourth, the image could be segmented following different strategies, this
+   option is selected in the *Segment Function*.
 
 #. Region Growing
 
@@ -115,6 +146,8 @@ including *cluster detection*, *watershed*, and *region growing*.
    from the seed point to adjacent points depending on a similarity constraint.
    Also a region size is required from the user. The growing process is
    continued until the region size reach this upper-bound.
+
+   .. image:: imgs/region_grow.png
 
 ROI Tools
 -----------------------
@@ -131,6 +164,14 @@ edge detection, and several other utility.
 
    This tool is used to extract the edge of the ROI. It's very useful when you
    need to display the ROI as a enclosed boundary.
+
+#. Regular ROI
+
+   Provided an image which contains many seed points, this tool could generate
+   many ROIs with regular shape (cube or sphere) using these seeds as centers.
+   The generated regular ROIs would be stored in a new image.
+
+   .. image:: imgs/regular_roi.png
 
 #. ROI to Surface
 
