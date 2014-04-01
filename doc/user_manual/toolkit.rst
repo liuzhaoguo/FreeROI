@@ -18,6 +18,7 @@ In FreeROI, the images could be binarized, smoothed, or masked by another image
 by a few clicks, liberating users from complex command lines.
 
 1. Binarization
+
    An image could be binarized with this tool. A threshold should be given, 
    the voxel, which value is not less than threshold, would be assigned as 1,
    otherwise, assigned as 0.
@@ -28,9 +29,10 @@ by a few clicks, liberating users from complex command lines.
    Specify the threshold value and output volume name, a binarized image would
    be generated after running the tool.
 
-.. image:: imgs/binarization.png
+   .. image:: imgs/binarization.png
 
 #. Smoothing
+
    A Gaussian filter could be used for image smoothing. The parameter *sigma*
    - standard deviation for Gaussian kernel - should be specified in voxel
    units first.
@@ -40,28 +42,32 @@ by a few clicks, liberating users from complex command lines.
    Gaussian kernel as well as the output volume name, a smoothed image would
    be generated.
 
-.. image:: imgs/smoothing.png
+   .. image:: imgs/smoothing.png
 
    The relationship between the *full width at half maximum (FWHM)* and *sigma*
    could be derived as FWHM = 2.3548 * sigma.
 
 #. Inversion
+
    In fMRI activation image, the negative activation is usually also concerned 
    by reserchers, yet no thresholding process for negative value is implemented
    in FreeROI. To facilitate users extract regions with negative value, the 
    image could be inverted by multiplying with -1 first.
 
 #. Intersection
+
    An image could be masked by another image using intersection tool.
 
    The "mask" image is selected as one of the loaded image, and binarized after
    thresholding with the lower-bound value for display.
 
 #. Local Maxima Detection
+
    This tool is used for extract local maxima from an image. The local maxima
    could be used for defining ROIs with regular shape.
 
 #. Extract mean time course
+
    After a ROI is defined, this tool could be used to extract mean time course
    of this ROI from an 3D/4D image. 
 
