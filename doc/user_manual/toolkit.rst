@@ -44,8 +44,8 @@ by a few clicks, liberating users from complex command lines.
 
    .. image:: imgs/smoothing.png
 
-   The relationship between the *full width at half maximum (FWHM)* and *sigma*
-   could be derived as FWHM = 2.3548 * sigma.
+   Note: The relationship between the *full width at half maximum (FWHM)* and
+   *sigma* could be derived as FWHM = 2.3548 * sigma.
 
 #. Inversion
 
