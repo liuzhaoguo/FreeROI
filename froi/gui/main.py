@@ -575,8 +575,14 @@ class BpMainWindow(QMainWindow):
         # Save previous opened directory (except `standard` directory)
         file_path = str(source)
         temp_dir = os.path.dirname(file_path)
-        if not os.path.samefile(temp_dir, os.path.join(self.label_path, 'standard')):
-            self._temp_dir = temp_dir
+        if sys.platform == 'win32':
+            if not os.stat(temp_dir) == os.stat(os.path.join(self.label_path,
+                                                             'standard')):
+                self._temp_dir = temp_dir
+        else:
+            if not os.path.samefile(temp_dir, os.path.join(self.label_path,
+                                                           'standard')):
+                self._temp_dir = temp_dir
 
         if self.model.addItem(file_path, None, name, header, view_min,
                               view_max, alpha, colormap):
