@@ -578,7 +578,7 @@ class BpMainWindow(QMainWindow):
         if sys.platform == 'win32':
             if not os.stat(temp_dir) == os.stat(os.path.join(self.label_path,
                                                              'standard')):
-                self._temp_dir = temp
+                self._temp_dir = temp_dir
         else:
             if not os.path.samefile(temp_dir, os.path.join(self.label_path,
                                                            'standard')):
