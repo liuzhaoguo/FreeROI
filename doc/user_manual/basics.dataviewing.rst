@@ -10,6 +10,9 @@ To load an image into FreeROI, open the ``File`` menu and choose ``Add volume``.
 A file viewer will appear and let you choose the file you want to load.
 
 Once you load an image, the name of the image will show on the image list placed on the left side of the window.
+
+.. image:: imgs/image_list.png
+
 There is a tickbox before each image name, only ticked images will be shown on the right window.
 To rename a image, double click the name of that image in the image list.
 In all the images loaded, all operations will only affect the one which has been highlighted in the list.
@@ -35,6 +38,8 @@ The number of sclice in each row can be adjusted by resize the window size of th
 If you have load multiple images, those ticked in the image list will be overlapped into one single image to display.
 You could set the order of each image in the overlap process by move the image up or down in the image list.
 The transparancy could also be set by adjusting the ``Visibility`` bar under the image list.
+
+.. image:: imgs/image_setting.png
 
 If you want to only show data among some range in the image, you could set the minimum and maximum limit by set the values in ``Min`` and ``Max`` attribute boxes.
 The colormap used for each image could also be set by choosing the prefered one listed in the ``Colormap`` list.
