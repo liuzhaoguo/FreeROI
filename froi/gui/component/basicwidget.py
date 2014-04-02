@@ -52,7 +52,7 @@ class BasicWidget(QDialog):
         self.cluster_button = QPushButton()
         self.cluster_button.setFocusPolicy(Qt.NoFocus)
         self.cluster_button.setIcon(QIcon(os.path.join(self._icon_dir,
-                                                       'merging.png')))
+                                                       'cluster.png')))
         self.cluster_button.setEnabled(True)
         self.cluster_button.setToolTip("Cluster")
 

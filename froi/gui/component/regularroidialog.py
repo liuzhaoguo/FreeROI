@@ -12,10 +12,9 @@ class RegularROIDialog(QDialog):
 
     """
 
-    def __init__(self, model, main_win, parent=None):
+    def __init__(self, model, parent=None):
         super(RegularROIDialog, self).__init__(parent)
         self._model = model 
-        self._main_win = main_win
 
         self._init_gui()
         self._create_actions()

@@ -358,7 +358,7 @@ class BpMainWindow(QMainWindow):
 
         # Cluster action
         self._actions['cluster'] = QAction(QIcon(os.path.join(
-                                        self._icon_dir, 'merging.png')),
+                                        self._icon_dir, 'cluster.png')),
                                              self.tr("Cluster"),
                                              self)
         self._actions['cluster'].triggered.connect(self._cluster)
@@ -939,15 +939,15 @@ class BpMainWindow(QMainWindow):
         self.model.redo_current_image()
 
     def _regular_roi(self):
-        regular_roi_dialog = RegularROIDialog(self.model, self)
+        regular_roi_dialog = RegularROIDialog(self.model)
         regular_roi_dialog.exec_()
 
     def _edge_detection(self):
-        new_dialog = Edge_detectionDialog(self.model, self)
+        new_dialog = Edge_detectionDialog(self.model)
         new_dialog.exec_()
 
     def _roi_merge(self):
-        new_dialog = ROIMergeDialog(self.model, self)
+        new_dialog = ROIMergeDialog(self.model)
         new_dialog.exec_()
 
     def _r2i(self):

@@ -160,6 +160,8 @@ edge detection, and several other utility.
    When you need to pool many ROIs stored in different images into one, this 
    tool could help you.
 
+   
+
 #. Edge Detection
 
    This tool is used to extract the edge of the ROI. It's very useful when you

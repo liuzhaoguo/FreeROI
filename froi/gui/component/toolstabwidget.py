@@ -78,7 +78,7 @@ class ToolsTabWidget(QDialog):
         edge detection clicked
         '''
         if self.detection_button.isEnabled():
-            new_dialog = Edge_detectionDialog(self._model, self)
+            new_dialog = Edge_detectionDialog(self._model)
             new_dialog.exec_()
 
     def _roimerge_clicked(self):
@@ -86,7 +86,7 @@ class ToolsTabWidget(QDialog):
         roi merge clicked
         '''
         if self.roimerge_button.isEnabled():
-            new_dialog = ROIMergeDialog(self._model, self)
+            new_dialog = ROIMergeDialog(self._model)
             new_dialog.exec_()
 
     def _r2i_clicked(self):
@@ -94,7 +94,7 @@ class ToolsTabWidget(QDialog):
         roi2interface clicked
         '''
         if self.roi2interface_button.isEnabled():
-            new_dialog = Roi2gwmiDialog(self._model, self)
+            new_dialog = Roi2gwmiDialog(self._model)
             new_dialog.exec_()
 
     def _regular_roi_clicked(self):
@@ -102,5 +102,5 @@ class ToolsTabWidget(QDialog):
         regular roi clicked
         '''
         if self.regularroi_button.isEnabled():
-            new_dialog = RegularROIDialog(self._model, self)
+            new_dialog = RegularROIDialog(self._model)
             new_dialog.exec_()
