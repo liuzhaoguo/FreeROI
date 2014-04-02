@@ -157,15 +157,21 @@ edge detection, and several other utility.
 
 1. Merging
 
-   When you need to pool many ROIs stored in different images into one, this 
+   When you need to pool many ROIs stored in different images together, this 
    tool could help you.
 
-   
+   Open the merging tool, and select the loaded images which you want to be
+   merged together, a merged image would be generated.
 
 #. Edge Detection
 
    This tool is used to extract the edge of the ROI. It's very useful when you
    need to display the ROI as a enclosed boundary.
+
+   A sample is presented. In the left image, a ROI is displayed in blue, its
+   edge is detected with this tool, and displayed in green color in the right.
+
+   .. image:: imgs/edge_detect.png
 
 #. Regular ROI
 
