@@ -52,7 +52,7 @@ Then, several python modules should be installed. Here we provide a script
 `quick_start.sh` to install them automatically. By default, a new virtual
 python environment would be generated using `virtualenv`. 
 
-### Install sip and PyQt4
+### Install SIP and PyQt4
 
 Third, [SIP](http://www.riverbankcomputing.com/software/sip/download) and 
 [PyQt4](http://www.riverbankcomputing.com/software/pyqt/download) should be
