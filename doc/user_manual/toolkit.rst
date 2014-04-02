@@ -89,6 +89,27 @@ by a few clicks, liberating users from complex command lines.
 
    .. image:: imgs/extract_mts.png
 
+Image Edit
+----------
+
+The image could be edited in voxel or ROI unit. Click the *pen* icon on the
+tool bar, the Image Edit Dialog would open.
+
+.. image:: imgs/cursor_status.png
+
+As the goal of **FreeROI** is to generate or label ROIs, the value assigned to
+each voxel is specified by a label list. Each label list consists of many
+different value and the corresponding label name.
+
+.. image:: imgs/voxel_edit.png
+
+Select one label from ths label list, you can assign the corresponding value to
+a voxel or ROI.
+
+1. Voxel Edit
+
+   
+
 Image Segmentation
 ------------------
 
