@@ -11,12 +11,12 @@ image segmentation.
 All tools could be classified into several categories based on their
 utility, and placed in the menu bar.
 
-.. image:: imgs/menu_bar.png
+.. image:: imgs/menu.png
 
 Also, many common tools are also available in the Tools Table in the
 lower-left of the window.
 
-.. image:: imgs/tools_table.png
+.. image:: imgs/tools_tab.png
 
 Basic Tools
 -----------
