@@ -9,7 +9,14 @@ related tools for image processing, such as smoothing, binarization, and
 image segmentation.
 
 All tools could be classified into several categories based on their
-utility.
+utility, and placed in the menu bar.
+
+.. image:: imgs/menu.png
+
+Also, many common tools are also available in the Tools Table in the
+lower-left of the window.
+
+.. image:: imgs/tools_tab.png
 
 Basic Tools
 -----------
@@ -88,6 +95,58 @@ by a few clicks, liberating users from complex command lines.
    to a csv file.
 
    .. image:: imgs/extract_mts.png
+
+Image Edit
+----------
+
+The image could be edited in voxel or ROI unit. Click the *pen* icon on the
+tool bar, the Image Edit Dialog would open.
+
+.. image:: imgs/cursor_status.png
+
+As the goal of **FreeROI** is to generate or label ROIs, the value assigned to
+each voxel is specified by a label list. Each label list consists of many
+different value and the corresponding label name.
+
+.. image:: imgs/voxel_edit.png
+
+Select one label from ths label list, you can assign the corresponding value to
+a voxel or ROI.
+
+Also, the label list could be customized by editing a label config file. A sample
+is shown here.
+
+.. image:: imgs/label_config_file.png
+
+This file containts several rows and six columns. Each row represents a ROI.
+Each column is separated by the blanks. The 1st column records the value of the
+region, the 2nd records the name of the region. The other four columns represent
+the R, G, B, and transparent degree while display this region in an image.
+
+Place this file into the directory `data/labelconfig` in **FreeROI** directory,
+the program would load it automatically.
+
+1. Voxel Edit
+
+   Select the image which you want to edit from the image list, and choose a 
+   label from label list, then you can modify the value of voxel freely by
+   drawing on the image.
+   In addition, you could also set the number of voxels selected one time
+   by setting the `Brush Size`.
+
+#. ROI Edit
+
+   Similar to the Voxel Edit, this tool could help you modify the value in
+   ROI unit by a single click on the image.
+
+   .. image:: imgs/roi_edit.png
+
+# ROI Batch
+
+  In ROI batch, you can modify several ROIs one time, and store the modified
+  ROI into a new image.
+
+  .. image:: imgs/roi_batch.png
 
 Image Segmentation
 ------------------

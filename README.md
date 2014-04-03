@@ -5,9 +5,9 @@
 
 ## Dependency
 
-- Python >= 2.7
+- Python 2.7
 - pip >= 1.4.1
-- Qt 4.8
+- Qt4 >= 4.7
 
 ## Installation
 
@@ -22,14 +22,12 @@ Notes: For Windows users, an exectable version is available. Unzip the package,
 and store the directory in a place which path has no Chinese characters. Double
 click *freeroi.exe* to run the program.
 
-### Prepare
-
-Qt4 should be installed first.
+### Install Qt4
 
 * On Ubuntu/Debian
 
   ```
-  $ apt-get qt4
+  $ apt-get install libqt4-core libqt4-dev libqt4-gui qt4-dev-tools
   ```
 
 * On CentOS/Fedora/Fedora
@@ -38,23 +36,53 @@ Qt4 should be installed first.
   ```
 
 * On Mac OSX
+   
+  On Mac OSX, the Qt4 could be installed with brew like this
+  ```
+  $ brew install qt --build-from-source
+  ```
 
-  On Mac OSX, the Qt4 should be installed manually.
+If you cannot install Qt4 with above methods, you may need to install it
+manually. The source code of Qt4.8 could be downloaded from the
+[homepage of Qt](http://qt-project.org/downloads).
 
-  - First, 
+### Install related python module
+
+Then, several python modules should be installed. Here we provide a script
+`quick_start.sh` to install them automatically. By default, a new virtual
+python environment would be generated using `virtualenv`. 
+
+### Install SIP and PyQt4
+
+Third, [SIP](http://www.riverbankcomputing.com/software/sip/download) and 
+[PyQt4](http://www.riverbankcomputing.com/software/pyqt/download) should be
+installed.
+
+Untar these packages, and install them like this
+```
+# install SIP
+$ cd SIP
+$ python configure.py
+$ make
+$ make install
+# install PyQt4
+$ cd ../PyQt
+$ python configure.py
+$ make
+$ make install
+```
 
 ### Install FreeROI
 
 After download the source code, you only to execte:
 
 ```
-./quick_start.sh
+python setup.py install
 ```
-
-This script would install all related packages automatically.
-
 
 ## License
 
 FreeROI is under Revised BSD License.
-See the [LICENSE file](https://github.com/BNUCNL/FreeROI/blob/master/LICENSE) for the full license text.
+See the [LICENSE file](https://github.com/BNUCNL/FreeROI/blob/master/LICENSE)
+for the full license text.
+
