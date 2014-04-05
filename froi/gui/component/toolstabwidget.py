@@ -5,7 +5,7 @@ import os
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-from edgedetectiondialog import Edge_detectionDialog
+from no_gui_tools import edge_detection
 from roimergedialog import ROIMergeDialog
 from roi2gwmidialog import Roi2gwmiDialog
 from regularroidialog import RegularROIDialog
@@ -78,8 +78,7 @@ class ToolsTabWidget(QDialog):
         edge detection clicked
         '''
         if self.detection_button.isEnabled():
-            new_dialog = Edge_detectionDialog(self._model)
-            new_dialog.exec_()
+            edge_detection(self._model)
 
     def _roimerge_clicked(self):
         '''

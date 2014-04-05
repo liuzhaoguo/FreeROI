@@ -92,14 +92,14 @@ class BasicWidget(QDialog):
         self.bin_button.setToolTip("Binarization")
 
         gridlayout = QGridLayout(self)
-        gridlayout.addWidget(self.grow_button, 1, 0)
-        gridlayout.addWidget(self.watershed_button, 1, 1)
-        gridlayout.addWidget(self.cluster_button, 1, 2)
-        gridlayout.addWidget(self.localmax_button, 2, 0)
-        gridlayout.addWidget(self.intersect_button, 2, 1)
-        gridlayout.addWidget(self.inverse_button, 2, 2)
-        gridlayout.addWidget(self.bin_button, 3, 0)
-        gridlayout.addWidget(self.smooth_button, 3, 1)
+        gridlayout.addWidget(self.grow_button, 0, 0)
+        gridlayout.addWidget(self.watershed_button, 0, 1)
+        gridlayout.addWidget(self.cluster_button, 0, 2)
+        gridlayout.addWidget(self.localmax_button, 1, 0)
+        gridlayout.addWidget(self.intersect_button, 1, 1)
+        gridlayout.addWidget(self.inverse_button, 1, 2)
+        gridlayout.addWidget(self.bin_button, 2, 0)
+        gridlayout.addWidget(self.smooth_button, 2, 1)
 
     def _create_actions(self):
         """
